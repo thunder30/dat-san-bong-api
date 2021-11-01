@@ -1,8 +1,12 @@
 const authRouter = require('./auth.route')
+const roleRouter = require('./role.route')
 
 function routes(app) {
+    // Router Role
+    app.use('/api/role', roleRouter)
+
     // Router Auth
-    app.use('/auth', authRouter)
+    app.use('/api/auth', authRouter)
 
     // Home
     app.get('/', (req, res) => {

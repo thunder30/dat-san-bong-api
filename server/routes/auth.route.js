@@ -10,7 +10,7 @@ const {
 } = require('../middlewares/validate.middleware')
 
 /**
- * @POST auth/login
+ * @POST /api/auth/login
  * @desc
  */
 router.get('/login', (req, res) => {
@@ -18,7 +18,7 @@ router.get('/login', (req, res) => {
 })
 
 /**
- * @POST auth/register
+ * @POST /api/auth/register
  * @desc
  */
 router.post('/register', validateRegister, async (req, res) => {
@@ -72,10 +72,10 @@ router.post('/register', validateRegister, async (req, res) => {
 })
 
 /**
- * @GET auth/verify
+ * @GET /api/auth/confirm
  * @desc
  */
-router.get('/verify', (req, res) => {
+router.get('/confirm', (req, res) => {
     res.send('Send verify your email')
 })
 

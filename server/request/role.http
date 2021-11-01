@@ -1,0 +1,25 @@
+###
+POST http://localhost:5000/api/role
+Content-Type: application/json
+
+{
+    "name": "Nhân viên"
+}
+
+###
+GET http://localhost:5000/api/role
+
+
+###
+GET http://localhost:5000/api/role/617f7ecf0b4f90e6728cf570
+
+###
+PUT http://localhost:5000/api/role/617f7ecf0b4f90e6728cf570
+Content-Type: application/json
+
+{
+    "name": "Chủ sân"
+}
+
+###
+DELETE http://localhost:5000/api/role/617f8c34b87f2aca86639eb2
