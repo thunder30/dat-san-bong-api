@@ -1,18 +1,19 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const slug = require('mongoose-slug-generator')
-
 const RoleSchema = new Schema(
     {
         name: { type: String, required: true },
-        slug: { type: String, slug: `name`, unique: true },
+        code: { type: String, unique: true, required: true },
+        users: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User',
+            },
+        ],
     },
     {
         timestamps: true,
     }
 )
-
-mongoose.plugin(slug)
-
 module.exports = mongoose.model('Role', RoleSchema)

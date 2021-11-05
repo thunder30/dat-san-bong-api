@@ -1,5 +1,5 @@
-const authRouter = require('./auth.route')
-const roleRouter = require('./role.route')
+const authRouter = require('./auth.routes')
+const roleRouter = require('./role.routes')
 
 function routes(app) {
     // Router Role

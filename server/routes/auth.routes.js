@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
-const Crytpo = require('crypto-js')
 const { validationResult } = require('express-validator')
 const hashPassword = require('../utils/hashPassword')
 const User = require('../models/User')
+const Role = require('../models/Role')
 const {
     validateRegister,
     validateLogin,
@@ -39,28 +39,37 @@ router.post('/register', validateRegister, async (req, res) => {
     }
 
     // start create User
-    const { email, password } = req.body
+    const { email, password, roles } = req.body
     try {
-        // check email
-        checkUser = await User.findOne({ email })
-        if (checkUser) {
+        // get roles
+        const dbRoles = await Role.find({ code: { $in: roles } })
+
+        if (dbRoles.length === 0)
             return res.status(400).json({
                 success: false,
-                message: 'Email already exists!',
+                message: `A role doesn't exists at least`,
             })
-        }
 
-        // add user
-        const newUser = new User({
-            username,
+        // create user
+        const user = new User({
             email,
             password: hashPassword.encrypt(password),
+            roles: dbRoles.map((role) => role._id),
         })
 
-        const user = await newUser.save()
+        // add user in Role collection
+        const newUser = await user.save()
+
+        // update role
+        // dbRoles.forEach(role => {
+        //     Role.find({code: role})
+        //     role.users.push(newUser._id)
+        // })
+
         res.status(200).json({
             success: true,
-            user,
+            message: 'Register successfully!',
+            newUser,
         })
     } catch (error) {
         res.status(500).json({

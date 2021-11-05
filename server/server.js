@@ -2,8 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const mailer = require('./helpers/mailer')
-const routes = require('./routes/index.router')
-const db = require('./config/db/index.db')
+const routes = require('./routes/index.routes')
+const db = require('./config/db.config')
 
 const app = express()
 const PORT = process.env.PORT || 5000

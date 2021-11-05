@@ -13,11 +13,14 @@ router.post('/', async (req, res) => {
         if (!name)
             return res.status(400).json({
                 success: false,
-                message: 'Not found field!',
+                message: 'Name not found!',
             })
 
         const newRole = new Role({
             name,
+            code: slugify(name.toUpperCase(), {
+                replacement: '_',
+            }),
         })
         const role = await newRole.save()
         res.status(200).json({
@@ -29,6 +32,7 @@ router.post('/', async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
+            error,
         })
     }
 })
@@ -40,6 +44,12 @@ router.post('/', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         const roles = await Role.find({})
+
+        if (roles.length === 0)
+            return res.status(200).json({
+                success: false,
+                message: 'Roles empty!',
+            })
         res.status(200).json({
             success: true,
             message: 'Get all roles',
@@ -61,9 +71,14 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const role = await Role.findById(req.params.id)
+        if (!role)
+            return res.status(400).json({
+                success: false,
+                message: 'Role not found.',
+            })
         res.status(200).json({
             success: true,
-            message: 'Get role',
+            message: 'Get role by Id',
             role,
         })
     } catch (error) {
@@ -80,13 +95,23 @@ router.get('/:id', async (req, res) => {
  * @description update role
  */
 router.put('/:id', async (req, res) => {
+    const { name } = req.body
     try {
-        const newRole = await Role.findByIdAndUpdate(req.params.id, {
-            name: req.body.name,
-            slug: slugify(req.body.name, {
-                lower: true,
-            }),
-        })
+        const newRole = await Role.findOneAndUpdate(
+            { _id: req.params.id },
+            {
+                name,
+                code: slugify(name.toUpperCase(), {
+                    replacement: '_',
+                }),
+            },
+            { new: true }
+        )
+        if (!newRole)
+            return res.status(400).json({
+                success: false,
+                message: 'Role not found.',
+            })
         res.status(200).json({
             success: true,
             message: 'Update successfully!',
@@ -107,10 +132,16 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        await Role.findByIdAndDelete(req.params.id)
+        const role = await Role.findOneAndDelete({ _id: req.params.id })
+        if (!role)
+            return res.status(400).json({
+                success: false,
+                message: 'Role not found.',
+            })
         res.status(200).json({
             success: true,
             message: 'Delete successfully!',
+            role,
         })
     } catch (error) {
         res.status(500).json({
