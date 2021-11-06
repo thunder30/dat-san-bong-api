@@ -44,7 +44,7 @@ router.post('/register', validateRegister, async (req, res) => {
         // get roles
         const dbRoles = await Role.find({ code: { $in: roles } })
 
-        if (dbRoles.length === 0)
+        if (dbRoles.length !== roles.length)
             return res.status(400).json({
                 success: false,
                 message: `A role doesn't exists at least`,
@@ -57,19 +57,32 @@ router.post('/register', validateRegister, async (req, res) => {
             roles: dbRoles.map((role) => role._id),
         })
 
-        // add user in Role collection
-        const newUser = await user.save()
+        user.save((error, newUser) => {
+            if (error)
+                return res.status(500).json({
+                    success: false,
+                    message: 'Internal server error!',
+                    error,
+                })
 
-        // update role
-        // dbRoles.forEach(role => {
-        //     Role.find({code: role})
-        //     role.users.push(newUser._id)
-        // })
+            //add user in Role collection
+            dbRoles.forEach((role) => {
+                role.users = [...role.users, newUser._id]
+                role.save((error) => {
+                    if (error)
+                        return res.status(500).json({
+                            success: false,
+                            message: 'Internal server error!',
+                            error,
+                        })
+                })
+            })
 
-        res.status(200).json({
-            success: true,
-            message: 'Register successfully!',
-            newUser,
+            res.status(200).json({
+                success: true,
+                message: 'Register successfully!',
+                newUser,
+            })
         })
     } catch (error) {
         res.status(500).json({
