@@ -3,7 +3,7 @@ const roleRouter = require('./role.routes')
 
 function routes(app) {
     // Router Role
-    app.use('/api/role', roleRouter)
+    app.use('/api/roles', roleRouter)
 
     // Router Auth
     app.use('/api/auth', authRouter)

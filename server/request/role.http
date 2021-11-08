@@ -1,5 +1,5 @@
 ###
-POST http://localhost:5000/api/role
+POST http://localhost:5000/api/roles
 Content-Type: application/json
 
 {
@@ -7,14 +7,14 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/api/role
+GET http://localhost:5000/api/roles
 
 
 ###
-GET http://localhost:5000/api/role/618115740bbf1eee0fbda0b5
+GET http://localhost:5000/api/roles/618115740bbf1eee0fbda0b5
 
 ###
-PUT http://localhost:5000/api/role/617f7ecf0b4f90e6728cf570
+PUT http://localhost:5000/api/roles/617f7ecf0b4f90e6728cf570
 Content-Type: application/json
 
 {
@@ -22,5 +22,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/api/role/618115740bbf1eee0fbda0b5
+DELETE http://localhost:5000/api/roles/618115740bbf1eee0fbda0b5
 
