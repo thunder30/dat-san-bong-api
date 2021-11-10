@@ -7,6 +7,7 @@ const Role = require('../models/Role')
 const {
     validateRegister,
     validateLogin,
+    validateResult,
 } = require('../middlewares/validate.middleware')
 const generateToken = require('../utils/generateToken')
 const {
@@ -23,17 +24,17 @@ router.post('/login', validateLogin, async (req, res) => {
     const { email, password } = req.body
 
     try {
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email }).populate('roles')
 
         if (!user)
-            return res.status(401).json({
+            return res.status(400).json({
                 success: false,
                 message: 'Wrong email or password!',
             })
 
         const originalPassword = hashPassword.decrypt(user.password)
         if (password !== originalPassword)
-            return res.status(401).json({
+            return res.status(400).json({
                 success: false,
                 message: 'Wrong email or password!',
             })
@@ -53,9 +54,22 @@ router.post('/login', validateLogin, async (req, res) => {
             })
         }
 
+        if (!user.isActive)
+            return res.status(403).json({
+                success: false,
+                message: 'The user is deactivated!',
+            })
+        // write log for login
+        user.lastLogin = Date.now()
+
+        await user.save()
+
+        // get code in roles
+        const roles = user.roles.map((role) => role.code)
+
         // generation access token
         const accessToken = generateToken(
-            { userId: user._id },
+            { userId: user._id, roles },
             { expiresIn: '1h' }
         )
         res.status(200).json({
@@ -76,23 +90,7 @@ router.post('/login', validateLogin, async (req, res) => {
  * @POST /api/auth/register
  * @desc
  */
-router.post('/register', validateRegister, async (req, res) => {
-    // Check validate body
-    const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
-        // Build your resulting errors however you want! String, object, whatever - it works!
-        return `${location}[${param}]: ${msg}`
-    }
-    const result = validationResult(req).formatWith(errorFormatter)
-    if (!result.isEmpty()) {
-        // Response will contain something like
-        // { errors: [ "body[password]: must be at least 10 chars long" ] }
-        return res.status(400).json({
-            success: false,
-            message: 'Validate error!',
-            errors: result.array(),
-        })
-    }
-
+router.post('/register', validateRegister, validateResult, async (req, res) => {
     // start create User
     const { email, password, roles, isAdmin } = req.body
     try {
@@ -105,12 +103,38 @@ router.post('/register', validateRegister, async (req, res) => {
                 message: `A role doesn't exists at least`,
             })
 
-        const _user = await User.findOne({ email })
-        if (_user)
-            return res.status(422).json({
-                success: false,
-                message: 'Email already exists!',
+        const inputRoles = dbRoles.map((role) => role._id) // [46dac35, 3abd3c4, ...]
+
+        /**
+         * Kiểm tra email và vai trò
+         * nếu email và tất cả vai trò đã tồn tại -> User already exists
+         * nếu email tồn tại, có ít nhất 1 vai trò kh tồn tại -> cập nhật
+         * nếu email không tồn tại -> thêm mới
+         */
+
+        let _user = await User.findOne({ email })
+        if (_user) {
+            // lọc role id không tồn tại
+            const newRoles = dbRoles.filter((role) => {
+                return !_user.roles.includes(role._id)
             })
+
+            if (newRoles.length === 0)
+                return res.status(422).json({
+                    success: false,
+                    message: 'User already exists!',
+                })
+
+            // update user
+            _user.roles = [..._user.roles, ...newRoles]
+
+            await _user.save()
+            return res.status(200).json({
+                success: true,
+                message: 'Register successfully!',
+                _user,
+            })
+        }
 
         // create user
         const user = new User({

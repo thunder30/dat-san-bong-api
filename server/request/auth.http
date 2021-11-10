@@ -3,7 +3,7 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "iqe72956@cuoly.com",
+    "email": "agxwouffnqrfpweeax@adfskj.com",
     "password": "thunder",
     "roles": ["KHACH_HANG"]
 }
@@ -13,6 +13,6 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "iqe72956@cuoly.com",
+    "email": "agxwouffnqrfpweeax@adfskj.com",
     "password": "thunder"
 }
