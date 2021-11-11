@@ -3,7 +3,7 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "agxwouffnqrfpweeax@adfskj.com",
+    "email": "wehbvcmsehvewhflrz@sdvrecft.com",
     "password": "thunder",
     "roles": ["KHACH_HANG"]
 }
@@ -13,6 +13,6 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "ngoctinh3004@gmail.com",
+    "email": "rxtk5ypwwb@email.edu.pl",
     "password": "thunder"
 }

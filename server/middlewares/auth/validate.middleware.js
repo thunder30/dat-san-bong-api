@@ -2,12 +2,12 @@ const { check, validationResult } = require('express-validator')
 
 const validateRegister = (req, res, next) => {
     // check Register
-    next()
+    validateResult(req, res, next)
 }
 
 const validateLogin = (req, res, next) => {
-    // check  Login
-    next()
+    // check Login
+    validateResult(req, res, next)
 }
 
 const validateResult = (req, res, next) => {
@@ -28,4 +28,4 @@ const validateResult = (req, res, next) => {
     }
     next()
 }
-module.exports = { validateLogin, validateRegister, validateResult }
+module.exports = { validateLogin, validateRegister }

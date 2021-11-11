@@ -5,7 +5,7 @@ const UserSchema = new Schema(
     {
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        fisrtName: { type: String, default: '' },
+        firstName: { type: String, default: '' },
         lastName: { type: String, default: '' },
         sex: { type: String, enum: ['Nam', 'Nữ', 'Khác'], default: 'Khác' },
         phone: { type: String, default: '' },
@@ -17,8 +17,8 @@ const UserSchema = new Schema(
         province: { type: String, default: '' },
         lastLogin: { type: Date, default: null },
         lastLogout: { type: Date, default: null },
-        isActive: { type: Boolean, default: false },
-        isVerify: { type: Boolean, default: false },
+        isActived: { type: Boolean, default: false },
+        isVerified: { type: Boolean, default: false },
         isAdmin: { type: Boolean, default: false },
         accessToken: { type: String, default: '' },
         roles: [

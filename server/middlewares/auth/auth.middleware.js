@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const User = require('../models/User')
+const User = require('../../models/User')
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 
@@ -35,12 +35,14 @@ const verifyToken = (req, res, next) => {
             // kiểm tra sự hợp lệ của id
             if (!ObjectId.isValid(payload.userId))
                 return res.status(401).json({
+                    success: false,
                     message: 'Access token is invalid!',
                 })
 
             const user = await User.findById(payload.userId)
             if (token !== user.accessToken)
                 return res.status(401).json({
+                    success: false,
                     message: 'Access token is invalid!',
                 })
         } catch (error) {
@@ -64,8 +66,11 @@ const emailVerifyToken = (req, res, next) => {
     try {
         const token = req.params.token
         console.log('Email verify token - ', token)
-        const { userId } = jwt.verify(token, process.env.SECRET_KEY)
-        req.userId = userId
+        const payload = jwt.verify(token, process.env.SECRET_KEY)
+        //req.userId = userId
+        req.payload = {
+            ...payload,
+        }
         next()
     } catch (error) {
         return catchError(error, res, 'email')

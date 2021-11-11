@@ -5,25 +5,20 @@ const hashPassword = require('../utils/hashPassword')
 const User = require('../models/User')
 const Role = require('../models/Role')
 const {
-    validateRegister,
     validateLogin,
-    validateResult,
-} = require('../middlewares/validate.middleware')
-const generateToken = require('../utils/generateToken')
-const {
-    verifyToken,
+    validateRegister,
     emailVerifyToken,
-} = require('../middlewares/auth.middleware')
-const mailer = require('../helpers/mailer')
-
+} = require('../middlewares/auth')
+const generateToken = require('../utils/generateToken')
+const { sendMailVerify } = require('../helpers/mailVerify')
 /**
  * @POST /api/auth/login
  * @desc
  */
 router.post('/login', validateLogin, async (req, res) => {
-    const { email, password } = req.body
-
     try {
+        const { email, password } = req.body
+
         const user = await User.findOne({ email }).populate('roles')
 
         if (!user)
@@ -40,32 +35,27 @@ router.post('/login', validateLogin, async (req, res) => {
             })
 
         // check email verify
-        if (!user.isVerify) {
-            const token = generateToken(
-                { userId: user._id },
-                { expiresIn: '5m' }
-            )
-            const url = `http://${req.headers.host}/api/auth/confirm/${token}`
-            // send mail
-            mailer.sendMail(email, url)
+        if (!user.isVerified) {
+            sendMailVerify(req, email, user._id)
             return res.status(401).json({
                 success: false,
                 message: 'User is not email verify. Please check my email.',
             })
         }
 
-        if (!user.isActive)
+        if (!user.isActived)
             return res.status(403).json({
                 success: false,
                 message: 'The user is deactivated!',
             })
 
-        // get codes in roles
-        const roles = user.roles.map((role) => role.code)
-
         // generation access token
         const accessToken = generateToken(
-            { userId: user._id, roles, isAdmin: user.isAdmin },
+            {
+                userId: user._id,
+                roles: user.roles.map((role) => role.code),
+                isAdmin: user.isAdmin,
+            },
             { expiresIn: '1h' }
         )
 
@@ -92,10 +82,10 @@ router.post('/login', validateLogin, async (req, res) => {
  * @POST /api/auth/register
  * @desc
  */
-router.post('/register', validateRegister, validateResult, async (req, res) => {
-    // start create User
-    const { email, password, roles, isAdmin } = req.body
+router.post('/register', validateRegister, async (req, res) => {
     try {
+        // start create User
+        const { email, password, roles, isAdmin } = req.body
         // get roles
         const dbRoles = await Role.find({ code: { $in: roles } })
 
@@ -131,7 +121,7 @@ router.post('/register', validateRegister, validateResult, async (req, res) => {
             _user.roles = [..._user.roles, ...newRoles]
 
             await _user.save()
-            return res.status(200).json({
+            return res.status(201).json({
                 success: true,
                 message: 'Register successfully!',
                 _user,
@@ -161,16 +151,8 @@ router.post('/register', validateRegister, validateResult, async (req, res) => {
             })
         })
 
-        // send mail verify token
-        const token = generateToken(
-            { userId: newUser._id },
-            { expiresIn: '5m' }
-        )
-        const url = `http://${req.headers.host}/api/auth/confirm/${token}`
-        console.log(`url: `, url)
-
-        // send mail
-        mailer.sendMail(email, url)
+        // email verify token
+        sendMailVerify(req, email, newUser._id)
 
         res.status(201).json({
             success: true,
@@ -192,16 +174,16 @@ router.post('/register', validateRegister, validateResult, async (req, res) => {
  */
 router.get('/confirm/:token', emailVerifyToken, async (req, res) => {
     try {
-        const userId = req.userId
+        const { userId } = req.payload
 
         const user = await User.findById(userId)
 
-        if (user.isVerify) {
+        if (user.isVerified) {
             return res.status(400).json({
                 message: 'User is email verified.',
             })
         }
-        user.isVerify = user.isActive = true
+        user.isVerified = user.isActived = true
 
         await user.save()
         res.status(200).json({
@@ -209,7 +191,11 @@ router.get('/confirm/:token', emailVerifyToken, async (req, res) => {
             message: 'Verified email successfully!',
         })
     } catch (error) {
-        res.status(403).json({ message: 'Access token is not valid!', error })
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error,
+        })
     }
 })
 

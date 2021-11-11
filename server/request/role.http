@@ -3,7 +3,7 @@ POST http://localhost:5000/api/roles
 Content-Type: application/json
 
 {
-    "name": "Khách hàng"
+    "name": "Chủ sân"
 }
 
 ###
