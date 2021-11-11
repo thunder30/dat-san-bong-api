@@ -1,6 +1,7 @@
 const authRouter = require('./auth.routes')
 const roleRouter = require('./role.routes')
 const userRouter = require('./user.routes')
+const timeRouter = require('./time.routes')
 
 function routes(app) {
     // Router Role
@@ -11,6 +12,8 @@ function routes(app) {
 
     // Router User
     app.use('/api/users', userRouter)
+    // Router Time
+    app.use('/api/times', timeRouter)
 
     // Home
     app.get('/', (req, res) => {

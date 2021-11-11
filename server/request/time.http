@@ -1,0 +1,27 @@
+###
+POST http://localhost:5000/api/times
+Content-Type: application/json
+
+{
+    "code": "OT3",
+    "start_Time": "01:01",
+    "end_Time": "01:30",
+    "description":"Bắt đầu lúc 01:00"
+}
+
+###
+GET http://localhost:5000/api/times
+
+###
+PUT http://localhost:5000/api/times
+Content-Type: application/json
+
+{
+    "code": "OT3",
+    "start_Time": "01:01",
+    "end_Time": "01:30",
+    "description":"Bắt đầu lúc 01:01"
+}
+
+### 
+DELETE http://localhost:5000/api/times/OT3
