@@ -161,5 +161,31 @@ router.delete('/:code', async (req, res) => {
         })
     }
 })
+
+/**
+ * @GET /api/time/:code
+ * @desc Get a time
+ */
+router.get('/:code', async (req, res) => {
+    try {
+        const time = await Time.findOne({code: req.params.code})
+        if(!time)
+            return res.status(400).json({
+                success: false,
+                message: 'Time not found!'
+            })
+        res.status(200).json({
+            success: true,
+            message: 'Get successfully!',
+            time,
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error,
+        })
+    }
+})
   
 module.exports = router

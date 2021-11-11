@@ -25,3 +25,7 @@ Content-Type: application/json
 
 ### 
 DELETE http://localhost:5000/api/times/OT3
+
+###
+
+GET http://localhost:5000/api/times/OT5
