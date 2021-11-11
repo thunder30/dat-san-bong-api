@@ -3,10 +3,10 @@ const Schema = mongoose.Schema
 
 const TimeSchema = new Schema(
     {
-        code : {type: String, required: true },
-        start_Time: {type: String, required: true },
-        end_Time: {type: String, required: true },
-        description: {type: String, required: false },
+        code : {type: String, required: true, unique: true},
+        startTime: {type: String, required: true },
+        endTime: {type: String, required: true },
+        description: {type: String},
     },
     {
         timestamps: true

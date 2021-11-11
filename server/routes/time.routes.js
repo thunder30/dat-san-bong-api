@@ -1,12 +1,19 @@
 const express = require('express')
 const router = express.Router()
 const Time = require('../models/Time')
+const {
+    validatePost,
+    validatePut,
+    validateDelete, 
+    validateGetOneTime,
+} = require('../middlewares/time')
+const { verifyToken } = require('../middlewares/auth')
 
 /**
  * @GET /api/time
  * @desc Get all times
  */
-router.get('/', async (req, res) => {
+router.get('/',verifyToken ,async (req, res) => {
    
     try {
         const times = await Time.find()
@@ -35,16 +42,9 @@ router.get('/', async (req, res) => {
  * @POST /api/time
  * @desc Create a new time
  */
-router.post('/', async (req, res) => {
-    const {code,start_Time,end_Time,description} = req.body
+router.post('/',verifyToken, validatePost, async (req, res) => {
     try {
-        //Check if not empty
-        if(!code || !start_Time || !end_Time) {
-            return res.status(400).json({
-                success: false,
-                message: 'Argument not found!'
-            })
-        }
+        const {code,startTime,endTime,description} = req.body
 
         // if code already exists
         const _code = await Time.findOne({code})
@@ -55,22 +55,11 @@ router.post('/', async (req, res) => {
             })
         }
 
-        //validate start_Time and end_Time
-        const start_Time_validate = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$/
-        const end_Time_validate = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$/
-        if(!start_Time_validate.test(start_Time) || !end_Time_validate.test(end_Time)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid time format!'
-            })
-        }
-
         //Create new time
-        var newTime
-            newTime = new Time({
+        const newTime = new Time({
                 code,
-                start_Time,
-                end_Time,
+                startTime,
+                endTime,
                 description,
             })
         const time = await newTime.save()
@@ -89,27 +78,19 @@ router.post('/', async (req, res) => {
 })
 
 /**
- * @PUT /api/time/
+ * @PUT /api/time/:id
  * @desc Update a time
  */
-router.put('/', async (req, res) => {
+router.put('/:id',verifyToken, validatePut ,async (req, res) => {
     try {
-        const {code,start_Time,end_Time,description} = req.body
-        //Check if not empty
-        if(!code || !start_Time || !end_Time) {
-            return res.status(400).json({
-                success: false,
-                message: 'Argument not found!'
-            })
-        }
-        
+        const {code,startTime,endTime,description} = req.body
+
         // Update to mongoDB
         const newTime = await Time.findOneAndUpdate(
-            { code: code },
+            { _id: req.params.id },
             {
-                code,
-                start_Time,
-                end_Time,
+                startTime,
+                endTime,
                 description,
             },
             { new: true }
@@ -137,12 +118,12 @@ router.put('/', async (req, res) => {
 })
 
 /**
- * @DELETE /api/time/:code
+ * @DELETE /api/time/:id
  * @desc Delete a time
  */
-router.delete('/:code', async (req, res) => {
+router.delete('/:id', verifyToken, validateDelete,async (req, res) => {
     try {
-        const time = await Time.findOneAndDelete({code: req.params.code})
+        const time = await Time.findOneAndDelete({_id: req.params.id})
         if(!time) 
             return res.status(400).json({
                 success: false,
@@ -163,17 +144,12 @@ router.delete('/:code', async (req, res) => {
 })
 
 /**
- * @GET /api/time/:code
+ * @GET /api/time/:id
  * @desc Get a time
  */
-router.get('/:code', async (req, res) => {
+router.get('/:id', verifyToken, validateGetOneTime, async (req, res) => {
     try {
-        const time = await Time.findOne({code: req.params.code})
-        if(!time)
-            return res.status(400).json({
-                success: false,
-                message: 'Time not found!'
-            })
+        const time = await Time.findOne({_id: req.params.id})
         res.status(200).json({
             success: true,
             message: 'Get successfully!',

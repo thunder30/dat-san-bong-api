@@ -3,29 +3,29 @@ POST http://localhost:5000/api/times
 Content-Type: application/json
 
 {
-    "code": "OT3",
-    "start_Time": "01:01",
-    "end_Time": "01:30",
-    "description":"Bắt đầu lúc 01:00"
+    "code": "OT2",
+    "startTime": "01:01",
+    "endTime": "01:30",
+    "description":"Bắt đầu lúc 01:01"
 }
 
 ###
 GET http://localhost:5000/api/times
 
 ###
-PUT http://localhost:5000/api/times
+PUT http://localhost:5000/api/times/618d5c7d8a73d2a171b97336
 Content-Type: application/json
 
 {
-    "code": "OT3",
-    "start_Time": "01:01",
-    "end_Time": "01:30",
+    "code": "OT2",
+    "startTime": "01:02",
+    "endTime": "01:30",
     "description":"Bắt đầu lúc 01:01"
 }
 
 ### 
-DELETE http://localhost:5000/api/times/OT3
+DELETE http://localhost:5000/api/times/618d5c7d8a73d2a171b97336
 
 ###
 
-GET http://localhost:5000/api/times/OT5
+GET http://localhost:5000/api/times/618d5c7d8a73d2a171b97336
