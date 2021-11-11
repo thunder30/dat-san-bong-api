@@ -59,19 +59,21 @@ router.post('/login', validateLogin, async (req, res) => {
                 success: false,
                 message: 'The user is deactivated!',
             })
-        // write log for login
-        user.lastLogin = Date.now()
 
-        await user.save()
-
-        // get code in roles
+        // get codes in roles
         const roles = user.roles.map((role) => role.code)
 
         // generation access token
         const accessToken = generateToken(
-            { userId: user._id, roles },
+            { userId: user._id, roles, isAdmin: user.isAdmin },
             { expiresIn: '1h' }
         )
+
+        // write log for login
+        user.lastLogin = Date.now()
+        user.accessToken = accessToken
+        await user.save()
+
         res.status(200).json({
             success: true,
             message: 'Login successfully!',

@@ -20,6 +20,7 @@ const UserSchema = new Schema(
         isActive: { type: Boolean, default: false },
         isVerify: { type: Boolean, default: false },
         isAdmin: { type: Boolean, default: false },
+        accessToken: { type: String, default: '' },
         roles: [
             {
                 type: Schema.Types.ObjectId,

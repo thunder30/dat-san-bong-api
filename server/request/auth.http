@@ -13,6 +13,6 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "agxwouffnqrfpweeax@adfskj.com",
+    "email": "ngoctinh3004@gmail.com",
     "password": "thunder"
 }
