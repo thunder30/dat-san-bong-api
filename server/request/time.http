@@ -1,31 +1,38 @@
 ###
 POST http://localhost:5000/api/times
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY2OTkzMTEsImV4cCI6MTYzNjcwMjkxMX0.Bpo0ZqB4oA5ZTPWK9HpbLoPcyn1Qyjreq4fm8KvPabM
 Content-Type: application/json
 
 {
-    "code": "OT2",
-    "startTime": "01:01",
-    "endTime": "01:30",
-    "description":"Bắt đầu lúc 01:01"
+    "code": "OT3",
+    "startTime": "01:31",
+    "endTime": "02:00",
+    "description":"Bắt đầu lúc 01:31"
 }
 
 ###
 GET http://localhost:5000/api/times
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY2OTkzMTEsImV4cCI6MTYzNjcwMjkxMX0.Bpo0ZqB4oA5ZTPWK9HpbLoPcyn1Qyjreq4fm8KvPabM
 
 ###
-PUT http://localhost:5000/api/times/618d5c7d8a73d2a171b97336
+PUT http://localhost:5000/api/times/618e0d29a0b76f677e587e4a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY2OTkzMTEsImV4cCI6MTYzNjcwMjkxMX0.Bpo0ZqB4oA5ZTPWK9HpbLoPcyn1Qyjreq4fm8KvPabM
 Content-Type: application/json
 
 {
-    "code": "OT2",
-    "startTime": "01:02",
-    "endTime": "01:30",
-    "description":"Bắt đầu lúc 01:01"
+    "code": "OT3",
+    "startTime": "01:32",
+    "endTime": "02:00",
+    "description":"Bắt đầu lúc 01:31"
 }
 
 ### 
 DELETE http://localhost:5000/api/times/618d5c7d8a73d2a171b97336
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY2OTkzMTEsImV4cCI6MTYzNjcwMjkxMX0.Bpo0ZqB4oA5ZTPWK9HpbLoPcyn1Qyjreq4fm8KvPabM
 
 ###
 
 GET http://localhost:5000/api/times/618d5c7d8a73d2a171b97336
+
+###
+GET http://localhost:5000/api/times/reGenAllTimes

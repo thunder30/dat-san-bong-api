@@ -10,63 +10,42 @@ const {
 const { verifyToken } = require('../middlewares/auth')
 
 /**
- * @GET /api/time
- * @desc Get all times
- */
-router.get('/',verifyToken ,async (req, res) => {
-   
-    try {
-        const times = await Time.find()
-        if(times.length ===0) {
-            return res.status(404).json({ 
-                success: false,
-                message: 'No times found'
-            })
-        }
-        res.status(200).json({
-            success: true,
-            message: 'Get all times',
-            times,
-        })
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            err,
-        })
-    }
-
-})
-
-/**
  * @POST /api/time
  * @desc Create a new time
  */
 router.post('/',verifyToken, validatePost, async (req, res) => {
+
+    if(!req.payload.isAdmin){
+        return res.status(400).json({ 
+            success: false,
+            message: `You don't have permission to access`
+        })
+    }
+
     try {
-        const {code,startTime,endTime,description} = req.body
+        const { code, startTime, endTime, description } = req.body
 
         // if code already exists
-        const _code = await Time.findOne({code})
-        if(_code) {
+        const _time = await Time.findOne({code})
+        if(_time) {
             return res.status(400).json({
                 success: false,
-                message: 'Code already exists!'
+                message: 'Time already exists!'
             })
         }
 
         //Create new time
-        const newTime = new Time({
+        const time = new Time({
                 code,
                 startTime,
                 endTime,
                 description,
             })
-        const time = await newTime.save()
-        res.status(200).json({
+        const newTime = await time.save()
+        res.status(201).json({
             success: true,
             message: 'Create successfully!',
-            time,
+            newTime,
         })
     } catch (error) {
         res.status(500).json({
@@ -82,13 +61,22 @@ router.post('/',verifyToken, validatePost, async (req, res) => {
  * @desc Update a time
  */
 router.put('/:id',verifyToken, validatePut ,async (req, res) => {
+    
+    if(!req.payload.isAdmin){
+        return res.status(400).json({ 
+            success: false,
+            message: `You don't have permission to access`
+        })
+    }
+
     try {
-        const {code,startTime,endTime,description} = req.body
+        const {code, startTime, endTime, description } = req.body
 
         // Update to mongoDB
-        const newTime = await Time.findOneAndUpdate(
+        const time = await Time.findOneAndUpdate(
             { _id: req.params.id },
             {
+                code,
                 startTime,
                 endTime,
                 description,
@@ -96,8 +84,8 @@ router.put('/:id',verifyToken, validatePut ,async (req, res) => {
             { new: true }
         )
 
-        if(!newTime) {
-            return res.status(404).json({
+        if(!time) {
+            return res.status(400).json({
                 success: false,
                 message: 'Time not found!'
             })
@@ -105,7 +93,7 @@ router.put('/:id',verifyToken, validatePut ,async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Update successfully!',
-            newTime,
+            time,
         })
     
     } catch (error) {
@@ -122,6 +110,14 @@ router.put('/:id',verifyToken, validatePut ,async (req, res) => {
  * @desc Delete a time
  */
 router.delete('/:id', verifyToken, validateDelete,async (req, res) => {
+
+    if(!req.payload.isAdmin){
+        return res.status(400).json({ 
+            success: false,
+            message: `You don't have permission to access`
+        })
+    }
+    
     try {
         const time = await Time.findOneAndDelete({_id: req.params.id})
         if(!time) 
@@ -143,11 +139,103 @@ router.delete('/:id', verifyToken, validateDelete,async (req, res) => {
     }
 })
 
+
+/**
+ * @GET /api/times/genAllTimes
+ * @desc Generate all times
+ */
+router.get('/reGenAllTimes', async (req, res) => {
+
+    //delete all times
+    await Time.deleteMany({})
+    
+    let count = 0;
+    for(let i = 1; i <= 24; i++) {
+        const time = new Time({
+            code: `OT${count}`,
+            startTime: `${i-1}:00`,
+            endTime: `${i-1}:30`,
+            description: `Bắt đầu lúc ${i-1}:00`,
+        })
+        await time.save()
+        count++;
+        const time2 = new Time({
+            code: `OT${count}`,
+            startTime: `${i-1}:30`,
+            endTime: `${i}:00`,
+            description: `Bắt đầu lúc ${i-1}:30`,
+        })
+        await time2.save()
+        count++;
+    }
+    // let times = []
+    // let startTime = `00:00`
+    // for (let i = 1, y = 1; i <= 48; i++) {
+    //     const endTime = `${i-1}:30`
+    //     const time = {
+    //         code: `OT${i}`,
+    //         startTime,
+    //         endTime,
+    //     }
+    
+    //     startTime = endTime
+    //     times.push(time)
+    // }
+
+    const times = await Time.find()
+
+    res.status(200).json({
+        success: true,
+        message: 'Get successfully!',
+        times,
+    })
+
+})
+
+
+/**
+ * @GET /api/time
+ * @desc Get all times
+ */
+ router.get('/', verifyToken, async (req, res) => {
+   
+    if(!req.payload.isAdmin){
+        return res.status(400).json({ 
+            success: false,
+            message: `You don't have permission to access`
+        })
+    }
+
+    try {
+        const times = await Time.find()
+        res.status(200).json({
+            success: true,
+            message: 'Get all times',
+            times,
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            err,
+        })
+    }
+
+})
+
 /**
  * @GET /api/time/:id
  * @desc Get a time
  */
-router.get('/:id', verifyToken, validateGetOneTime, async (req, res) => {
+ router.get('/:id', verifyToken, validateGetOneTime, async (req, res) => {
+
+    if(!req.payload.isAdmin){
+        return res.status(400).json({ 
+            success: false,
+            message: `You don't have permission to access`
+        })
+    }
+
     try {
         const time = await Time.findOne({_id: req.params.id})
         res.status(200).json({
@@ -163,5 +251,6 @@ router.get('/:id', verifyToken, validateGetOneTime, async (req, res) => {
         })
     }
 })
+
   
 module.exports = router
