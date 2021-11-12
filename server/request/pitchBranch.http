@@ -1,0 +1,52 @@
+###
+POST http://localhost:5000/api/pitchBranch
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3MzY2NTYsImV4cCI6MTYzNjc0MDI1Nn0.cQlZhEsKPgq-tYFMqVNepwV9wjcDJXqtLiD1U8FMIDk
+Content-Type: application/json
+
+{
+    "displayName": "Sân ku Tèo",
+    "phoneNumber": "0987654321",
+    "address": "số 123",
+    "ward": "phường 2",
+    "district": "quận 2",
+    "province": "HCM",
+    "description":"zui là chính",
+    "startTime": "06:00",
+    "endTime": "22:00",
+    "owner": "618e0c52a0b76f677e587e3"
+
+}
+
+###
+GET http://localhost:5000/api/pitchBranch/618e97dae982d6fc9be026b8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3MzY2NTYsImV4cCI6MTYzNjc0MDI1Nn0.cQlZhEsKPgq-tYFMqVNepwV9wjcDJXqtLiD1U8FMIDk
+
+###
+
+GET http://localhost:5000/api/pitchBranch
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3MzY2NTYsImV4cCI6MTYzNjc0MDI1Nn0.cQlZhEsKPgq-tYFMqVNepwV9wjcDJXqtLiD1U8FMIDk
+
+###
+DELETE  http://localhost:5000/api/pitchBranch/618ea2921cbb49df804e119a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3MzY2NTYsImV4cCI6MTYzNjc0MDI1Nn0.cQlZhEsKPgq-tYFMqVNepwV9wjcDJXqtLiD1U8FMIDk
+
+###
+
+PUT http://localhost:5000/api/pitchBranch/618e97dae982d6fc9be026b8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3MzY2NTYsImV4cCI6MTYzNjc0MDI1Nn0.cQlZhEsKPgq-tYFMqVNepwV9wjcDJXqtLiD1U8FMIDk
+Content-Type: application/json
+
+{
+    "displayName": "Sân ku Tè",
+    "phoneNumber": "0987654321",
+    "address": "số 123",
+    "ward": "phường 2",
+    "district": "quận 2",
+    "province": "HCM",
+    "description":"zui là chính",
+    "startTime": "06:00",
+    "endTime": "22:00",
+    "owner": "618e0c52a0b76f677e587e38"
+
+}
+
