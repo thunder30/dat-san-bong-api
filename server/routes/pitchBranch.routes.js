@@ -85,7 +85,7 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
  * @GET /api/pitchBranch/
  * @description Get all pitchBranch
  */
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     try {
 
         // Verify isAdmin or isOwner

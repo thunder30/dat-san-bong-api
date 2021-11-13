@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
 const { check, validationResult } = require('express-validator')
+const time = require('../time')
 
 
 const validatePost = (req, res, next) => {
@@ -24,7 +25,14 @@ const validatePost = (req, res, next) => {
         message: 'Invalid phone format!'
     })
 
-    
+    // Check startTime < endtime
+    const start = new Date(`1/1/2021 ${startTime}`)
+    const end = new Date(`1/1/2021 ${endTime}`)
+    if (start > end)
+    return res.status(400).json({
+        success: false,
+        message: 'Start time must be smaller than end time'
+    })
 
     validateResult(req, res, next)
 }
@@ -48,6 +56,16 @@ const validatePut = (req, res, next) => {
         success: false,
         message: 'Invalid time format!'
     })
+
+    // Check startTime < endtime
+    const start = new Date(`1/1/2021 ${startTime}`)
+    const end = new Date(`1/1/2021 ${endTime}`)
+    if (start > end)
+    return res.status(400).json({
+        success: false,
+        message: 'Start time must be smaller than end time'
+    })
+
 
     // Check validate phoneNumber
     const phoneNumber = req.body.phoneNumber
