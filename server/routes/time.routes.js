@@ -4,7 +4,7 @@ const Time = require('../models/Time')
 const {
     validatePost,
     validatePut,
-    validateDelete, 
+    validateDelete,
     validateGetOneTime,
 } = require('../middlewares/time')
 const { verifyToken } = require('../middlewares/auth')
@@ -13,12 +13,11 @@ const { verifyToken } = require('../middlewares/auth')
  * @POST /api/time
  * @desc Create a new time
  */
-router.post('/',verifyToken, validatePost, async (req, res) => {
-
-    if(!req.payload.isAdmin){
-        return res.status(400).json({ 
+router.post('/', verifyToken, validatePost, async (req, res) => {
+    if (!req.payload.isAdmin) {
+        return res.status(400).json({
             success: false,
-            message: `You don't have permission to access`
+            message: `You don't have permission to access`,
         })
     }
 
@@ -26,21 +25,21 @@ router.post('/',verifyToken, validatePost, async (req, res) => {
         const { code, startTime, endTime, description } = req.body
 
         // if code already exists
-        const _time = await Time.findOne({code})
-        if(_time) {
+        const _time = await Time.findOne({ code })
+        if (_time) {
             return res.status(400).json({
                 success: false,
-                message: 'Time already exists!'
+                message: 'Time already exists!',
             })
         }
 
         //Create new time
         const time = new Time({
-                code,
-                startTime,
-                endTime,
-                description,
-            })
+            code,
+            startTime,
+            endTime,
+            description,
+        })
         const newTime = await time.save()
         res.status(201).json({
             success: true,
@@ -60,17 +59,16 @@ router.post('/',verifyToken, validatePost, async (req, res) => {
  * @PUT /api/time/:id
  * @desc Update a time
  */
-router.put('/:id',verifyToken, validatePut ,async (req, res) => {
-    
-    if(!req.payload.isAdmin){
-        return res.status(400).json({ 
+router.put('/:id', verifyToken, validatePut, async (req, res) => {
+    if (!req.payload.isAdmin) {
+        return res.status(400).json({
             success: false,
-            message: `You don't have permission to access`
+            message: `You don't have permission to access`,
         })
     }
 
     try {
-        const {code, startTime, endTime, description } = req.body
+        const { code, startTime, endTime, description } = req.body
 
         // Update to mongoDB
         const time = await Time.findOneAndUpdate(
@@ -84,10 +82,10 @@ router.put('/:id',verifyToken, validatePut ,async (req, res) => {
             { new: true }
         )
 
-        if(!time) {
+        if (!time) {
             return res.status(400).json({
                 success: false,
-                message: 'Time not found!'
+                message: 'Time not found!',
             })
         }
         res.status(200).json({
@@ -95,7 +93,6 @@ router.put('/:id',verifyToken, validatePut ,async (req, res) => {
             message: 'Update successfully!',
             time,
         })
-    
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -109,21 +106,20 @@ router.put('/:id',verifyToken, validatePut ,async (req, res) => {
  * @DELETE /api/time/:id
  * @desc Delete a time
  */
-router.delete('/:id', verifyToken, validateDelete,async (req, res) => {
-
-    if(!req.payload.isAdmin){
-        return res.status(400).json({ 
+router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
+    if (!req.payload.isAdmin) {
+        return res.status(400).json({
             success: false,
-            message: `You don't have permission to access`
+            message: `You don't have permission to access`,
         })
     }
-    
+
     try {
-        const time = await Time.findOneAndDelete({_id: req.params.id})
-        if(!time) 
+        const time = await Time.findOneAndDelete({ _id: req.params.id })
+        if (!time)
             return res.status(400).json({
                 success: false,
-                message: 'Time not found!'
+                message: 'Time not found!',
             })
         res.status(200).json({
             success: true,
@@ -139,52 +135,50 @@ router.delete('/:id', verifyToken, validateDelete,async (req, res) => {
     }
 })
 
-
 /**
  * @GET /api/times/genAllTimes
  * @desc Generate all times
  */
-router.get('/reGenAllTimes', async (req, res) => {
-
+router.get('/reGenAllTimes', verifyToken, async (req, res) => {
     //delete all times
     await Time.deleteMany({})
-    let startTime , endTime
-    let count = 0;
-    for(let i = 1; i <= 24; i++) {
-        if(i < 10) {
-            startTime = `0${i-1}:00`
-            endTime = `0${i-1}:30`
+    let startTime, endTime
+    let count = 0
+    for (let i = 1; i <= 24; i++) {
+        if (i < 10) {
+            startTime = `0${i - 1}:00`
+            endTime = `0${i - 1}:30`
         } else {
-            startTime = `${i-1}:00`
-            endTime = `${i-1}:30`
+            startTime = `${i - 1}:00`
+            endTime = `${i - 1}:30`
         }
         const time = new Time({
             code: `OT${count}`,
             startTime,
             endTime,
-            description: `Bắt đầu lúc ${i-1}:00`,
+            description: `Bắt đầu lúc ${i - 1}:00`,
         })
 
         await time.save()
-        count++;
-        if(i < 10) {
-            startTime = `0${i-1}:30`
+        count++
+        if (i < 10) {
+            startTime = `0${i - 1}:30`
             endTime = `0${i}:00`
         } else {
-            startTime = `${i-1}:30`
+            startTime = `${i - 1}:30`
             endTime = `${i}:00`
         }
-        if(endTime === '24:00') {
+        if (endTime === '24:00') {
             endTime = '23:59'
         }
         const time2 = new Time({
             code: `OT${count}`,
             startTime,
             endTime,
-            description: `Bắt đầu lúc ${i-1}:30`,
+            description: `Bắt đầu lúc ${i - 1}:30`,
         })
         await time2.save()
-        count++;
+        count++
     }
     // let times = []
     // let startTime = `00:00`
@@ -195,7 +189,7 @@ router.get('/reGenAllTimes', async (req, res) => {
     //         startTime,
     //         endTime,
     //     }
-    
+
     //     startTime = endTime
     //     times.push(time)
     // }
@@ -207,20 +201,17 @@ router.get('/reGenAllTimes', async (req, res) => {
         message: 'Get successfully!',
         times,
     })
-
 })
-
 
 /**
  * @GET /api/time
  * @desc Get all times
  */
- router.get('/', verifyToken, async (req, res) => {
-   
-    if(!req.payload.isAdmin){
-        return res.status(400).json({ 
+router.get('/', verifyToken, async (req, res) => {
+    if (!req.payload.isAdmin) {
+        return res.status(400).json({
             success: false,
-            message: `You don't have permission to access`
+            message: `You don't have permission to access`,
         })
     }
 
@@ -238,24 +229,22 @@ router.get('/reGenAllTimes', async (req, res) => {
             err,
         })
     }
-
 })
 
 /**
  * @GET /api/time/:id
  * @desc Get a time
  */
- router.get('/:id', verifyToken, validateGetOneTime, async (req, res) => {
-
-    if(!req.payload.isAdmin){
-        return res.status(400).json({ 
+router.get('/:id', verifyToken, validateGetOneTime, async (req, res) => {
+    if (!req.payload.isAdmin) {
+        return res.status(400).json({
             success: false,
-            message: `You don't have permission to access`
+            message: `You don't have permission to access`,
         })
     }
 
     try {
-        const time = await Time.findOne({_id: req.params.id})
+        const time = await Time.findOne({ _id: req.params.id })
         res.status(200).json({
             success: true,
             message: 'Get successfully!',
@@ -270,5 +259,4 @@ router.get('/reGenAllTimes', async (req, res) => {
     }
 })
 
-  
 module.exports = router

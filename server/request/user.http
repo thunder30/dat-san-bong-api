@@ -1,10 +1,10 @@
 ###
 GET http://localhost:5000/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY2MjQ3NjgsImV4cCI6MTYzNjYyODM2OH0.wNK-H15PQpxRGy42PrdosxuqtCa7yDk969VN68OTjkU
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3ODg0MDcsImV4cCI6MTYzNjc5MjAwN30.9igYQ5IJRGurl_UDNNOpA2fVpcPb3XOL0vlcDTU9U3g
 
 ### 
 GET http://localhost:5000/api/users/618ce9f82ffa9e9c3d217029
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTlmODJmZmE5ZTljM2QyMTcwMjkiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzY2MjU3NzAsImV4cCI6MTYzNjYyOTM3MH0.xlQKDTlsBvZfKNQtGVpgnkvZ2kXpeeZe-4NkGE2t818
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3ODQ3MzksImV4cCI6MTYzNjc4ODMzOX0.QEI4SNtlgAQF2bd93SBK66qaHe2sMEDIL4YX90HIJUc
 
 ###
 POST http://localhost:5000/api/users/
@@ -13,6 +13,20 @@ Content-Type: application/json
 
 {
     "email": "rxtk5ypwwb@email.edu.pl",
+    "password": "thunder",
+    "firstName": "David",
+    "lastName": "Moyce",
+    "sex": "Nam",
+    "phone": "0987654321",
+    "roles" : ["KHACH_HANG"]
+}
+
+###
+PUT http://localhost:5000/api/users/618cf4de63f7ea54d60b8cef
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3ODQ3MzksImV4cCI6MTYzNjc4ODMzOX0.QEI4SNtlgAQF2bd93SBK66qaHe2sMEDIL4YX90HIJUc
+Content-Type: application/json
+
+{
     "password": "thunder",
     "firstName": "David",
     "lastName": "Moyce",

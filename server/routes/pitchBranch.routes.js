@@ -6,7 +6,7 @@ const {
     validatePost,
     validateGetById,
     validatePut,
-    validateDelete
+    validateDelete,
 } = require('../middlewares/pitchBranch')
 const { verifyToken } = require('../middlewares/auth')
 
@@ -15,16 +15,14 @@ const { verifyToken } = require('../middlewares/auth')
  * @description Create a new pitchBranch
  */
 router.post('/', verifyToken, validatePost, async (req, res) => {
-
     try {
-
         // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
         const { owner } = req.body
         if (!isAdmin && userId !== owner) {
             return res.status(401).json({
                 success: false,
-                message: `You don't have permission`
+                message: `You don't have permission`,
             })
         }
 
@@ -36,10 +34,9 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         res.status(201).json({
             success: true,
             message: 'Create successfully!',
-            _pitchBranch
+            _pitchBranch,
         })
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
@@ -54,25 +51,25 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
  */
 router.get('/:id', verifyToken, validateGetById, async (req, res) => {
     try {
-
         // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
         const { owner } = req.body
         if (!isAdmin && userId !== owner) {
             return res.status(403).json({
                 success: false,
-                message: `You don't have permission`
+                message: `You don't have permission`,
             })
         }
 
-        const pitchBranch = await PitchBranch.findById(req.params.id).populate('owner')
+        const pitchBranch = await PitchBranch.findById(req.params.id).populate(
+            'owner'
+        )
         res.status(200).json({
             success: true,
             message: 'Get successfully!',
-            pitchBranch
+            pitchBranch,
         })
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
@@ -87,25 +84,27 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
  */
 router.get('/', verifyToken, async (req, res) => {
     try {
-
         // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
         const { owner } = req.body
         if (!isAdmin && userId !== owner) {
             return res.status(403).json({
                 success: false,
-                message: `You don't have permission`
+                message: `You don't have permission`,
             })
         }
 
-        const pitchBranch = await PitchBranch.find().populate('owner')
+        const pitchBranch = await PitchBranch.find().populate({
+            path: 'owner',
+            select: '_id',
+        })
+
         res.status(200).json({
             success: true,
             message: 'Get successfully!',
-            pitchBranch
+            pitchBranch,
         })
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
@@ -118,7 +117,7 @@ router.get('/', verifyToken, async (req, res) => {
  * @Delete /api/pitchBranch/:id
  * @description Delete a pitchBranch by id
  */
-router.delete('/:id', verifyToken, validateDelete, async (req, res) => {   
+router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     try {
         // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
@@ -126,7 +125,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         if (!isAdmin && userId !== owner) {
             return res.status(403).json({
                 success: false,
-                message: `You don't have permission`
+                message: `You don't have permission`,
             })
         }
 
@@ -144,8 +143,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
             success: true,
             message: 'Delete successfully!',
         })
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
@@ -160,14 +158,13 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
  */
 router.put('/:id', verifyToken, validatePut, async (req, res) => {
     try {
-
         // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
         const { owner } = req.body
         if (!isAdmin && userId !== owner) {
             return res.status(403).json({
                 success: false,
-                message: `You don't have permission`
+                message: `You don't have permission`,
             })
         }
 
@@ -180,14 +177,16 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
             })
         }
 
+        // delete key
+        delete req.body.owner
+
         // update
         await pitchBranch.updateOne(req.body)
         res.status(200).json({
             success: true,
             message: 'Update successfully!',
         })
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
@@ -195,6 +194,5 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         })
     }
 })
-
 
 module.exports = router
