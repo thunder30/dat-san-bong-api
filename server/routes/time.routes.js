@@ -148,21 +148,39 @@ router.get('/reGenAllTimes', async (req, res) => {
 
     //delete all times
     await Time.deleteMany({})
-    
+    let startTime , endTime
     let count = 0;
     for(let i = 1; i <= 24; i++) {
+        if(i < 10) {
+            startTime = `0${i-1}:00`
+            endTime = `0${i-1}:30`
+        } else {
+            startTime = `${i-1}:00`
+            endTime = `${i-1}:30`
+        }
         const time = new Time({
             code: `OT${count}`,
-            startTime: `${i-1}:00`,
-            endTime: `${i-1}:30`,
+            startTime,
+            endTime,
             description: `Bắt đầu lúc ${i-1}:00`,
         })
+
         await time.save()
         count++;
+        if(i < 10) {
+            startTime = `0${i-1}:30`
+            endTime = `0${i}:00`
+        } else {
+            startTime = `${i-1}:30`
+            endTime = `${i}:00`
+        }
+        if(endTime === '24:00') {
+            endTime = '23:59'
+        }
         const time2 = new Time({
             code: `OT${count}`,
-            startTime: `${i-1}:30`,
-            endTime: `${i}:00`,
+            startTime,
+            endTime,
             description: `Bắt đầu lúc ${i-1}:30`,
         })
         await time2.save()
