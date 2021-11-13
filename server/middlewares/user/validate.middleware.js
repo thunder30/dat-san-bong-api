@@ -12,7 +12,7 @@ const validatePut = (req, res, next) => {
     const id = req.params.id
     // check id
     if (!ObjectId.isValid(id))
-        return res.status(400).json({
+        return res.status(404).json({
             success: false,
             message: 'User not found!',
         })
@@ -24,7 +24,7 @@ const validateDelete = (req, res, next) => {
     const id = req.params.id
     // check id
     if (!ObjectId.isValid(id))
-        return res.status(400).json({
+        return res.status(404).json({
             success: false,
             message: 'User not found!',
         })
@@ -35,7 +35,7 @@ const validateGetById = (req, res, next) => {
     const id = req.params.id
     // check id
     if (!ObjectId.isValid(id))
-        return res.status(400).json({
+        return res.status(404).json({
             success: false,
             message: 'User not found!',
         })

@@ -1,6 +1,6 @@
 ###
 GET http://localhost:5000/api/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3ODg0MDcsImV4cCI6MTYzNjc5MjAwN30.9igYQ5IJRGurl_UDNNOpA2fVpcPb3XOL0vlcDTU9U3g
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY4MDkyMDAsImV4cCI6MTYzNjgxMjgwMH0.5EnihMjdw3lNMfh5UTONJlJQB0rVdSxr9z9ezqcVp9g
 
 ### 
 GET http://localhost:5000/api/users/618ce9f82ffa9e9c3d217029
@@ -23,7 +23,7 @@ Content-Type: application/json
 
 ###
 PUT http://localhost:5000/api/users/618cf4de63f7ea54d60b8cef
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3ODQ3MzksImV4cCI6MTYzNjc4ODMzOX0.QEI4SNtlgAQF2bd93SBK66qaHe2sMEDIL4YX90HIJUc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY4MTI4NzgsImV4cCI6MTYzNjgxNjQ3OH0.YKCl8SocR-H4ntEGCg5r0f0aQH_EkDlurUfpfQMWDY8
 Content-Type: application/json
 
 {
@@ -32,5 +32,10 @@ Content-Type: application/json
     "lastName": "Moyce",
     "sex": "Nam",
     "phone": "0987654321",
-    "roles" : ["KHACH_HANG"]
+    "roles": ["KHACH_HANG"]
 }
+
+###
+DELETE http://localhost:5000/api/users/618cf4de63f7ea54d60b8cef
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY4MTI4NzgsImV4cCI6MTYzNjgxNjQ3OH0.YKCl8SocR-H4ntEGCg5r0f0aQH_EkDlurUfpfQMWDY8
+Content-Type: application/json
