@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const slugify = require('slugify')
 const PitchBranch = require('../models/pitchBranch')
 const {
     validatePost,
@@ -9,6 +8,8 @@ const {
     validateDelete,
 } = require('../middlewares/pitchBranch')
 const { verifyToken } = require('../middlewares/auth')
+const User = require('../models/User')
+const Role = require('../models/Role')
 
 /**
  * @POST /api/pitchBranch
@@ -26,15 +27,40 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             })
         }
 
+
+        /**Nếu khách hàng tạo sân bóng thì khách hàng sẽ trở thành chủ sân */
+        // find user by id
+        const user = await User.findById(req.body.owner).populate('roles')
+
+        //make flat array user by code
+        const userRoles = user.roles.map(role => role.code)
+        console.log(userRoles)
+
+        //if userroles is CHU_SAN
+        if (!userRoles.includes('CHU_SAN')) {
+            //update user roles by code CHU_SAN
+            const dbRoles = await Role.find({ code: { $in: ['CHU_SAN'] } })
+            await User.findOneAndUpdate(
+                { _id : req.body.owner },
+                {
+                    $push: {
+                        roles: dbRoles.map((role) => role._id),
+                    },
+                },
+                { new: true }
+            )
+            
+        }
+            
         const pitchBranch = new PitchBranch({
             ...req.body,
         })
         // save to db
-        let _pitchBranch = await pitchBranch.save()
+        // let _pitchBranch = await pitchBranch.save()
         res.status(201).json({
             success: true,
             message: 'Create successfully!',
-            _pitchBranch,
+            // _pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
