@@ -56,11 +56,11 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             ...req.body,
         })
         // save to db
-        // let _pitchBranch = await pitchBranch.save()
+        let _pitchBranch = await pitchBranch.save()
         res.status(201).json({
             success: true,
             message: 'Create successfully!',
-            // _pitchBranch,
+            _pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
