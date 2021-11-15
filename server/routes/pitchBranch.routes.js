@@ -4,12 +4,14 @@ const PitchBranch = require('../models/pitchBranch')
 const {
     validatePost,
     validateGetById,
+    validateGetByUserId,
     validatePut,
     validateDelete,
 } = require('../middlewares/pitchBranch')
 const { verifyToken } = require('../middlewares/auth')
 const User = require('../models/User')
 const Role = require('../models/Role')
+const { findById } = require('../models/pitchBranch')
 
 /**
  * @POST /api/pitchBranch
@@ -26,7 +28,6 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
                 message: `You don't have permission`,
             })
         }
-
 
         /**Nếu khách hàng tạo sân bóng thì khách hàng sẽ trở thành chủ sân */
         // find user by id
@@ -71,25 +72,88 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
     }
 })
 
+
+/**
+ * @GET /api/pitchBranch/owner/:id
+ * @description Get a pitchBranch by owner
+ */
+ router.get('/owner/:id', verifyToken, validateGetByUserId, async (req, res) => {
+    try {
+
+        const { isAdmin, userId } = req.payload
+        // lấy pitchBranch theo params và theo payload id của user
+        let pitchBranch = await PitchBranch.find({})
+        .where('owner').equals(userId)
+        .where('owner').equals(req.params.id)
+        .populate(
+            path='owner',
+            match = { owner: req.payload.userId },
+        )
+
+        if(pitchBranch.length === 0 && !isAdmin){
+            return res.status(404).json({
+                success: false,
+                message: 'Not found',
+            })
+        }
+
+        // if isAdmin
+        if (isAdmin) {
+            pitchBranch = await PitchBranch.find({})
+            .where('owner').equals(req.params.id)
+            .populate(
+                path='owner',
+                match = { owner: req.payload.userId },
+            )
+        }
+
+        console.log(pitchBranch)
+        res.status(200).json({
+            success: true,
+            message: 'Get pitchBranch successfully!',
+            pitchBranch,
+        })
+        
+
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error,
+        })
+    }
+})
+
 /**
  * GET /api/pitchBranch/:id
  * @description Get a pitchBranch by id
  */
 router.get('/:id', verifyToken, validateGetById, async (req, res) => {
     try {
-        // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
-        const { owner } = req.body
-        if (!isAdmin && userId !== owner) {
+        // lấy pitchBranch theo params và theo payload id của user
+        let pitchBranch = await PitchBranch.find({})
+        .where('_id').equals(req.params.id)
+        .where('owner').equals(userId)
+        .populate(
+            path='owner',
+            match = { owner: req.payload.userId },
+        )
+
+        if (pitchBranch.length === 0 && !isAdmin) {
             return res.status(403).json({
                 success: false,
-                message: `You don't have permission`,
+                message: 'Not found',
             })
         }
-
-        const pitchBranch = await PitchBranch.findById(req.params.id).populate(
+        // nếu là admin thì get luôn
+        if(isAdmin){
+        pitchBranch = await PitchBranch.findById(req.params.id).populate(
             'owner'
         )
+        }
+
         res.status(200).json({
             success: true,
             message: 'Get successfully!',
@@ -112,8 +176,9 @@ router.get('/', verifyToken, async (req, res) => {
     try {
         // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
-        const { owner } = req.body
-        if (!isAdmin && userId !== owner) {
+        // const { owner } = req.body
+        
+        if (!isAdmin) {
             return res.status(403).json({
                 success: false,
                 message: `You don't have permission`,
@@ -145,17 +210,22 @@ router.get('/', verifyToken, async (req, res) => {
  */
 router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     try {
-        // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
-        const { owner } = req.body
-        if (!isAdmin && userId !== owner) {
-            return res.status(403).json({
-                success: false,
-                message: `You don't have permission`,
-            })
+
+        let pitchBranch = await PitchBranch.findById(req.params.id)
+        .where('owner').equals(userId)
+        .populate(
+            path='owner',
+            match = { owner: req.payload.userId },
+        )
+
+        if(isAdmin){
+            pitchBranch = await PitchBranch.findById(req.params.id)
+            .populate(
+                path='owner',
+            )
         }
 
-        const pitchBranch = await PitchBranch.findById(req.params.id)
         if (!pitchBranch) {
             return res.status(404).json({
                 success: false,
@@ -168,6 +238,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Delete successfully!',
+            pitchBranch
         })
     } catch (error) {
         res.status(500).json({
@@ -177,6 +248,8 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         })
     }
 })
+
+
 
 /**
  * @PUT /api/pitchBranch/:id
@@ -220,5 +293,6 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         })
     }
 })
+
 
 module.exports = router

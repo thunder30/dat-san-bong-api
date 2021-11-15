@@ -105,6 +105,19 @@ const validateGetById = (req, res, next) => {
     validateResult(req, res, next)
 }
 
+const validateGetByUserId = (req, res, next) => {
+
+    // check id
+    const id = req.params.id
+    if (!ObjectId.isValid(id))
+    return res.status(400).json({
+        success: false,
+        message: '_id invalid',
+    })
+
+    validateResult(req, res, next)
+}
+
 const validateResult = (req, res, next) => {
     // Check validate body
     const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
@@ -126,4 +139,4 @@ const validateResult = (req, res, next) => {
 
 
 
-module.exports = { validatePost, validateDelete, validateGetById, validatePut }
+module.exports = { validatePost, validateDelete, validateGetById, validatePut,validateGetByUserId }
