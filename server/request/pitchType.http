@@ -1,0 +1,37 @@
+###
+GET http://localhost:5000/api/pitchtype
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg5MTYxNSwiZXhwIjoxNjM2ODk1MjE1fQ.oFowJI4boQWiV1EZL7NXfHBNLPHz9dY-RfBRA4v86oQ
+
+###
+POST http://localhost:5000/api/pitchtype
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg4MjY3OCwiZXhwIjoxNjM2ODg2Mjc4fQ.6sra4hoSKuirY98G3L4Q1TmO7kHyVu5xEm_UOVs0xEY
+Content-Type: application/json
+
+{
+    "displayName": " Sân 7 ",
+    "description": "Sân này có 7 người",
+    "pitchBranch":"618f6d86d1d92d1149e4c454"
+}
+
+###
+PUT http://localhost:5000/api/pitchtype/6190cf8840851e03ca987d2a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg3ODgwMCwiZXhwIjoxNjM2ODgyNDAwfQ.iaPem6zvUTLW74YABbc0xb7xKjZ85tqVRp-Hw5bLRqk
+Content-Type: application/json
+
+{
+    "displayName": "Sân 7",
+    "description": "Sân này có 8 người",
+    "pitchBranch":"618f6d86d1d92d1149e4c454"
+}
+
+###
+DELETE http://localhost:5000/api/pitchtype/6190cb37f14f073c8c79e960
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg3ODgwMCwiZXhwIjoxNjM2ODgyNDAwfQ.iaPem6zvUTLW74YABbc0xb7xKjZ85tqVRp-Hw5bLRqk
+
+###
+GET http://localhost:5000/api/pitchtype/6190cf8840851e03ca987d2a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg5MTYxNSwiZXhwIjoxNjM2ODk1MjE1fQ.oFowJI4boQWiV1EZL7NXfHBNLPHz9dY-RfBRA4v86oQ
+
+###
+GET http://localhost:5000/api/pitchtype/user/618e0c52a0b76f677e587e38
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg5MTYxNSwiZXhwIjoxNjM2ODk1MjE1fQ.oFowJI4boQWiV1EZL7NXfHBNLPHz9dY-RfBRA4v86oQ

@@ -3,6 +3,7 @@ const roleRouter = require('./role.routes')
 const userRouter = require('./user.routes')
 const timeRouter = require('./time.routes')
 const pitchBranchRouter = require('./pitchBranch.routes')
+const pitchTypeRouter = require('./pitchType.routes')
 
 
 function routes(app) {
@@ -20,6 +21,9 @@ function routes(app) {
 
     // Router PitchBranch
     app.use('/api/pitchbranch', pitchBranchRouter)
+
+    // Router PitchBranch
+    app.use('/api/pitchtype', pitchTypeRouter)
 
     // Home
     app.get('/', (req, res) => {
