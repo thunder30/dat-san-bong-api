@@ -17,15 +17,52 @@ const validatePost = (req, res, next) => {
 
 const validateGetById = (req, res, next) => {
 
+    // check id
+    const id = req.params.id
+    if (!ObjectId.isValid(id))
+    return res.status(400).json({
+        success: false,
+        message: '_id invalid',
+    })
+
     validateResult(req, res, next)
 }
 
 const validatePut = (req, res, next) => {
 
+    // check id
+    const id = req.params.id
+    if (!ObjectId.isValid(id))
+    return res.status(400).json({
+        success: false,
+        message: '_id invalid',
+    })
+
     validateResult(req, res, next)
 }
 
 const validateDelete = (req, res, next) => {
+
+    // check id
+    const id = req.params.id
+    if (!ObjectId.isValid(id))
+    return res.status(400).json({
+        success: false,
+        message: '_id invalid',
+    })
+
+    validateResult(req, res, next)
+}
+
+const validateGetByBranch = (req, res, next) => {
+
+    // check id
+    const id = req.params.id
+    if (!ObjectId.isValid(id))
+    return res.status(400).json({
+        success: false,
+        message: '_id invalid',
+    })
 
     validateResult(req, res, next)
 }
@@ -50,4 +87,4 @@ const validateResult = (req, res, next) => {
     next()
 }
 
-module.exports = { validatePost, validateDelete, validateGetById, validatePut }
+module.exports = { validatePost, validateDelete, validateGetById, validatePut, validateGetByBranch }

@@ -1,37 +1,37 @@
 ###
 GET http://localhost:5000/api/pitchtype
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg5MTYxNSwiZXhwIjoxNjM2ODk1MjE1fQ.oFowJI4boQWiV1EZL7NXfHBNLPHz9dY-RfBRA4v86oQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzA0MDQwMCwiZXhwIjoxNjM3MDQ0MDAwfQ.y_JLPRS2mB1z3BPaILCTvJToDb6I97WydqGtL97juDs
 
 ###
 POST http://localhost:5000/api/pitchtype
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg4MjY3OCwiZXhwIjoxNjM2ODg2Mjc4fQ.6sra4hoSKuirY98G3L4Q1TmO7kHyVu5xEm_UOVs0xEY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MDM5MzQyLCJleHAiOjE2MzcwNDI5NDJ9.bdGAVE-EFsOuliAcnEp_a7GbQP0XOU4zmTOvIIvkaNY
 Content-Type: application/json
 
 {
-    "displayName": " Sân 7 ",
-    "description": "Sân này có 7 người",
-    "pitchBranch":"618f6d86d1d92d1149e4c454"
+    "displayName": " Sân 12 ",
+    "description": "Sân này có 12 người",
+    "pitchBranch":"6191ee94a487c92bab48d44e"
 }
 
 ###
 PUT http://localhost:5000/api/pitchtype/6190cf8840851e03ca987d2a
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg3ODgwMCwiZXhwIjoxNjM2ODgyNDAwfQ.iaPem6zvUTLW74YABbc0xb7xKjZ85tqVRp-Hw5bLRqk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzcwMzk2MzAsImV4cCI6MTYzNzA0MzIzMH0.tgnNMXyAkp6jB9kAjXAXCKdqkXr21eytUrrA986m0Vg
 Content-Type: application/json
 
 {
-    "displayName": "Sân 7",
-    "description": "Sân này có 8 người",
-    "pitchBranch":"618f6d86d1d92d1149e4c454"
+    "displayName": "Sân 11",
+    "description": "Sân này có 11 người",
+    "pitchBranch":"6191ee94a487c92bab48d44e"
 }
 
 ###
-DELETE http://localhost:5000/api/pitchtype/6190cb37f14f073c8c79e960
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg3ODgwMCwiZXhwIjoxNjM2ODgyNDAwfQ.iaPem6zvUTLW74YABbc0xb7xKjZ85tqVRp-Hw5bLRqk
+DELETE http://localhost:5000/api/pitchtype/619347615da96bc6c9721f0f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MDM5MzQyLCJleHAiOjE2MzcwNDI5NDJ9.bdGAVE-EFsOuliAcnEp_a7GbQP0XOU4zmTOvIIvkaNY
 
 ###
 GET http://localhost:5000/api/pitchtype/6190cf8840851e03ca987d2a
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg5MTYxNSwiZXhwIjoxNjM2ODk1MjE1fQ.oFowJI4boQWiV1EZL7NXfHBNLPHz9dY-RfBRA4v86oQ
 
 ###
-GET http://localhost:5000/api/pitchtype/user/618e0c52a0b76f677e587e38
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg5MTYxNSwiZXhwIjoxNjM2ODk1MjE1fQ.oFowJI4boQWiV1EZL7NXfHBNLPHz9dY-RfBRA4v86oQ
+GET http://localhost:5000/api/pitchtype/branch/618f6d94ba97307e4e33d33b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzcwMzk2MzAsImV4cCI6MTYzNzA0MzIzMH0.tgnNMXyAkp6jB9kAjXAXCKdqkXr21eytUrrA986m0Vg

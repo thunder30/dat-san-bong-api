@@ -6,7 +6,8 @@ const {
     validatePost,
     validatePut,
     validateDelete,
-    validateGetById
+    validateGetById,
+    validateGetByBranch
 } = require('../middlewares/pitchType')
 const PitchBranch = require('../models/pitchBranch')
 
@@ -20,7 +21,35 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
        //trim request body
         req.body.displayName = req.body.displayName.trim()
         req.body.description = req.body.description.trim()
+    
+        const { isAdmin, userId } = req.payload
         
+        //check if branch of user is owner
+        const _pitchBranch = await PitchBranch.find({})
+        .where('owner').equals(userId)
+        .select('_id')
+        .populate(
+            {
+                path: 'owner',
+                select: 'id',
+                match: {owner: userId}
+            }
+        )
+
+        console.log(_pitchBranch)
+
+        let isOwner
+        isOwner = _pitchBranch.some((value,index) => {
+            return value._id.toString() === req.body.pitchBranch
+        })
+
+        if(!isOwner && !isAdmin){
+            return res.status(403).json({
+                success: false,
+                message: 'You are not owner of this branch!',
+            })
+        }
+
         const pitchType = new PitchType({
             ...req.body
         })
@@ -49,14 +78,37 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
  */
 router.put('/:id', verifyToken, validatePut, async (req, res) => {
     try{
+        const { id } = req.params.id
+        const { isAdmin, userId } = req.payload
+        
+        //check if branch of user is owner
+        const _pitchBranch = await PitchBranch.find({})
+        .where('owner').equals(userId)
+        .select('_id')
+        .populate(
+            {
+                path: 'owner',
+                select: 'id',
+                match: {owner: userId}
+            }
+        )
+
+        let isOwner
+        isOwner = _pitchBranch.some((value,index) => {
+            return value._id.toString() === req.body.pitchBranch
+        })
+
+        if(!isOwner && !isAdmin){
+            return res.status(403).json({
+                success: false,
+                message: 'You are not owner of this branch!',
+            })
+        }
 
         req.body.displayName = req.body.displayName.trim()
         req.body.description = req.body.description.trim()
+        delete req.body.pitchBranch
 
-
-
-
-        const { id } = req.params.id
         const pitchType = {
             ...req.body
         }
@@ -85,8 +137,38 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
 router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     try{
 
+        // //check if branch of user
         const { id } = req.params.id
-        const _pitchType = await PitchType.findOneAndDelete(id)
+        const { isAdmin, userId } = req.payload
+        // const _pitchBranch = await PitchBranch.find({})
+        // .where('owner').equals(userId)
+        // .select('_id')
+        // .populate(
+        //     {
+        //         path: 'owner',
+        //         select: 'id',
+        //         match: {owner: userId}
+        //     }
+        // )
+        // let isOwner
+        // isOwner = _pitchBranch.some((value,index) => {
+        //     return value._id.toString() === req.params.id
+        // })
+
+        // if(!isOwner && !isAdmin){
+        //     return res.status(403).json({
+        //         success: false,
+        //         message: 'You are not owner of this branch!',
+        //     })
+        // }
+
+        const _pitchType = await PitchType.findOneAndDelete({ _id: req.params.id })
+        if(!_pitchType){
+            return res.status(404).json({
+                success: false,
+                message: 'PitchType not found!',
+            })
+        }
         res.status(200).json({
             success: true,
             message: 'Delete successfully!',
@@ -104,30 +186,44 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
 
 
 /**
- * @GET /api/user/:id
- * @description Get all pitchType of user
+ * @GET /api/branch/:id
+ * @description Get all pitchType of branch
  */
- router.get('/user/:id', verifyToken, async (req, res) => {
+ router.get('/branch/:id', verifyToken, validateGetByBranch, async (req, res) => {
     try{
 
-        //get pitchBrand of user
-        const pitchBranches = await PitchBranch.find({ owner: req.params.id })
-        const {owner} = pitchBranches[0]
-        const pitchTypes = await PitchType.find({ pitchBranch: pitchBranches.owner })
-        
-        console.log(pitchBranches)
-        console.log(owner.toString())
-        // console.log(pitchTypes)
+        //check if branch of user
+        const { id } = req.params.id
+        const { isAdmin, userId } = req.payload
+        const _pitchBranch = await PitchBranch.find({})
+        .where('owner').equals(userId)
+        .select('_id')
+        .populate(
+            {
+                path: 'owner',
+                select: 'id',
+                match: {owner: userId}
+            }
+        )
+        let isOwner
+        isOwner = _pitchBranch.some((value,index) => {
+            return value._id.toString() === req.params.id
+        })
 
-        const pitchType = await PitchType.find({}).populate
+        if(!isOwner && !isAdmin){
+            return res.status(403).json({
+                success: false,
+                message: 'You are not owner of this branch!',
+            })
+        }
+
+        const pitchType = await PitchType.find({})
+        .where('pitchBranch').equals(req.params.id)
+        .populate
         ({
             path: 'pitchBranch',
             select: '_id',
-            populate: {
-                path: 'owner', 
-                select: '_id',
-                where: {owner: req.params.id}
-            }
+            match : { pitchBranch: req.params.id },
         })
         res.status(200).json({
             success: true,
@@ -176,6 +272,14 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
  router.get('/', verifyToken, async (req, res) => {
 
     try{
+        const { isAdmin, userId } = req.payload
+        if(!isAdmin){
+            return res.status(403).json({
+                success: false,
+                message: 'You are not admin!',
+            })
+        }
+
         const pitchTypes = await PitchType.find({})
         res.status(200).json({
             success: true,
