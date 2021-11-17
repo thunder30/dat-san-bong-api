@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const PitchBranch = require('../models/pitchBranch')
+const PitchBranch = require('../models/PitchBranch')
 const {
     validatePost,
     validateGetById,
@@ -34,7 +34,7 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         const user = await User.findById(req.body.owner).populate('roles')
 
         //make flat array user by code
-        const userRoles = user.roles.map(role => role.code)
+        const userRoles = user.roles.map((role) => role.code)
         console.log(userRoles)
 
         //if userroles is CHU_SAN
@@ -42,7 +42,7 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             //update user roles by code CHU_SAN
             const dbRoles = await Role.find({ code: { $in: ['CHU_SAN'] } })
             await User.findOneAndUpdate(
-                { _id : req.body.owner },
+                { _id: req.body.owner },
                 {
                     $push: {
                         roles: dbRoles.map((role) => role._id),
@@ -50,9 +50,8 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
                 },
                 { new: true }
             )
-            
         }
-            
+
         const pitchBranch = new PitchBranch({
             ...req.body,
         })
@@ -72,25 +71,22 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
     }
 })
 
-
 /**
  * @GET /api/pitchBranch/owner/:id
  * @description Get a pitchBranch by owner
  */
- router.get('/owner/:id', verifyToken, validateGetByUserId, async (req, res) => {
+router.get('/owner/:id', verifyToken, validateGetByUserId, async (req, res) => {
     try {
-
         const { isAdmin, userId } = req.payload
         // lấy pitchBranch theo params và theo payload id của user
         let pitchBranch = await PitchBranch.find({})
-        .where('owner').equals(userId)
-        .where('owner').equals(req.params.id)
-        .populate(
-            path='owner',
-            match = { owner: req.payload.userId },
-        )
+            .where('owner')
+            .equals(userId)
+            .where('owner')
+            .equals(req.params.id)
+            .populate((path = 'owner'), (match = { owner: req.payload.userId }))
 
-        if(pitchBranch.length === 0 && !isAdmin){
+        if (pitchBranch.length === 0 && !isAdmin) {
             return res.status(404).json({
                 success: false,
                 message: 'Not found',
@@ -100,11 +96,12 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         // if isAdmin
         if (isAdmin) {
             pitchBranch = await PitchBranch.find({})
-            .where('owner').equals(req.params.id)
-            .populate(
-                path='owner',
-                match = { owner: req.payload.userId },
-            )
+                .where('owner')
+                .equals(req.params.id)
+                .populate(
+                    (path = 'owner'),
+                    (match = { owner: req.payload.userId })
+                )
         }
 
         console.log(pitchBranch)
@@ -113,9 +110,6 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             message: 'Get pitchBranch successfully!',
             pitchBranch,
         })
-        
-
-
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -134,12 +128,11 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
         const { isAdmin, userId } = req.payload
         // lấy pitchBranch theo params và theo payload id của user
         let pitchBranch = await PitchBranch.find({})
-        .where('_id').equals(req.params.id)
-        .where('owner').equals(userId)
-        .populate(
-            path='owner',
-            match = { owner: req.payload.userId },
-        )
+            .where('_id')
+            .equals(req.params.id)
+            .where('owner')
+            .equals(userId)
+            .populate((path = 'owner'), (match = { owner: req.payload.userId }))
 
         if (pitchBranch.length === 0 && !isAdmin) {
             return res.status(403).json({
@@ -148,10 +141,10 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
             })
         }
         // nếu là admin thì get luôn
-        if(isAdmin){
-        pitchBranch = await PitchBranch.findById(req.params.id).populate(
-            'owner'
-        )
+        if (isAdmin) {
+            pitchBranch = await PitchBranch.findById(req.params.id).populate(
+                'owner'
+            )
         }
 
         res.status(200).json({
@@ -177,7 +170,7 @@ router.get('/', verifyToken, async (req, res) => {
         // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
         // const { owner } = req.body
-        
+
         if (!isAdmin) {
             return res.status(403).json({
                 success: false,
@@ -213,16 +206,13 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         const { isAdmin, userId } = req.payload
 
         let pitchBranch = await PitchBranch.findById(req.params.id)
-        .where('owner').equals(userId)
-        .populate(
-            path='owner',
-            match = { owner: req.payload.userId },
-        )
+            .where('owner')
+            .equals(userId)
+            .populate((path = 'owner'), (match = { owner: req.payload.userId }))
 
-        if(isAdmin){
-            pitchBranch = await PitchBranch.findById(req.params.id)
-            .populate(
-                path='owner',
+        if (isAdmin) {
+            pitchBranch = await PitchBranch.findById(req.params.id).populate(
+                (path = 'owner')
             )
         }
 
@@ -238,7 +228,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Delete successfully!',
-            pitchBranch
+            pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
@@ -248,8 +238,6 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         })
     }
 })
-
-
 
 /**
  * @PUT /api/pitchBranch/:id
@@ -293,6 +281,5 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         })
     }
 })
-
 
 module.exports = router

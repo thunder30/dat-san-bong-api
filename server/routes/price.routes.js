@@ -7,18 +7,18 @@ const {
     validatePut,
     validateGetByid,
 } = require('../middlewares/price')
-const Price = require('../models/price')
+const Price = require('../models/Price')
 
 /**
  * @POST /api/price
  * @desc Add new price
  */
 router.post('/', verifyToken, validatePost, async (req, res) => {
-    try{
-        const { pitchType, time, price} = req.body
+    try {
+        const { pitchType, time, price } = req.body
 
         const valprice = await Price.findOne({ pitchType, time })
-        if(valprice) {
+        if (valprice) {
             return res.status(400).json({
                 success: false,
                 message: 'Price already exists',
@@ -28,21 +28,19 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         const newPrice = await Price.create({
             pitchType,
             time,
-            price
+            price,
         })
 
-        return res.status(201).json(
-            {
-                success: true,
-                message: 'Add new price success',
-                newPrice
-            }
-        ) 
-    }catch(error){
+        return res.status(201).json({
+            success: true,
+            message: 'Add new price success',
+            newPrice,
+        })
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
-            error: error.message
+            error: error.message,
         })
     }
 })
@@ -52,28 +50,27 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
  * @desc Update price by id
  */
 router.put('/:id', verifyToken, validatePut, async (req, res) => {
-    try{
-        const {id} = req.params
-        const price = await Price.findByIdAndUpdate(id, req.body.price, {new: true})
-        if(!price){
+    try {
+        const { id } = req.params
+        const price = await Price.findByIdAndUpdate(id, req.body.price, {
+            new: true,
+        })
+        if (!price) {
             return res.status(404).json({
                 success: false,
-                message: 'Price not found'
+                message: 'Price not found',
             })
         }
-        return res.status(200).json(
-            {
-                success: true,
-                message: 'Update price success',
-                price
-            }
-        )
-
-    }catch(error){
+        return res.status(200).json({
+            success: true,
+            message: 'Update price success',
+            price,
+        })
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
-            error: error.message
+            error: error.message,
         })
     }
 })
@@ -83,74 +80,65 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
  * @desc Delete price by id
  */
 router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
-    try{
-        const {id} = req.params
+    try {
+        const { id } = req.params
         await Price.findByIdAndDelete(id)
-        return res.status(200).json(
-            {
-                success: true,
-                message: 'Delete price success'
-            }
-        )
-    }
-    catch(error){
+        return res.status(200).json({
+            success: true,
+            message: 'Delete price success',
+        })
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
-            error: error.message
+            error: error.message,
         })
     }
 })
-
 
 /**
  * @GET /api/price/:id
  * @desc Get price by id
  */
- router.get('/:id', verifyToken, validateGetByid, async (req, res) => {
-    try{
-        const {id} = req.params
+router.get('/:id', verifyToken, validateGetByid, async (req, res) => {
+    try {
+        const { id } = req.params
         const price = await Price.findById(id).populate(
-            path = 'pitchType time',
-            select = '-pitchBranch'
-            )
-        return res.status(200).json(
-            {
-                success: true,
-                message: 'Get price success',
-                price
-            }
+            (path = 'pitchType time'),
+            (select = '-pitchBranch')
         )
-    }
-    catch(error){
+        return res.status(200).json({
+            success: true,
+            message: 'Get price success',
+            price,
+        })
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
-            error: error.message
+            error: error.message,
         })
     }
 })
-
 
 /**
  * @GET /api/price?pitchType=123
  * @desc Get price by pitchType
  */
 router.get('/', verifyToken, async (req, res) => {
-    try{
-
+    try {
         //if req.query isEmpty
-        if(Object.keys(req.query).length === 0){
-            const {isAdmin} = req.payload
-            if(!isAdmin){
+        if (Object.keys(req.query).length === 0) {
+            const { isAdmin } = req.payload
+            if (!isAdmin) {
                 return res.status(403).json({
                     success: false,
-                    message: 'You are not admin'
+                    message: 'You are not admin',
                 })
             }
             //get all pitchType
             let _price = await Price.find({})
-            //return 
+            //return
             return res.status(200).json({
                 success: true,
                 message: 'Get all price successfully!',
@@ -160,7 +148,7 @@ router.get('/', verifyToken, async (req, res) => {
 
         const pitchTypeId = req.query.pitchType
 
-        if(!pitchTypeId){
+        if (!pitchTypeId) {
             return res.status(400).json({
                 success: false,
                 message: 'Bad request!',
@@ -168,25 +156,23 @@ router.get('/', verifyToken, async (req, res) => {
         }
 
         const prices = await Price.find({})
-        .where('pitchType').equals(pitchTypeId)
-        .populate({
-            path: 'pitchType time',
-            select: '-pitchBranch',
-            match: {pitchType : pitchTypeId}
+            .where('pitchType')
+            .equals(pitchTypeId)
+            .populate({
+                path: 'pitchType time',
+                select: '-pitchBranch',
+                match: { pitchType: pitchTypeId },
+            })
+        return res.status(200).json({
+            success: true,
+            message: 'Get prices success',
+            prices,
         })
-        return res.status(200).json(
-            {
-                success: true,
-                message: 'Get prices success',
-                prices
-            }
-        )
-
-    }catch(error){
+    } catch (error) {
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
-            error: error.message
+            error: error.message,
         })
     }
 })
