@@ -1,0 +1,37 @@
+
+###
+POST http://localhost:5000/api/price
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MTIzNjc0LCJleHAiOjE2MzcxMjcyNzR9.WPs7Cm0pKaUI6KFoJfBOYhLRR3mwg2pc5pRyssjhmRw
+Content-Type: application/json
+
+{
+    "pitchType": "6193475a5da96bc6c9721f0a",
+    "time": "618f41d01299ceb312bf5cc3",
+    "price": "2000000"
+}
+
+###
+
+GET http://localhost:5000/api/price
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzA1MzUzMywiZXhwIjoxNjM3MDU3MTMzfQ.1u7yKdTv3_hf96SdOr0Kzsvi4JZdY3m8nf5FfQcww_Y
+
+###
+GET http://localhost:5000/api/price/6193536844ab97ae11537db7
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MDUzNTExLCJleHAiOjE2MzcwNTcxMTF9.5qp6tFAVnmKDGiWG7-izy3WeWQ_-XMNRrl2tV5Y81Io
+
+###
+PUT  http://localhost:5000/api/price/6193536844ab97ae11537db7
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MTIzNjc0LCJleHAiOjE2MzcxMjcyNzR9.WPs7Cm0pKaUI6KFoJfBOYhLRR3mwg2pc5pRyssjhmRw
+Content-Type: application/json
+
+{
+    "pitchType": "6193475a5da96bc6c9721f0a",
+    "time": "618f41d01299ceb312bf5cc2",
+    "price": "2000"
+}
+
+###
+GET  http://localhost:5000/api/price
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzE0MDA4MSwiZXhwIjoxNjM3MTQzNjgxfQ.e25-MLU4PhZ7uox8ZqVZf7lXRKSj5IcRoHcnPMzDWaE
+
+
