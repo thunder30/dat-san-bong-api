@@ -8,7 +8,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZ
 Content-Type: application/json
 
 {
-    "displayName": " Sân 12 ",
+    "displayName": "Sân 12",
     "description": "Sân này có 12 người",
     "pitchBranch":"6191ee94a487c92bab48d44e"
 }
@@ -33,5 +33,5 @@ GET http://localhost:5000/api/pitchtype/6190cf8840851e03ca987d2a
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg5MTYxNSwiZXhwIjoxNjM2ODk1MjE1fQ.oFowJI4boQWiV1EZL7NXfHBNLPHz9dY-RfBRA4v86oQ
 
 ###
-GET http://localhost:5000/api/pitchtype/branch/618f6d94ba97307e4e33d33b
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzcwMzk2MzAsImV4cCI6MTYzNzA0MzIzMH0.tgnNMXyAkp6jB9kAjXAXCKdqkXr21eytUrrA986m0Vg
+GET http://localhost:5000/api/pitchtype?branchId=6191ee94a487c92bab48d44e&Bra=123
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MTM3OTYyLCJleHAiOjE2MzcxNDE1NjJ9.RTbcZfN5VYZT2MutEh8M9iTzFJDQLN1Wy9IqmOaOoys

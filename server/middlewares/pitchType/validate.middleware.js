@@ -56,13 +56,13 @@ const validateDelete = (req, res, next) => {
 
 const validateGetByBranch = (req, res, next) => {
 
-    // check id
-    const id = req.params.id
-    if (!ObjectId.isValid(id))
-    return res.status(400).json({
-        success: false,
-        message: '_id invalid',
-    })
+    // // check id
+    // const id = req.params.id
+    // if (!ObjectId.isValid(id))
+    // return res.status(400).json({
+    //     success: false,
+    //     message: '_id invalid',
+    // })
 
     validateResult(req, res, next)
 }

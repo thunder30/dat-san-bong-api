@@ -6,7 +6,7 @@ const PitchTypeSchema = new Schema(
     code: { type: String, default: '' },
     displayName : { type: String, required: true },
     description : { type: String, default: '' },
-    isActive: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
     pitchBranch:
         {
             type: Schema.Types.ObjectId,

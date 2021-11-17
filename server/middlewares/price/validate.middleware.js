@@ -61,14 +61,6 @@ const validatePut = (req, res, next) => {
         })
     }
 
-    if(price < 1000){
-        return res.status(400).json({
-            success: false,
-            message: 'Price must be greater than 1000',
-        })
-    }
-    
-
     validateResult(req, res, next)
 }
 
