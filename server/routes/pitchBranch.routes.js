@@ -11,7 +11,6 @@ const {
 const { verifyToken } = require('../middlewares/auth')
 const User = require('../models/User')
 const Role = require('../models/Role')
-const { findById } = require('../models/pitchBranch')
 
 /**
  * @POST /api/pitchBranch

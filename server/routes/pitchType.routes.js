@@ -9,7 +9,7 @@ const {
     validateGetById,
     validateGetByBranch,
 } = require('../middlewares/pitchType')
-const PitchBranch = require('../models/pitchBranch')
+const PitchBranch = require('../models/PitchBranch')
 
 /**
  * @POST /api/pitchType
