@@ -8,6 +8,7 @@ const {
     validateRegister,
     emailVerifyToken,
     verifyToken,
+    resetVerifyToken,
 } = require('../middlewares/auth')
 const generateToken = require('../utils/generateToken')
 const { sendMailVerify, sendMailReset } = require('../helpers/mailVerify')
@@ -273,7 +274,7 @@ router.post('/reset/:token', resetVerifyToken, async (req, res) => {
 router.get('/', verifyToken, async (req, res) => {
     try {
         const { userId } = req.payload
-        const user = await User.findById(userId)
+        const user = await User.findById(userId).select('-password')
         if (!user) {
             return res.status(404).json({
                 success: false,
