@@ -4,6 +4,7 @@ const userRouter = require('./user.routes')
 const timeRouter = require('./time.routes')
 const pitchBranchRouter = require('./pitchBranch.routes')
 const pitchTypeRouter = require('./pitchType.routes')
+const priceRouter = require('./price.routes')
 
 
 function routes(app) {
@@ -24,6 +25,9 @@ function routes(app) {
 
     // Router PitchBranch
     app.use('/api/pitchtype', pitchTypeRouter)
+
+    // Router Price
+    app.use('/api/price', priceRouter)
 
     // Home
     app.get('/', (req, res) => {
