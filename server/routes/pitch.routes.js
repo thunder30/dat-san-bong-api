@@ -17,9 +17,6 @@ const { route } = require('./price.routes')
  */
 router.post('/', verifyToken, validatePost, async (req, res) => {
     try{
-        //trim request body
-        req.body.displayName = req.body.displayName.trim()
-        req.body.description = req.body.description.trim()
 
         const pitch = new Pitch({
             ...req.body,
@@ -41,68 +38,11 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
 })
 
 /**
- * @GET /api/pitch
- * @desc Get all pitches
- */
-router.get('/', verifyToken, async (req, res) => {
-    try{
-
-        //check if user is admin
-        const {isAdmin} = req.payload.isAdmin
-        if(!isAdmin){
-            return res.status(403).json({
-                success: false,
-                message: 'You are not Admin !',
-            })
-        }
-
-        let pitches = await Pitch.find()
-        res.status(200).json({
-            success: true,
-            message: 'Get successfully!',
-            pitches,
-        })
-    }
-    catch(error){
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            error: error.message
-        })
-    }
-})
-
-/**
- * @GET /api/pitch/:id
- * @desc Get a pitch by id
- */
-router.get('/:id', verifyToken, validateGetById, async (req, res) => {
-    try{
-        let pitch = await Pitch.findById(req.params.id).populate(path = 'pitchType', select = '-pitchBranch')
-        res.status(200).json({
-            success: true,
-            message: 'Get successfully!',
-            pitch,
-        })
-    }
-    catch(error){
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            error: error.message
-        })
-    }
-})
-
-/**
  * @PUT /api/pitch/:id
  * @desc Update a pitch by id
  */
 router.put('/:id', verifyToken, validatePut, async (req, res) => {
     try{
-        //trim request body
-        req.body.displayName = req.body.displayName.trim()
-        req.body.description = req.body.description.trim()
         
         let pitch = await Pitch.findByIdAndUpdate(req.params.id, req.body, { new: true })
         res.status(200).json({
@@ -150,13 +90,94 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     }
 })
 
+
+// /**
+//  * @GET /api/pitch
+//  * @desc Get all pitches
+//  */
+//  router.get('/', verifyToken, async (req, res) => {
+//     try{
+
+//         //check if user is admin
+//         const {isAdmin} = req.payload.isAdmin
+//         if(!isAdmin){
+//             return res.status(403).json({
+//                 success: false,
+//                 message: 'You are not Admin !',
+//             })
+//         }
+
+//         let pitches = await Pitch.find()
+//         res.status(200).json({
+//             success: true,
+//             message: 'Get successfully!',
+//             pitches,
+//         })
+//     }
+//     catch(error){
+//         res.status(500).json({
+//             success: false,
+//             message: 'Internal server error!',
+//             error: error.message
+//         })
+//     }
+// })
+
 /**
- * @GET /api/pitch/pitchType/:id
+ * @GET /api/pitch/:id
+ * @desc Get a pitch by id
+ */
+router.get('/:id', verifyToken, validateGetById, async (req, res) => {
+    try{
+        let pitch = await Pitch.findById(req.params.id).populate(path = 'pitchType', select = '-pitchBranch')
+        res.status(200).json({
+            success: true,
+            message: 'Get successfully!',
+            pitch,
+        })
+    }
+    catch(error){
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+/**
+ * @GET /api/pitch?pitchType=:pitchType
  * @desc Get all pitches by pitchType
  */
-router.get('/pitchType/:id', verifyToken, validateGetByPitchType, async (req, res) => {
+router.get('/', verifyToken, validateGetByPitchType, async (req, res) => {
     try{
-        let pitches = await Pitch.find({ pitchType: req.params.id })
+        if(Object.keys(req.query).length === 0){
+           //check if user is admin
+            const {isAdmin} = req.payload.isAdmin
+            if(!isAdmin){
+                return res.status(403).json({
+                    success: false,
+                    message: 'You are not Admin !',
+                })
+            }
+            let pitches = await Pitch.find()
+            res.status(200).json({
+                success: true,
+                message: 'Get successfully!',
+                pitches,
+            })
+        }
+
+        const pitchTypeId = req.query.pitchType
+
+        if(!pitchTypeId){
+            return res.status(400).json({
+                success: false,
+                message: 'Bad request',
+            })
+        }
+
+        let pitches = await Pitch.find({ pitchType: pitchTypeId })
         res.status(200).json({
             success: true,
             message: 'Get successfully!',

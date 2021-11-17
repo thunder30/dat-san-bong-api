@@ -35,70 +35,10 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             {
                 success: true,
                 message: 'Add new price success',
-                // newPrice
+                newPrice
             }
         ) 
     }catch(error){
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            error: error.message
-        })
-    }
-})
-
-/**
- * @GET /api/price
- * @desc Get all price
- */
-router.get('/', verifyToken, async (req, res) => {
-    try{
-
-        const {isAdmin} = req.payload
-        if(!isAdmin){
-            return res.status(403).json({
-                success: false,
-                message: 'You are not admin'
-            })
-        }
-
-        const prices = await Price.find()
-        return res.status(200).json(
-            {
-                success: true,
-                message: 'Get all price success',
-                prices
-            }
-        )
-    }catch(error){
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            error: error.message
-        })
-    }
-})
-
-/**
- * @GET /api/price/:id
- * @desc Get price by id
- */
-router.get('/:id', verifyToken, validateGetByid, async (req, res) => {
-    try{
-        const {id} = req.params
-        const price = await Price.findById(id).populate(
-            path = 'pitchType time',
-            select = '-pitchBranch'
-            )
-        return res.status(200).json(
-            {
-                success: true,
-                message: 'Get price success',
-                price
-            }
-        )
-    }
-    catch(error){
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
@@ -162,25 +102,83 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     }
 })
 
+
 /**
- * @GET /api/price/pitchType/:id
- * @desc Get price by pitchType
+ * @GET /api/price/:id
+ * @desc Get price by id
  */
-router.get('/pitchType/:id', verifyToken, async (req, res) => {
+ router.get('/:id', verifyToken, validateGetByid, async (req, res) => {
     try{
         const {id} = req.params
-        const price = await Price.find({})
-        .where('pitchType').equals(id)
-        .populate({
-            path: 'pitchType time',
-            select: '-pitchBranch',
-            match: {pitchType : id}
-        })
+        const price = await Price.findById(id).populate(
+            path = 'pitchType time',
+            select = '-pitchBranch'
+            )
         return res.status(200).json(
             {
                 success: true,
                 message: 'Get price success',
                 price
+            }
+        )
+    }
+    catch(error){
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+
+/**
+ * @GET /api/price?pitchType=123
+ * @desc Get price by pitchType
+ */
+router.get('/', verifyToken, async (req, res) => {
+    try{
+
+        //if req.query isEmpty
+        if(Object.keys(req.query).length === 0){
+            const {isAdmin} = req.payload
+            if(!isAdmin){
+                return res.status(403).json({
+                    success: false,
+                    message: 'You are not admin'
+                })
+            }
+            //get all pitchType
+            let _price = await Price.find({})
+            //return 
+            return res.status(200).json({
+                success: true,
+                message: 'Get all price successfully!',
+                _price,
+            })
+        }
+
+        const pitchTypeId = req.query.pitchType
+
+        if(!pitchTypeId){
+            return res.status(400).json({
+                success: false,
+                message: 'Bad request!',
+            })
+        }
+
+        const prices = await Price.find({})
+        .where('pitchType').equals(pitchTypeId)
+        .populate({
+            path: 'pitchType time',
+            select: '-pitchBranch',
+            match: {pitchType : pitchTypeId}
+        })
+        return res.status(200).json(
+            {
+                success: true,
+                message: 'Get prices success',
+                prices
             }
         )
 
