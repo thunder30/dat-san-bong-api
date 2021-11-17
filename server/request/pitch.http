@@ -1,0 +1,40 @@
+POST http://localhost:5000/api/pitch
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MTI5NzM0LCJleHAiOjE2MzcxMzMzMzR9.iCXmDVV8ypGud1pdvtGsgA5jKbAk0AByzrluim9KHWA
+Content-Type: application/json
+
+{
+    "displayName": "Sân KuTỉn",
+    "description": "Sân này xịn nhìn",
+    "pitchType": "6194a41c3131eaf3927bf4d2"
+
+}
+
+###
+GET http://localhost:5000/api/pitch
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MTI5NzM0LCJleHAiOjE2MzcxMzMzMzR9.iCXmDVV8ypGud1pdvtGsgA5jKbAk0AByzrluim9KHWA
+
+###
+GET http://localhost:5000/api/pitch/61949e17a945c7b10652e45d
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MTI5NzM0LCJleHAiOjE2MzcxMzMzMzR9.iCXmDVV8ypGud1pdvtGsgA5jKbAk0AByzrluim9KHWA
+
+###
+PUT http://localhost:5000/api/pitch/61949e17a945c7b10652e45d
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MTI5NzM0LCJleHAiOjE2MzcxMzMzMzR9.iCXmDVV8ypGud1pdvtGsgA5jKbAk0AByzrluim9KHWA
+Content-Type: application/json
+
+{
+    "displayName": "Sân C rồi",
+    "description": "Sân này kế cây bự á",
+    "pitchType": "6193475a5da96bc6c9721f0a"
+}
+
+###
+DELETE http://localhost:5000/api/pitch/6194a08573b363e9184ac8af
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MTI5NzM0LCJleHAiOjE2MzcxMzMzMzR9.iCXmDVV8ypGud1pdvtGsgA5jKbAk0AByzrluim9KHWA
+
+###
+GET http://localhost:5000/api/pitch/pitchType/6194a41c3131eaf3927bf4d2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MTI5NzM0LCJleHAiOjE2MzcxMzMzMzR9.iCXmDVV8ypGud1pdvtGsgA5jKbAk0AByzrluim9KHWA
+
+
+
