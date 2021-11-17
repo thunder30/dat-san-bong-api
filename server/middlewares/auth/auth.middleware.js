@@ -23,6 +23,7 @@ const verifyToken = (req, res, next) => {
     const token = authHeader && authHeader.split(' ')[1]
     if (!token)
         return res.status(401).json({
+            success: false,
             message: 'Access token is not found!',
         })
 
@@ -77,4 +78,19 @@ const emailVerifyToken = (req, res, next) => {
     }
 }
 
-module.exports = { verifyToken, emailVerifyToken }
+const resetVerifyToken = (req, res, next) => {
+    try {
+        const token = req.params.token
+        console.log('Reset verify token - ', token)
+        const payload = jwt.verify(token, process.env.SECRET_KEY)
+        //req.userId = userId
+        req.payload = {
+            ...payload,
+        }
+        next()
+    } catch (error) {
+        return catchError(error, res, 'reset')
+    }
+}
+
+module.exports = { verifyToken, emailVerifyToken, resetVerifyToken }

@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const { validationResult } = require('express-validator')
 const hashPassword = require('../utils/hashPassword')
 const User = require('../models/User')
 const Role = require('../models/Role')
@@ -8,9 +7,12 @@ const {
     validateLogin,
     validateRegister,
     emailVerifyToken,
+    verifyToken,
+    resetVerifyToken,
 } = require('../middlewares/auth')
 const generateToken = require('../utils/generateToken')
-const { sendMailVerify } = require('../helpers/mailVerify')
+const { sendMailVerify, sendMailReset } = require('../helpers/mailVerify')
+const { isValidObjectId } = require('mongoose')
 /**
  * @POST /api/auth/login
  * @desc
@@ -178,8 +180,15 @@ router.get('/confirm/:token', emailVerifyToken, async (req, res) => {
 
         const user = await User.findById(userId)
 
+        if (!user)
+            return res.status(404).json({
+                success: false,
+                message: 'User not found!',
+            })
+
         if (user.isVerified) {
             return res.status(400).json({
+                success: false,
                 message: 'User is email verified.',
             })
         }
@@ -199,4 +208,90 @@ router.get('/confirm/:token', emailVerifyToken, async (req, res) => {
     }
 })
 
+/**
+ * @GET /api/auth/reset/:id
+ * @desc Send email reset password
+ */
+router.get('/reset/:id', async (req, res) => {
+    try {
+        if (!isValidObjectId(req.params.id))
+            return res.status(400).json({
+                succes: false,
+                message: 'User not exists!',
+            })
+
+        const user = await User.findById(req.params.id)
+        if (!user)
+            return res.status(404).json({
+                success: false,
+                message: 'User not found!',
+            })
+
+        // send mail reset
+        sendMailReset(req, user.email, user._id)
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error,
+        })
+    }
+})
+
+/**
+ * @POST /api/auth/reset/:token
+ * @desc verify reset password
+ */
+router.post('/reset/:token', resetVerifyToken, async (req, res) => {
+    try {
+        const { userId } = req.payload
+
+        const user = await User.findById(userId)
+
+        if (!user)
+            return res.status(404).json({
+                success: false,
+                message: 'User not found!',
+            })
+
+        res.status(200).json({
+            success: true,
+            message: 'Verify successfully!',
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error,
+        })
+    }
+})
+
+/**
+ * @GET /api/auth
+ * @desc Get info user by token
+ */
+router.get('/', verifyToken, async (req, res) => {
+    try {
+        const { userId } = req.payload
+        const user = await User.findById(userId).select('-password')
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found!',
+            })
+        }
+        res.status(200).json({
+            success: true,
+            message: 'Authenticated!',
+            user,
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error,
+        })
+    }
+})
 module.exports = router
