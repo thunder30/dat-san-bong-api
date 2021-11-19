@@ -151,9 +151,10 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
  */
 router.get('/', verifyToken, validateGetByPitchType, async (req, res) => {
     try{
+        const isAdmin = req.payload.isAdmin
         if(Object.keys(req.query).length === 0){
            //check if user is admin
-            const {isAdmin} = req.payload.isAdmin
+            console.log(isAdmin)
             if(!isAdmin){
                 return res.status(403).json({
                     success: false,
@@ -161,7 +162,7 @@ router.get('/', verifyToken, validateGetByPitchType, async (req, res) => {
                 })
             }
             let pitches = await Pitch.find()
-            res.status(200).json({
+            return res.status(200).json({
                 success: true,
                 message: 'Get successfully!',
                 pitches,

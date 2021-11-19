@@ -1,0 +1,30 @@
+###
+POST http://localhost:5000/api/status
+Content-Type: application/json
+
+{
+    "status": "ST1",
+    "description": "Đang chờ checkin"
+}
+
+###
+POST http://localhost:5000/api/status
+Content-Type: application/json
+
+{
+    "status": "ST2",
+    "description": "Đã hủy"
+}
+
+###
+POST http://localhost:5000/api/status
+Content-Type: application/json
+
+{
+    "status": "ST3",
+    "description": "Đang đá"
+}
+
+###
+GET http://localhost:5000/api/status
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MzAyNTQ1LCJleHAiOjE2MzczMDYxNDV9.DfwykWZrOkJmvsmtKiOIppg7fXkn2oIUfzEbzkCToWo

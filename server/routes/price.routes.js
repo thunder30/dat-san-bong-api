@@ -138,10 +138,10 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
  */
 router.get('/', verifyToken, async (req, res) => {
     try{
-
+        const isAdmin = req.payload.isAdmin
+        console.log(isAdmin)
         //if req.query isEmpty
         if(Object.keys(req.query).length === 0){
-            const {isAdmin} = req.payload
             if(!isAdmin){
                 return res.status(403).json({
                     success: false,

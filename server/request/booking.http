@@ -1,0 +1,42 @@
+POST http://localhost:5000/api/booking
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+Content-Type: application/json
+
+{
+    "startDate": "20/11",
+    "endDate": "20/11",
+    "total": "20000000",
+    "isPaid": true,
+    "customer": "61975b345189c10b99d74038"
+
+}
+
+###
+GET http://localhost:5000/api/booking
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+
+###
+GET http://localhost:5000/api/booking?customerId=6191ecfb29e45fcfe777c478
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+
+###
+GET http://localhost:5000/api/booking/619743880b34ce1c4b933c59
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+
+###
+PUT http://localhost:5000/api/booking/619743880b34ce1c4b933c59
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+Content-Type: application/json
+
+{
+    "startDate": "20/11",
+    "endDate": "20/11",
+    "total": "30000000",
+    "isPaid": true,
+    "customer": "6191ecfb29e45fcfe777c478"
+}
+
+###
+DELETE http://localhost:5000/api/booking/61974575a491e8f384c7cf35
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+
