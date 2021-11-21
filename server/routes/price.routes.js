@@ -7,7 +7,7 @@ const {
     validatePut,
     validateGetByid,
 } = require('../middlewares/price')
-const Price = require('../models/price')
+const Price = require('../models/Price')
 
 /**
  * @POST /api/price

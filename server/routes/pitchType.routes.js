@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const PitchType = require('../models/pitchType')
+const PitchType = require('../models/PitchType')
 const { verifyToken } = require('../middlewares/auth')
 const {
     validatePost,
@@ -9,7 +9,7 @@ const {
     validateGetById,
     validateGetByBranch
 } = require('../middlewares/pitchType')
-const PitchBranch = require('../models/pitchBranch')
+const PitchBranch = require('../models/PitchBranch')
 
 
 /**

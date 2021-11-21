@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const PitchBranch = require('../models/pitchBranch')
+const PitchBranch = require('../models/PitchBranch')
 const {
     validatePost,
     validateGetById,
@@ -11,7 +11,11 @@ const {
 const { verifyToken } = require('../middlewares/auth')
 const User = require('../models/User')
 const Role = require('../models/Role')
-const { findById } = require('../models/pitchBranch')
+const Pitch = require('../models/Pitch')
+const PitchType = require('../models/PitchType')
+const Price = require('../models/Price')
+const Time = require('../models/Time')
+// const Price = require('../models/Price')
 
 /**
  * @POST /api/pitchBranch
@@ -62,6 +66,97 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             success: true,
             message: 'Create successfully!',
             _pitchBranch,
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error,
+        })
+    }
+})
+
+
+/**
+ * @Delete /api/pitchBranch/:id
+ * @description Delete a pitchBranch by id
+ */
+ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
+    try {
+        const { isAdmin, userId } = req.payload
+
+        let pitchBranch = await PitchBranch.findById(req.params.id)
+        .where('owner').equals(userId)
+        .populate(
+            path='owner',
+            match = { owner: req.payload.userId },
+        )
+
+        if(isAdmin){
+            pitchBranch = await PitchBranch.findById(req.params.id)
+            .populate(
+                path='owner',
+            )
+        }
+
+        if (!pitchBranch) {
+            return res.status(404).json({
+                success: false,
+                message: 'PitchBranch not found!',
+            })
+        }
+
+        // delete
+        await pitchBranch.remove()
+        res.status(200).json({
+            success: true,
+            message: 'Delete successfully!',
+            pitchBranch
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error,
+        })
+    }
+})
+
+
+
+/**
+ * @PUT /api/pitchBranch/:id
+ * @description Update a pitchBranch by id
+ */
+router.put('/:id', verifyToken, validatePut, async (req, res) => {
+    try {
+        // Verify isAdmin or isOwner
+        const { isAdmin, userId } = req.payload
+        const { owner } = req.body
+        if (!isAdmin && userId !== owner) {
+            return res.status(403).json({
+                success: false,
+                message: `You don't have permission`,
+            })
+        }
+
+        // find pitchBranch
+        const pitchBranch = await PitchBranch.findById(req.params.id)
+        if (!pitchBranch) {
+            return res.status(404).json({
+                success: false,
+                message: 'PitchBranch not found!',
+            })
+        }
+
+        // delete key
+        delete req.body.owner
+
+        // update
+        await pitchBranch.updateOne(req.body)
+        res.status(200).json({
+            success: true,
+            message: 'Update successfully!',
         })
     } catch (error) {
         res.status(500).json({
@@ -169,7 +264,49 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
 })
 
 /**
- * @GET /api/pitchBranch/
+ * @GET /api/pitchBranch/getDetail/:id
+ * @description Get all detail pitchBranch
+ */
+router.get('/getDetail/:id', async (req, res) => {
+    try {
+        const pitchType = await PitchType.find()
+        .where('pitchBranch').equals(req.params.id)
+
+        //sy help
+        var pitchTypes =[]
+        for(var item of pitchType)
+        {
+            // console.log (item._id.toString())
+            var pitch = await Pitch.find({pitchType: item._id.toString()}).select('_id displayName description isActive pitchType')
+
+            var price = await Price.find({pitchType: item._id.toString()}).select('_id price time').populate({path : 'time', select : '_id code startTime endTime description'})
+
+            pitchTypes.push({
+                id: item._id.toString(),
+                displayName: item.displayName,
+                description: item.description,
+                pitchs: pitch,
+                prices: price
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Get successfully!',
+            pitchTypes,
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message,
+        })
+    }
+})
+
+/**
+ * @GET /api/pitchBranch?getAsBranch=id
  * @description Get all pitchBranch
  */
 router.get('/', verifyToken, async (req, res) => {
@@ -177,17 +314,10 @@ router.get('/', verifyToken, async (req, res) => {
         // Verify isAdmin or isOwner
         const { isAdmin, userId } = req.payload
         // const { owner } = req.body
-        
-        if (!isAdmin) {
-            return res.status(403).json({
-                success: false,
-                message: `You don't have permission`,
-            })
-        }
 
         const pitchBranch = await PitchBranch.find().populate({
             path: 'owner',
-            select: '_id',
+            select: '-password -accessToken -users',
         })
 
         res.status(200).json({
@@ -204,95 +334,6 @@ router.get('/', verifyToken, async (req, res) => {
     }
 })
 
-/**
- * @Delete /api/pitchBranch/:id
- * @description Delete a pitchBranch by id
- */
-router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
-    try {
-        const { isAdmin, userId } = req.payload
-
-        let pitchBranch = await PitchBranch.findById(req.params.id)
-        .where('owner').equals(userId)
-        .populate(
-            path='owner',
-            match = { owner: req.payload.userId },
-        )
-
-        if(isAdmin){
-            pitchBranch = await PitchBranch.findById(req.params.id)
-            .populate(
-                path='owner',
-            )
-        }
-
-        if (!pitchBranch) {
-            return res.status(404).json({
-                success: false,
-                message: 'PitchBranch not found!',
-            })
-        }
-
-        // delete
-        await pitchBranch.remove()
-        res.status(200).json({
-            success: true,
-            message: 'Delete successfully!',
-            pitchBranch
-        })
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            error,
-        })
-    }
-})
-
-
-
-/**
- * @PUT /api/pitchBranch/:id
- * @description Update a pitchBranch by id
- */
-router.put('/:id', verifyToken, validatePut, async (req, res) => {
-    try {
-        // Verify isAdmin or isOwner
-        const { isAdmin, userId } = req.payload
-        const { owner } = req.body
-        if (!isAdmin && userId !== owner) {
-            return res.status(403).json({
-                success: false,
-                message: `You don't have permission`,
-            })
-        }
-
-        // find pitchBranch
-        const pitchBranch = await PitchBranch.findById(req.params.id)
-        if (!pitchBranch) {
-            return res.status(404).json({
-                success: false,
-                message: 'PitchBranch not found!',
-            })
-        }
-
-        // delete key
-        delete req.body.owner
-
-        // update
-        await pitchBranch.updateOne(req.body)
-        res.status(200).json({
-            success: true,
-            message: 'Update successfully!',
-        })
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            error,
-        })
-    }
-})
 
 
 module.exports = router
