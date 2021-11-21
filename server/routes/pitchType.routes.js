@@ -126,34 +126,29 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
  */
 router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     try{
-
         // //check if branch of user
-        const { id } = req.params.id
+        const id = req.params.id
         const { isAdmin, userId } = req.payload
-        // const _pitchBranch = await PitchBranch.find({})
-        // .where('owner').equals(userId)
-        // .select('_id')
-        // .populate(
-        //     {
-        //         path: 'owner',
-        //         select: 'id',
-        //         match: {owner: userId}
-        //     }
-        // )
-        // let isOwner
-        // isOwner = _pitchBranch.some((value,index) => {
-        //     return value._id.toString() === req.params.id
-        // })
+        const _pitchType = await PitchType.findById(id)
+        .where('owner').equals(userId)
+        .populate(
+                path = 'pitchBranch',
+                select = 'owner',
+                match = {owner: userId}
+        )
+        console.log(userId)
+        console.log(_pitchType.pitchBranch)
+        if(!_pitchType.pitchBranch){
+            return res.status(403).json({
+                success: false,
+                message: 'You are not owner of this branch!',
+            })
+        }
+        // delete from database _pitchType
+        const pitchTypeDel = await PitchType.findByIdAndDelete(id)
 
-        // if(!isOwner && !isAdmin){
-        //     return res.status(403).json({
-        //         success: false,
-        //         message: 'You are not owner of this branch!',
-        //     })
-        // }
-
-        const _pitchType = await PitchType.findOneAndDelete({ _id: req.params.id })
-        if(!_pitchType){
+        // const _pitchType = await PitchType.findOneAndDelete({ _id: req.params.id })
+        if(!pitchTypeDel){
             return res.status(404).json({
                 success: false,
                 message: 'PitchType not found!',
@@ -162,7 +157,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Delete successfully!',
-            _pitchType,
+            pitchTypeDel,
         })
     }
     catch(error){

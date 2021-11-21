@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { validationResult } = require('express-validator')
+const { check, validationResult } = require('express-validator')
 const hashPassword = require('../utils/hashPassword')
 const User = require('../models/User')
 const Role = require('../models/Role')
@@ -8,6 +8,7 @@ const {
     validateLogin,
     validateRegister,
     emailVerifyToken,
+    validateResult,
 } = require('../middlewares/auth')
 const generateToken = require('../utils/generateToken')
 const { sendMailVerify } = require('../helpers/mailVerify')
@@ -15,7 +16,7 @@ const { sendMailVerify } = require('../helpers/mailVerify')
  * @POST /api/auth/login
  * @desc
  */
-router.post('/login', validateLogin, async (req, res) => {
+router.post('/login', validateLogin(), validateResult , async (req, res) => {
     try {
         const { email, password } = req.body
 

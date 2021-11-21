@@ -7,14 +7,15 @@ const validateRegister = (req, res, next) => {
 
 const validateLogin = (req, res, next) => {
     // check Login
-    validateResult(req, res, next)
+    return [check('email',"Email Invalid Format").isEmail()]
+    // validateResult(req, res, next)
 }
 
 const validateResult = (req, res, next) => {
     // Check validate body
     const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
         // Build your resulting errors however you want! String, object, whatever - it works!
-        return `${location}[${param}]: ${msg}`
+        return `${param}: ${msg}`
     }
     const result = validationResult(req).formatWith(errorFormatter)
     if (!result.isEmpty()) {
@@ -28,4 +29,4 @@ const validateResult = (req, res, next) => {
     }
     next()
 }
-module.exports = { validateLogin, validateRegister }
+module.exports = { validateLogin, validateRegister, validateResult }
