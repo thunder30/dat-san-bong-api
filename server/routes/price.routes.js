@@ -8,6 +8,7 @@ const {
     validateGetByid,
 } = require('../middlewares/price')
 const Price = require('../models/Price')
+const PitchType = require('../models/PitchType')
 
 /**
  * @POST /api/price
@@ -19,19 +20,23 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         const { isAdmin, userId } = req.payload
 
         // Check if user is admin
-        const valPriceOwner = await Price.find({})
-        .where('pitchType').equals(pitchType)
-        .where('owner').equals(userId)
+        const valPriceOwner = await PitchType.find({})
+        .where('_id').equals(pitchType)
         .populate(
             {
-                path: 'pitchType',
-                populate: {
-                    path: 'pitchBranch',
-                    match: { owner: userId },
-                }
+                path: 'pitchBranch',
+                match: { owner: userId },
             }
         )
-        if(valPriceOwner.length === 0 && !isAdmin){
+        console.log(valPriceOwner)
+        
+        let isOwner
+        isOwner = valPriceOwner.some((value) => {
+            return value.pitchBranch !== null
+        })
+
+        //check valid user 
+        if(!isOwner && !isAdmin){
             return res.status(400).json({
                 success: false,
                 message: 'You are not owner of this PitchType!',
@@ -47,17 +52,17 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             })
         }
 
-        const newPrice = await Price.create({
-            pitchType,
-            time,
-            price
-        })
+        // const newPrice = await Price.create({
+        //     pitchType,
+        //     time,
+        //     price
+        // })
 
         return res.status(201).json(
             {
                 success: true,
                 message: 'Add new price success',
-                newPrice
+                // newPrice
             }
         ) 
     }catch(error){
@@ -77,6 +82,22 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
     try{
         const {id} = req.params
         const { isAdmin, userId } = req.payload
+
+        const _price = await Price.findById(id)
+        .populate({
+            path: 'pitchType',
+            populate: {
+                path: 'pitchBranch',
+                match: { owner: userId },
+            }
+        })
+
+        if(_price.pitchType.pitchBranch === null && !isAdmin){
+            return res.status(400).json({
+                success: false,
+                message: 'You are not owner of this PitchType!',
+            })
+        }
 
 
         const price = await Price.findByIdAndUpdate(id, req.body.price, {new: true})
@@ -110,6 +131,24 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
 router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     try{
         const {id} = req.params
+        const { isAdmin, userId } = req.payload
+
+        const _price = await Price.findById(id)
+        .populate({
+            path: 'pitchType',
+            populate: {
+                path: 'pitchBranch',
+                match: { owner: userId },
+            }
+        })
+
+        if(!_price.pitchType.pitchBranch && !isAdmin){
+            return res.status(400).json({
+                success: false,
+                message: 'You are not owner of this PitchType!',
+            })
+        }
+
         await Price.findByIdAndDelete(id)
         return res.status(200).json(
             {

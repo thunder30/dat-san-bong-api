@@ -54,6 +54,16 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
                 },
                 { new: true }
             )
+
+            const roles = await Role.findOneAndUpdate(
+                { code: 'CHU_SAN' },
+                {
+                    $push: {
+                        users: req.body.owner,
+                    },
+                },
+                { new: true }
+            )
             
         }
             
@@ -232,12 +242,12 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
         const { isAdmin, userId } = req.payload
         // lấy pitchBranch theo params và theo payload id của user
         let pitchBranch = await PitchBranch.find({})
-        .where('_id').equals(req.params.id)
-        .where('owner').equals(userId)
-        .populate(
-            path='owner',
-            match = { owner: req.payload.userId },
-        )
+            .where('_id').equals(req.params.id)
+            .where('owner').equals(userId)
+            .populate({
+                path: 'owner',
+                select: 'firstName lastName',
+            })
 
         if (pitchBranch.length === 0 && !isAdmin) {
             return res.status(403).json({
@@ -276,13 +286,13 @@ router.get('/getDetail/:id', async (req, res) => {
         .where('pitchBranch').equals(req.params.id)
 
         //sy help
-        var pitchTypes =[]
-        for(var item of pitchType)
+        let pitchTypes =[]
+        for(let item of pitchType)
         {
             // console.log (item._id.toString())
-            var pitch = await Pitch.find({pitchType: item._id.toString()}).select('_id displayName description isActive pitchType')
+            let pitch = await Pitch.find({pitchType: item._id.toString()}).select('_id displayName description isActive pitchType')
 
-            var price = await Price.find({pitchType: item._id.toString()}).select('_id price time').populate({path : 'time', select : '_id code startTime endTime description'})
+            let price = await Price.find({pitchType: item._id.toString()}).select('_id price time').populate({path : 'time', select : '_id code startTime endTime description'})
 
             pitchTypes.push({
                 id: item._id.toString(),

@@ -15,6 +15,9 @@ const Booking = require('../models/Booking')
  */
 router.post('/', verifyToken, validatePost, async (req, res) => {
     try {
+
+        
+
         const booking = new Booking({
             ...req.body,
         })

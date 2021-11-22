@@ -3,8 +3,8 @@ POST http://localhost:5000/api/auth/register
 Content-Type: application/json
 
 {
-    "email": "wehbvcmsehvewhflrz@sdvrecft.com",
-    "password": "thunder",
+    "email": "5ozcr0u4bs@email.edu.pl",
+    "password": "123456789",
     "roles": ["KHACH_HANG"]
 }
 
@@ -22,6 +22,15 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "oym59515@cuoly.com",
+    "email": "trisnguyen25112000@gmail.com",
+    "password": "123456789"
+}
+
+###
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "cql72243@zwoho.com",
     "password": "123456789"
 }

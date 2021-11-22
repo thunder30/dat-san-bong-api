@@ -10,6 +10,7 @@ const {
     validateResult
 } = require('../middlewares/pitch')
 const Pitch = require('../models/Pitch')
+const PitchType = require('../models/PitchType')
 const { route } = require('./price.routes')
 
 /**
@@ -21,19 +22,17 @@ router.post('/', verifyToken, validatePost(), validateResult, async (req, res) =
         const { isAdmin, userId } = req.payload
 
         //Check if user valid
-        const pit = await Pitch.find({})
-        .where('pitchType').equals(req.body.pitchType)
+        const pit = await PitchType.find({})
+        .where('_id').equals(req.body.pitchType)
         .populate({
-            path: 'pitchType',
-            populate: {
-                path: 'pitchBranch',
-                select: '_id owner',
-                match: {owner : userId}
-            }
+            path: 'pitchBranch',
+            match: {owner : userId}
         })
         let valTrueUser = pit.some(function (value, index) {
-        return value.pitchType.pitchBranch !== null;
+        return value.pitchBranch !== null;
         });
+        console.log(pit)
+        console.log(valTrueUser)
         if(!valTrueUser && !isAdmin){
         {
             return res.status(400).json({

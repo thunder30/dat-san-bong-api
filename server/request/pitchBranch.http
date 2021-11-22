@@ -53,3 +53,5 @@ Content-Type: application/json
     "owner": "618cf4de63f7ea54d60b8cef"
 }
 
+###
+GET http://localhost:5000/api/pitchBranch/getDetail/619ba817e6475ccdb08eea12
