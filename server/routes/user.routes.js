@@ -227,6 +227,20 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
                 message: 'User not found',
             })
 
+        // update role
+
+        const roles = user.roles
+        const _roles = await Role.find({})
+        _roles.forEach(async (role) => {
+            if (roles.includes(role._id)) {
+                const indexUser = role.users.indexOf(user._id)
+                if (indexUser !== -1) {
+                    role.users.splice(indexUser, 1)
+                    await role.save()
+                }
+            }
+        })
+
         res.status(200).json({
             success: true,
             message: 'Delete successfully!',
