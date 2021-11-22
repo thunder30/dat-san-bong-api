@@ -1,21 +1,32 @@
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId
 const { check, validationResult } = require('express-validator')
 
-const validateRegister = (req, res, next) => {
-    // check Register
+const validatePost = (req, res, next) => {
+
     validateResult(req, res, next)
 }
 
-const validateLogin = (req, res, next) => {
-    // check Login
-    return [check('email',"Email Invalid Format").isEmail()]
-    // validateResult(req, res, next)
+const validateDelete = (req, res, next) => {
+
+    validateResult(req, res, next)
+}
+
+const validatePut = (req, res, next) => {
+
+    validateResult(req, res, next)
+}
+
+const validateGetByID = (req, res, next) => {
+
+    validateResult(req, res, next)
 }
 
 const validateResult = (req, res, next) => {
     // Check validate body
     const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
         // Build your resulting errors however you want! String, object, whatever - it works!
-        return `${param}: ${msg}`
+        return `${location}[${param}]: ${msg}`
     }
     const result = validationResult(req).formatWith(errorFormatter)
     if (!result.isEmpty()) {
@@ -29,4 +40,5 @@ const validateResult = (req, res, next) => {
     }
     next()
 }
-module.exports = { validateLogin, validateRegister, validateResult }
+
+module.exports = { validatePost, validateDelete, validatePut, validateGetByID }

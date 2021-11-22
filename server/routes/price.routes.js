@@ -7,7 +7,7 @@ const {
     validatePut,
     validateGetByid,
 } = require('../middlewares/price')
-const Price = require('../models/price')
+const Price = require('../models/Price')
 
 /**
  * @POST /api/price
@@ -16,7 +16,29 @@ const Price = require('../models/price')
 router.post('/', verifyToken, validatePost, async (req, res) => {
     try{
         const { pitchType, time, price} = req.body
+        const { isAdmin, userId } = req.payload
 
+        // Check if user is admin
+        const valPriceOwner = await Price.find({})
+        .where('pitchType').equals(pitchType)
+        .where('owner').equals(userId)
+        .populate(
+            {
+                path: 'pitchType',
+                populate: {
+                    path: 'pitchBranch',
+                    match: { owner: userId },
+                }
+            }
+        )
+        if(valPriceOwner.length === 0 && !isAdmin){
+            return res.status(400).json({
+                success: false,
+                message: 'You are not owner of this PitchType!',
+            })
+        }
+            
+        // Check if price already exist
         const valprice = await Price.findOne({ pitchType, time })
         if(valprice) {
             return res.status(400).json({
@@ -54,6 +76,9 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
 router.put('/:id', verifyToken, validatePut, async (req, res) => {
     try{
         const {id} = req.params
+        const { isAdmin, userId } = req.payload
+
+
         const price = await Price.findByIdAndUpdate(id, req.body.price, {new: true})
         if(!price){
             return res.status(404).json({
@@ -138,10 +163,10 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
  */
 router.get('/', verifyToken, async (req, res) => {
     try{
-
+        const isAdmin = req.payload.isAdmin
+        console.log(isAdmin)
         //if req.query isEmpty
         if(Object.keys(req.query).length === 0){
-            const {isAdmin} = req.payload
             if(!isAdmin){
                 return res.status(403).json({
                     success: false,

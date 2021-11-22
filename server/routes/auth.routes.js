@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const { check, validationResult } = require('express-validator')
 const hashPassword = require('../utils/hashPassword')
 const User = require('../models/User')
 const Role = require('../models/Role')
@@ -9,6 +10,7 @@ const {
     emailVerifyToken,
     verifyToken,
     resetVerifyToken,
+    validateResult,
 } = require('../middlewares/auth')
 const generateToken = require('../utils/generateToken')
 const { sendMailVerify, sendMailReset } = require('../helpers/mailVerify')
@@ -17,7 +19,7 @@ const { isValidObjectId } = require('mongoose')
  * @POST /api/auth/login
  * @desc
  */
-router.post('/login', validateLogin, async (req, res) => {
+router.post('/login', validateLogin(), validateResult , async (req, res) => {
     try {
         const { email, password } = req.body
 

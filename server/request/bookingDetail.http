@@ -1,0 +1,17 @@
+###
+POST http://localhost:5000/api/bookingdetail/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzczMDk0ODYsImV4cCI6MTYzNzMxMzA4Nn0.9mLFroQMWhO2Zd2n8_929PpvItWUe4uFShcUpgDd6uk
+Content-Type: application/json
+
+{
+    "startTime": "06:00",
+    "endTime": "07:00",
+    "price": 200000,
+    "status": "61974b4efa951b1ee433d0f9",
+    "booking": "619761d65189c10b99d74079",
+    "pitch":"61975e915189c10b99d7406b"
+}
+###
+
+GET http://localhost:5000/api/bookingdetail/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MzA3NDkyLCJleHAiOjE2MzczMTEwOTJ9.v6wV0EK77TLhFo89riXlEOIrLPb1AqEQ9agvZ49QVGg
