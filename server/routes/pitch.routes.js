@@ -6,7 +6,8 @@ const {
     validateGetById,
     validatePut,
     validateDelete,
-    validateGetByPitchType
+    validateGetByPitchType,
+    validateResult
 } = require('../middlewares/pitch')
 const Pitch = require('../models/Pitch')
 const { route } = require('./price.routes')
@@ -15,8 +16,32 @@ const { route } = require('./price.routes')
  * @POST /api/pitch
  * @desc Create a new pitch
  */
-router.post('/', verifyToken, validatePost, async (req, res) => {
+router.post('/', verifyToken, validatePost(), validateResult, async (req, res) => {
     try{
+        const { isAdmin, userId } = req.payload
+
+        //Check if user valid
+        const pit = await Pitch.find({})
+        .where('pitchType').equals(req.body.pitchType)
+        .populate({
+            path: 'pitchType',
+            populate: {
+                path: 'pitchBranch',
+                select: '_id owner',
+                match: {owner : userId}
+            }
+        })
+        let valTrueUser = pit.some(function (value, index) {
+        return value.pitchType.pitchBranch !== null;
+        });
+        if(!valTrueUser && !isAdmin){
+        {
+            return res.status(400).json({
+                success: false,
+                message: 'You dont have permission to create this pitch',
+            })
+        }
+        }
 
         const pitch = new Pitch({
             ...req.body,
@@ -41,9 +66,27 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
  * @PUT /api/pitch/:id
  * @desc Update a pitch by id
  */
-router.put('/:id', verifyToken, validatePut, async (req, res) => {
+router.put('/:id', verifyToken, validatePut(), validateResult, async (req, res) => {
     try{
-        
+        const { isAdmin, userId } = req.payload
+        const id = req.params.id
+        const _pitch = await Pitch.findById(id)
+        .populate({
+            path: 'pitchType',
+            populate: {
+                path: 'pitchBranch',
+                match: {owner : userId}
+            }
+        })
+   
+        if(!_pitch.pitchType.pitchBranch && !isAdmin){
+            return res.status(403).json({
+                success: false,
+                message: 'You don\'t have permission!',
+            })
+        }
+
+        delete req.body.pitchType
         let pitch = await Pitch.findByIdAndUpdate(req.params.id, req.body, { new: true })
         res.status(200).json({
             success: true,
@@ -66,7 +109,26 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
  */
 router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     try{
-        let pitch = await Pitch.findByIdAndDelete(req.params.id)
+
+        const { isAdmin, userId } = req.payload
+        const id = req.params.id
+        const _pitch = await Pitch.findById(id)
+        .populate({
+            path: 'pitchType',
+            populate: {
+                path: 'pitchBranch',
+                match: {owner : userId}
+            }
+        })
+   
+        if(!_pitch.pitchType.pitchBranch && !isAdmin){
+            return res.status(403).json({
+                success: false,
+                message: 'You don\'t have permission!',
+            })
+        }
+
+        let pitch = await Pitch.findByIdAndDelete(id)
 
         if(!pitch){
             return res.status(404).json({
@@ -127,7 +189,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
  * @GET /api/pitch/:id
  * @desc Get a pitch by id
  */
-router.get('/:id', verifyToken, validateGetById, async (req, res) => {
+router.get('/:id', verifyToken, validateGetById(), validateResult, async (req, res) => {
     try{
         let pitch = await Pitch.findById(req.params.id).populate(path = 'pitchType', select = '-pitchBranch')
         res.status(200).json({
@@ -152,15 +214,8 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
 router.get('/', verifyToken, validateGetByPitchType, async (req, res) => {
     try{
         const isAdmin = req.payload.isAdmin
-        if(Object.keys(req.query).length === 0){
-           //check if user is admin
-            console.log(isAdmin)
-            if(!isAdmin){
-                return res.status(403).json({
-                    success: false,
-                    message: 'You are not Admin !',
-                })
-            }
+        if (Object.keys(req.query).length === 0){
+         
             let pitches = await Pitch.find()
             return res.status(200).json({
                 success: true,
@@ -170,14 +225,6 @@ router.get('/', verifyToken, validateGetByPitchType, async (req, res) => {
         }
 
         const pitchTypeId = req.query.pitchType
-
-        if(!pitchTypeId){
-            return res.status(400).json({
-                success: false,
-                message: 'Bad request',
-            })
-        }
-
         let pitches = await Pitch.find({ pitchType: pitchTypeId })
         res.status(200).json({
             success: true,

@@ -1,19 +1,15 @@
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
-const { check, validationResult } = require('express-validator')
+const { check, param, validationResult } = require('express-validator')
 
 const validatePost = (req, res, next) => {
 
     // Check pitchType , displayName not null
-    const pitchType = req.body.pitchType
-    const displayName = req.body.displayName
-    if (!pitchType || !displayName)
-    return res.status(400).json({
-        success: false,
-        message: 'pitchType and displayName is required !',
-    })
-
-    validateResult(req, res, next)
+    return [check('pitchType').not().isEmpty().withMessage('pitchType is required'),
+        check('displayName').not().isEmpty().withMessage('displayName is required'),
+        //check is id in mongoose
+        check('pitchType').isMongoId().withMessage('pitchType is invalid id')
+    ]
 }
 
 const validateDelete = (req, res, next) => {
@@ -31,38 +27,32 @@ const validateDelete = (req, res, next) => {
 
 const validatePut = (req, res, next) => {
 
-    // check id
-    const id = req.params.id
-    if (!ObjectId.isValid(id))
-    return res.status(400).json({
-        success: false,
-        message: '_id invalid',
-    })
-
-    validateResult(req, res, next)
+    return [check('pitchType').not().isEmpty().withMessage('pitchType is required'),
+    check('displayName').not().isEmpty().withMessage('displayName is required'),
+    check('pitchType').isMongoId().withMessage('pitchType is invalid id'),
+    param('id').isMongoId().withMessage('_id is invalid id')]
 }
 
 const validateGetById = (req, res, next) => {
 
-    // check id
-    const id = req.params.id
-    if (!ObjectId.isValid(id))
-    return res.status(400).json({
-        success: false,
-        message: '_id invalid',
-    })
-
-    validateResult(req, res, next)
+    return [
+        param('id').isMongoId().withMessage('_id is invalid id')
+    ]
+    
 }
 
 const validateGetByPitchType = (req, res, next) => {
-    // check id
-    // const id = req.params.id
-    // if (!ObjectId.isValid(id))
-    // return res.status(400).json({
-    //     success: false,
-    //     message: '_id invalid',
-    // })
+
+    const isAdmin = req.payload.isAdmin
+    if (!Object.keys(req.query).length === 0){
+        const pitchTypeId = req.query.pitchType
+        if(!pitchTypeId){
+            return res.status(400).json({
+                success: false,
+                message: 'Bad request',
+            })
+        }
+    }
 
     validateResult(req, res, next)
 }
@@ -87,4 +77,4 @@ const validateResult = (req, res, next) => {
     next()
 }
 
-module.exports = { validatePost, validateDelete, validatePut, validateGetById, validateGetByPitchType }
+module.exports = { validatePost, validateDelete, validatePut, validateGetById, validateGetByPitchType, validateResult }
