@@ -31,6 +31,6 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "cql72243@zwoho.com",
-    "password": "123456789"
+    "email": "4mgkixfpur@eposta.buzz",
+    "password": "thunder"
 }

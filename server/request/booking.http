@@ -1,13 +1,13 @@
 POST http://localhost:5000/api/booking
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc3MzAxMTUsImV4cCI6MTYzNzgxNjUxNX0.-y2F9fRuFjD7p057qAFLWoQeyxZXMOTfbpBxqO8UNnk
 Content-Type: application/json
 
 {
-    "startDate": "20/11",
-    "endDate": "20/11",
+    "startDate": "11/12/2023",
+    "endDate": "29/12/2023",
     "total": "20000000",
     "isPaid": true,
-    "customer": "61975b345189c10b99d74038"
+    "customer": "619ba213a6c8f7239ee1f169"
 
 }
 

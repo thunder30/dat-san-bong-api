@@ -5,17 +5,60 @@ const { verifyToken } = require('../middlewares/auth')
 const {
     validatePost,
     validatePut,
-    validateDelete
+    validateDelete,
+    validateResult,
+    validatePostFunction,
+    validatePostbyPitchType,
+    validatePostbyPitchTypeFunction,
+    validFunction
 } = require('../middlewares/bookingDetail')
 
 const BookingDetail = require('../models/BookingDetail')
+const Pitch = require('../models/Pitch')
+
+/**
+ * @POST /api/bookingDetail/pitchType
+ * @desc Create a new bookingDetail by pitchType
+ */
+router.post('/pitchType', verifyToken, validatePostbyPitchType(), validateResult, validatePostbyPitchTypeFunction, async (req, res) => {
+    try {
+
+        if (!req.body.pitch) {
+            return res.status(400).json({
+                success: false,
+                message: 'No pitch available'
+            })
+        }
+
+        delete req.body.pitchType
+        console.log(req.body)
+
+
+        const _bookingDetail = new BookingDetail({
+            ...req.body
+        })
+        const newBookingDetail = await _bookingDetail.save()
+        res.status(201).json({
+            message: 'BookingDetail created successfully',
+            newBookingDetail
+        })
+    } catch (error) {
+        res.status(400).send({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
 
 /**
  * @POST /api/bookingDetail
  * @desc Create a new bookingDetail
  */
-router.post('/', verifyToken, validatePost, async (req, res) => {
+router.post('/', verifyToken, validatePost(), validateResult, validatePostFunction, async (req, res) => {
     try {
+
         const bookingDetail = new BookingDetail(req.body)
         const _bookingDetail = await bookingDetail.save()
         res.status(201).send({
@@ -24,7 +67,11 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             _bookingDetail
         })
     } catch (error) {
-        res.status(400).send(error)
+        res.status(400).send({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
     }
 })
 

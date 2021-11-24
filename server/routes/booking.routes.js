@@ -6,17 +6,19 @@ const {
     validateGetByID,
     validatePut,
     validateDelete,
+    validateResult,
+    validatePostFunction
 } = require('../middlewares/booking')
 const Booking = require('../models/Booking')
+const User = require('../models/User')
 
 /**
  * @POST /api/booking
  * @desc Create a new booking
  */
-router.post('/', verifyToken, validatePost, async (req, res) => {
+router.post('/', verifyToken, validatePost(), validateResult, validatePostFunction, async (req, res) => {
     try {
-
-        
+        const { isAdmin, userId } = req.payload
 
         const booking = new Booking({
             ...req.body,

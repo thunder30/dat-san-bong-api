@@ -4,7 +4,53 @@ const { check, validationResult } = require('express-validator')
 
 const validatePost = (req, res, next) => {
 
-    validateResult(req, res, next)
+    return [
+        check('startDate', 'startDate is required').not().isEmpty(),
+        check('endDate', 'endDate is required').not().isEmpty(),
+        check('customer', 'customer is required').not().isEmpty(),
+    ]
+
+}
+
+const validatePostFunction = (req, res, next) => {
+    //check startDate is dd/mm/yyyy
+    const startDate = req.body.startDate
+    const endDate = req.body.endDate
+    const startDateFormat = /^\d{1,2}\/\d{1,2}\/\d{4}$/
+    const endDateFormat = /^\d{1,2}\/\d{1,2}\/\d{4}$/
+    if (!startDate.match(startDateFormat)) {
+        return res.status(400).json({
+            message: "startDate is not valid"
+        })
+    }
+    if (!endDate.match(endDateFormat)) {
+        return res.status(400).json({
+            message: "endDate is not valid"
+        })
+    }
+
+    if (new Date(startDate) > new Date(endDate)) {
+        return res.status(400).json({
+            message: "startDate is greater than endDate"
+        })
+    }
+
+    if (new Date(startDate) < new Date()) {
+        return res.status(400).json({
+            message: "startDate must be greater than today"
+        })
+    }
+
+    if(req.body.customer !== req.payload.userId){
+        return res.status(400).json({
+            success: false,
+            message: "Id not yours"
+        })
+    }
+
+    next()
+    
+
 }
 
 const validateDelete = (req, res, next) => {
@@ -41,4 +87,4 @@ const validateResult = (req, res, next) => {
     next()
 }
 
-module.exports = { validatePost, validateDelete, validatePut, validateGetByID }
+module.exports = { validatePost, validateDelete, validatePut, validateGetByID, validateResult, validatePostFunction }

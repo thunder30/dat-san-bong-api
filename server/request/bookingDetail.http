@@ -1,15 +1,29 @@
 ###
 POST http://localhost:5000/api/bookingdetail/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzczMDk0ODYsImV4cCI6MTYzNzMxMzA4Nn0.9mLFroQMWhO2Zd2n8_929PpvItWUe4uFShcUpgDd6uk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3NzI0NTg5LCJleHAiOjE2Mzc4MTA5ODl9.xcqz_zVr5RLs1DtUA5uszpwOCdXMMtt_FefBFR8BFGk
 Content-Type: application/json
 
 {
-    "startTime": "06:00",
-    "endTime": "07:00",
+    "startTime": "12/11/2023 00:00",
+    "endTime": "12/11/2023 02:00",
     "price": 200000,
-    "status": "61974b4efa951b1ee433d0f9",
-    "booking": "619761d65189c10b99d74079",
-    "pitch":"61975e915189c10b99d7406b"
+    "status": "619dbcd8bc930d10be70a610",
+    "booking": "619db648aef5c6de617106ee",
+    "pitch":"619bb2791637cd9082f29adb"
+}
+
+###
+POST http://localhost:5000/api/bookingdetail/pitchType
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3NzI0NTg5LCJleHAiOjE2Mzc4MTA5ODl9.xcqz_zVr5RLs1DtUA5uszpwOCdXMMtt_FefBFR8BFGk
+Content-Type: application/json
+
+{
+    "startTime": "12/11/2023 07:30",
+    "endTime": "12/11/2023 08:00",
+    "price": 200000,
+    "status": "619dbcd8bc930d10be70a610",
+    "booking": "619db648aef5c6de617106ee",
+    "pitchType":"619bb3e1b770e45c464db6e2"
 }
 ###
 
