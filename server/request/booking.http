@@ -11,6 +11,40 @@ Content-Type: application/json
 
 }
 
+### //check booking
+{
+        "startTime": "12/11/2023 00:00",
+        "endTime": "12/11/2023 02:00",
+        "customer": "619ba213a6c8f7239ee1f169",
+        "pitch":"619bb2791637cd9082f29adb"
+}
+
+### //  booking confirm
+POST http://localhost:5000/api/booking/confirm
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3ODUyMTc4LCJleHAiOjE2Mzc5Mzg1Nzh9.BpK3qncG-sjmgw9KzHSs2kxIDfx3ShxSyiSuGUxQ1_Q
+Content-Type: application/json
+
+{
+        "startTime": "12/11/2023 07:30",
+        "endTime": "12/11/2023 08:30",
+        "status": "ST1",
+        "isPaid": true,
+        "customer": "619ba12394bbb8fcce69142b",
+        "pitch":"619bb43bb770e45c464db6f1"
+}
+
+###
+POST http://localhost:5000/api/booking/checkout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3ODUyMTc4LCJleHAiOjE2Mzc5Mzg1Nzh9.BpK3qncG-sjmgw9KzHSs2kxIDfx3ShxSyiSuGUxQ1_Q
+Content-Type: application/json
+
+{
+    "startTime": "12/11/2023 07:30",
+    "endTime": "12/11/2023 08:30",
+    "customer": "619ba12394bbb8fcce69142b",
+    "pitch":"619bb43bb770e45c464db6f1"
+}
+ 
 ###
 GET http://localhost:5000/api/booking
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM

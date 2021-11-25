@@ -12,6 +12,12 @@ Content-Type: application/json
     "pitch":"619bb2791637cd9082f29adb"
 }
 
+{
+        "startTime": "12/11/2023 00:00",
+        "endTime": "12/11/2023 02:00",
+        "status": "619dbcd8bc930d10be70a610",
+}
+
 ###
 POST http://localhost:5000/api/bookingdetail/pitchType
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3NzI0NTg5LCJleHAiOjE2Mzc4MTA5ODl9.xcqz_zVr5RLs1DtUA5uszpwOCdXMMtt_FefBFR8BFGk
