@@ -1,11 +1,11 @@
 POST http://localhost:5000/api/pitch
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc1OTQwMDQsImV4cCI6MTYzNzY4MDQwNH0.9yWJsC59unFc9Qz6dKtc7qCkE6XgkypDSCwqi1cbOSo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5MzgzNTAsImV4cCI6MTYzODAyNDc1MH0.qS_jx0Eap3MssAtmjE725MajkXj982fpffy5c2ljo6M
 Content-Type: application/json
 
 {
-    "displayName": "Sân bờ hồ Hoàng Gia",
-    "description": "Sân này kế bên sông",
-    "pitchType": "619bb3e9b770e45c464db6e7"
+    "displayName": "Sân 5 đứa nhỏ",
+    "description": "Sân này thích cho con ních đá hơn",
+    "pitchType": "61a1083bc0e40d948fdf9b29"
 
 }
 

@@ -35,6 +35,24 @@ Content-Type: application/json
 }
 
 ###
+
+{
+    "pitchType": "6193475a5da96bc6c9721f0a",
+    [
+        {
+            "startTime": "01:30",
+            "endTime": "09:00",
+            "price": "2000"
+        }
+        {
+            "startTime": "10:30",
+            "endTime": "20:30",
+            "price": "2000"
+        }
+    ]
+}
+
+###
 DELETE  http://localhost:5000/api/price/619bacdc7eb3c1e90106768a
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc1OTUyNTIsImV4cCI6MTYzNzY4MTY1Mn0.fNHwSsJOuTVMOVddqnFbvXDcyfPflkwWtSBk5xsMpjQ
 

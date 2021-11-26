@@ -11,12 +11,14 @@ const {
     validateCheckout,
     validateCheckoutFunction,
     validatePostConfirmFunction,
-    validatePostConfirm
+    validatePostConfirm,
+    validatePutCheckinFunction
 } = require('../middlewares/booking')
 const Booking = require('../models/Booking')
 const BookingDetail = require('../models/BookingDetail')
 const User = require('../models/User')
 const Pitch = require('../models/Pitch')
+const Status = require('../models/Status')
 
 /**
  * @POST /api/booking/checkout
@@ -79,10 +81,25 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
             select : 'pitchBranch',
             populate: {
                 path: 'pitchBranch',
-                select: 'owner'
+                select: 'owner',
+                populate: {
+                    path: 'owner',
+                    // select: '_id name email phone users'
+                }
             }
         })
-        const userUpdate = await User.findOneAndUpdate({ _id: user.pitchType.pitchBranch.owner._id.toString() }, { $push: { users: customer } }, { new: true })
+        let checkRepeatUser = false
+        for(let i = 0; i < user.pitchType.pitchBranch.owner.users.length; i++){
+            if(user.pitchType.pitchBranch.owner.users[i]._id.toString() === customer.toString()){
+                check = true
+                break
+            }
+        }
+
+        if(!checkRepeatUser){
+            const userUpdate = await User.findOneAndUpdate({ _id: user.pitchType.pitchBranch.owner._id.toString() }, { $push: { users: customer } }, { new: true })
+        }
+
 
         res.status(200).json({
             success: true,
@@ -173,7 +190,7 @@ router.get('/', verifyToken, async (req, res) => {
             })
         }
         const customerId = req.query.customerId
-        const pitchBranchId = req.query.ownerId
+        const pitchBranchId = req.query.pitchBranchId
 
         if(!customerId && !pitchBranchId) {
             return res.status(400).json({
@@ -209,7 +226,8 @@ router.get('/', verifyToken, async (req, res) => {
             // Get all booking by bookingDetailId
             let c = []
             for(let i = 0; i < b.length; i++) {
-                const booking = await BookingDetail.findById(b[i].toString()).populate({
+                const booking = await BookingDetail
+                .find(b[i].toString()).populate({
                     path : 'booking',
                     populate: {
                         path: 'customer',
@@ -219,23 +237,84 @@ router.get('/', verifyToken, async (req, res) => {
                 c[i] = booking
             }
 
-            console.log(c)
-
             return res.status(200).json({
                 success: true,
                 message: 'Get bookings successfully!',
                 bookings: c
             })
         }
-        
-        
 
-        let bookings = await Booking.find({customer : customerId})
+        let customerIdd = '619dbcd6bc930d10be70a60e'
+        
+        let bookings = await BookingDetail.find({})
+
+        .where('customer').equals(customerId)
+        .populate({
+            path: 'booking',
+            populate: {
+                path: 'customer',
+                match: { _id: customerId },
+                select: '_id',
+            }
+        })
+
+        // console.log(bookings)
+
+        let arrBookings = []
+
+        for(let i = 0; i < bookings.length; i++) {
+            if(bookings[i].booking.customer._id.toString() === customerId) {
+                arrBookings.push(bookings[i])
+                console.log(bookings[i])
+            }
+        }
+
         return res.status(200).json({
             success: true,
             message: 'Get successfully!',
-            bookings
+            bookings: arrBookings
         })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+
+/**
+ * @PUT /api/booking/checkin/:id
+ * @desc update status by a bookingDetail code
+ */
+ router.put('/checkin/:id', verifyToken, validatePutCheckinFunction, async (req, res) => {
+    try {
+
+        const status = req.body.status
+        const statusId = await Status.findOne({ status: status })
+        if(!req.body.bookingDetailId){
+            return res.status(404).json({
+                success: false,
+                message: 'Not found',
+            })
+        }
+        let bookingDetailUpdate = await BookingDetail.findOneAndUpdate(
+            { 
+                _id: req.body.bookingDetailId
+            }, 
+            { status: statusId._id }, 
+            { new: true })
+            .select('status startTime endTime price booking pitch')
+            // console.log(bookingDetail[i]._id)
+        
+        res.status(200).json({
+            success: true,
+            message: 'Update successfully!',
+            bookingDetailUpdate
+        })
+
 
     } catch (error) {
         res.status(500).json({
@@ -268,6 +347,7 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         })
     }
 })
+
 
 /**
  * @DELETE /api/booking/:id
