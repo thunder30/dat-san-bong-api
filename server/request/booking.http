@@ -41,7 +41,6 @@ Content-Type: application/json
 {
     "startTime": "12/11/2023 07:30",
     "endTime": "12/11/2023 08:30",
-    "customer": "619ba12394bbb8fcce69142b",
     "pitch":"619bb43bb770e45c464db6f1"
 }
  

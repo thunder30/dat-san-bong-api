@@ -21,10 +21,10 @@ const validateCheckout = (req, res, next) => {
     return[
         check('startTime', 'startDate is required').not().isEmpty(),
         check('endTime', 'endDate is required').not().isEmpty(),
-        check('customer', 'customer is required').not().isEmpty(),
+        // check('customer', 'customer is required').not().isEmpty(),
         check('pitch', 'pitch is required').not().isEmpty(),
         check('pitch').isMongoId().withMessage('pitch is invalid id'),
-        check('customer').isMongoId().withMessage('customer is invalid id'),
+        // check('customer').isMongoId().withMessage('customer is invalid id'),
     ]
 }
 
@@ -44,14 +44,15 @@ const validatePostConfirm = (req, res, next) => {
 const validateCheckoutFunction = async (req, res, next) => {
 
     const {isAdmin, userId} = req.payload
-    const {startTime, endTime, pitch, customer} = req.body
+    const {startTime, endTime, pitch} = req.body
+    // const {startTime, endTime, pitch, customer} = req.body
 
-    if(customer !== userId){
-        return res.status(400).json({
-            success: false,
-            message: "Id not yours"
-        })
-    }
+    // if(customer !== userId){
+    //     return res.status(400).json({
+    //         success: false,
+    //         message: "Id not yours"
+    //     })
+    // }
 
     //check startTime is in format dd/mm/yyyy HH:mm
     const startTimeRegex = /^(0[1-9]|[12][0-9]|3[01])[\/](0[1-9]|1[012])[\/]\d{4} (0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9])$/
