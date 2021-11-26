@@ -473,7 +473,6 @@ const validatePostConfirmFunction = async (req, res, next) => {
         }
     }
 
-    console.log(sumPrice)
     req.body.price = sumPrice
 
     req.body.startDate = startTimeArrayAdd[0]

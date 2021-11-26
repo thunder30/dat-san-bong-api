@@ -176,7 +176,6 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         const {id} = req.params
         const price = await Price.findById(id).populate(
             path = 'pitchType time',
-            select = '-pitchBranch'
             )
         return res.status(200).json(
             {
@@ -206,12 +205,12 @@ router.get('/', verifyToken, async (req, res) => {
         console.log(isAdmin)
         //if req.query isEmpty
         if(Object.keys(req.query).length === 0){
-            if(!isAdmin){
-                return res.status(403).json({
-                    success: false,
-                    message: 'You are not admin'
-                })
-            }
+            // if(!isAdmin){
+            //     return res.status(403).json({
+            //         success: false,
+            //         message: 'You are not admin'
+            //     })
+            // }
             //get all pitchType
             let _price = await Price.find({})
             //return 
@@ -236,7 +235,6 @@ router.get('/', verifyToken, async (req, res) => {
         .populate({
             path: 'pitchType time',
             select: '-pitchBranch',
-            match: {pitchType : pitchTypeId}
         })
         return res.status(200).json(
             {

@@ -214,7 +214,7 @@ router.get('/', verifyToken, validateGetByPitchType, async (req, res) => {
     try{
         const isAdmin = req.payload.isAdmin
         if (Object.keys(req.query).length === 0){
-         
+        
             let pitches = await Pitch.find()
             return res.status(200).json({
                 success: true,

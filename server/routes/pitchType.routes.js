@@ -197,38 +197,36 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
             })
         }
 
-        //check if branch of user
-        const  id = req.query.branchId
-        const { isAdmin, userId } = req.payload
-        const _pitchBranch = await PitchBranch.find({})
-        .where('owner').equals(userId)
-        .select('_id')
-        .populate(
-            {
-                path: 'owner',
-                select: 'id',
-                match: {owner: userId}
-            }
-        )
-        let isOwner
-        isOwner = _pitchBranch.some((value,index) => {
-            return value._id.toString() === id
-        })
+        // //check if branch of user
+        // const  id = req.query.branchId
+        // const { isAdmin, userId } = req.payload
+        // const _pitchBranch = await PitchBranch.find({})
+        // .where('owner').equals(userId)
+        // .select('_id')
+        // .populate(
+        //     {
+        //         path: 'owner',
+        //         select: 'id',
+        //         match: {owner: userId}
+        //     }
+        // )
+        // let isOwner
+        // isOwner = _pitchBranch.some((value,index) => {
+        //     return value._id.toString() === id
+        // })
 
-        if(!isOwner && !isAdmin){
-            return res.status(403).json({
-                success: false,
-                message: 'You are not owner of this branch!',
-            })
-        }
+        // if(!isOwner && !isAdmin){
+        //     return res.status(403).json({
+        //         success: false,
+        //         message: 'You are not owner of this branch!',
+        //     })
+        // }
 
         const pitchType = await PitchType.find({})
         .where('pitchBranch').equals(id)
         .populate
         ({
             path: 'pitchBranch',
-            select: '_id',
-            match : { pitchBranch: id },
         })
         res.status(200).json({
             success: true,

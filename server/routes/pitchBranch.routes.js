@@ -186,32 +186,12 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
  router.get('/owner/:id', verifyToken, validateGetByUserId, async (req, res) => {
     try {
 
-        const { isAdmin, userId } = req.payload
-        // lấy pitchBranch theo params và theo payload id của user
-        let pitchBranch = await PitchBranch.find({})
-        .where('owner').equals(userId)
+        pitchBranch = await PitchBranch.find({})
         .where('owner').equals(req.params.id)
         .populate(
             path='owner',
-            match = { owner: req.payload.userId },
+            select = 'firstName lastName',
         )
-
-        if(pitchBranch.length === 0 && !isAdmin){
-            return res.status(404).json({
-                success: false,
-                message: 'Not found',
-            })
-        }
-
-        // if isAdmin
-        if (isAdmin) {
-            pitchBranch = await PitchBranch.find({})
-            .where('owner').equals(req.params.id)
-            .populate(
-                path='owner',
-                match = { owner: req.payload.userId },
-            )
-        }
 
         console.log(pitchBranch)
         res.status(200).json({
@@ -358,9 +338,6 @@ router.get('/getDetail/:id', async (req, res) => {
  */
 router.get('/', verifyToken, async (req, res) => {
     try {
-        // Verify isAdmin or isOwner
-        const { isAdmin, userId } = req.payload
-        // const { owner } = req.body
 
         const pitchBranch = await PitchBranch.find().populate({
             path: 'owner',

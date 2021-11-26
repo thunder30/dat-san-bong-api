@@ -16,6 +16,7 @@ const {
 const Booking = require('../models/Booking')
 const BookingDetail = require('../models/BookingDetail')
 const User = require('../models/User')
+const Pitch = require('../models/Pitch')
 
 /**
  * @POST /api/booking/checkout
@@ -47,6 +48,7 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
     try {
         //create new booking
         const { startDate, endDate, price, customer, pitch, startTime, endTime, status } = req.body
+
         const booking = new Booking({
             startDate,
             endDate,
@@ -68,16 +70,31 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
         })
         const newBookingDetail = await bookingDetail.save()
 
+        const code = newBookingDetail._id.toString().substring(newBookingDetail._id.toString().length - 6)
+        
+        //update user
+        const user = await Pitch.findOne({ _id: pitch })
+        .populate({
+            path: 'pitchType',
+            select : 'pitchBranch',
+            populate: {
+                path: 'pitchBranch',
+                select: 'owner'
+            }
+        })
+        const userUpdate = await User.findOneAndUpdate({ _id: user.pitchType.pitchBranch.owner._id.toString() }, { $push: { users: customer } }, { new: true })
+
         res.status(200).json({
             success: true,
             message: 'success',
             Booking: newBooking,
             BookingDetail: newBookingDetail,
+            code,
         })
 
 
     } catch (err) {
-        res.status(400).json({
+        res.status(500).json({
             success: false,
             message: err.message
         })
@@ -134,7 +151,7 @@ router.post('/', verifyToken, validatePost(), validateResult, validatePostFuncti
 })
 
 /**
- * @GET /api/booking?customerId=:customerId
+ * @GET /api/booking?customerId=:customerId?ownerId=:ownerId
  * @desc Get all bookings
  */
 router.get('/', verifyToken, async (req, res) => {
@@ -156,13 +173,62 @@ router.get('/', verifyToken, async (req, res) => {
             })
         }
         const customerId = req.query.customerId
+        const pitchBranchId = req.query.ownerId
 
-        if(!customerId) {
+        if(!customerId && !pitchBranchId) {
             return res.status(400).json({
                 success: false,
                 message: 'Bad request',
             })
         }
+
+        if(pitchBranchId) {
+            const bookingDetail = await BookingDetail.find({})
+            .populate({
+                path: 'pitch',
+                select: '_id',
+                populate: {
+                    path: 'pitchType',
+                    select: '_id',
+                    populate: {
+                        path: 'pitchBranch',
+                        
+                        // match: {owner : ownerId}
+                    }
+                },
+            })
+
+            // Get all booking detail by pitchBranchId
+            let b = []
+            for(let i = 0; i < bookingDetail.length; i++) {
+                if(bookingDetail[i].pitch.pitchType.pitchBranch._id.toString() === pitchBranchId && bookingDetail[i].pitch.pitchType.pitchBranch.owner.toString() === req.payload.userId) {
+                    b.push(bookingDetail[i]._id)
+                }
+            }
+
+            // Get all booking by bookingDetailId
+            let c = []
+            for(let i = 0; i < b.length; i++) {
+                const booking = await BookingDetail.findById(b[i].toString()).populate({
+                    path : 'booking',
+                    populate: {
+                        path: 'customer',
+                        select: '_id email firstName lastName',
+                    }
+                })
+                c[i] = booking
+            }
+
+            console.log(c)
+
+            return res.status(200).json({
+                success: true,
+                message: 'Get bookings successfully!',
+                bookings: c
+            })
+        }
+        
+        
 
         let bookings = await Booking.find({customer : customerId})
         return res.status(200).json({
