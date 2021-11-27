@@ -3,8 +3,8 @@ GET http://localhost:5000/api/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY4MDkyMDAsImV4cCI6MTYzNjgxMjgwMH0.5EnihMjdw3lNMfh5UTONJlJQB0rVdSxr9z9ezqcVp9g
 
 ### 
-GET http://localhost:5000/api/users/618ce9f82ffa9e9c3d217029
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY3ODQ3MzksImV4cCI6MTYzNjc4ODMzOX0.QEI4SNtlgAQF2bd93SBK66qaHe2sMEDIL4YX90HIJUc
+GET http://localhost:5000/api/users/619ba12394bbb8fcce69142b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
 
 ###
 POST http://localhost:5000/api/users/
@@ -22,16 +22,15 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:5000/api/users/618cf4de63f7ea54d60b8cef
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZTc4NDVkNmFkZTgxZjc5NGE3OGEiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzY4MTI4NzgsImV4cCI6MTYzNjgxNjQ3OH0.YKCl8SocR-H4ntEGCg5r0f0aQH_EkDlurUfpfQMWDY8
+PUT http://localhost:5000/api/users/619ba12394bbb8fcce69142b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
 Content-Type: application/json
 
 {
-    "password": "thunder",
-    "firstName": "David",
-    "lastName": "Moyce",
+    "firstName": "Nguyễn",
+    "lastName": "Tris",
     "sex": "Nam",
-    "phone": "0987654321",
+    "phone": "0383205546",
     "roles": ["KHACH_HANG"]
 }
 

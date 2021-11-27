@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const { check, validationResult } = require('express-validator')
 const hashPassword = require('../utils/hashPassword')
 const User = require('../models/User')
 const Role = require('../models/Role')
@@ -9,6 +10,7 @@ const {
     emailVerifyToken,
     verifyToken,
     resetVerifyToken,
+    validateResult,
 } = require('../middlewares/auth')
 const generateToken = require('../utils/generateToken')
 const { sendMailVerify, sendMailReset } = require('../helpers/mailVerify')
@@ -17,7 +19,7 @@ const { isValidObjectId } = require('mongoose')
  * @POST /api/auth/login
  * @desc
  */
-router.post('/login', validateLogin, async (req, res) => {
+router.post('/login', validateLogin(), validateResult , async (req, res) => {
     try {
         const { email, password } = req.body
 
@@ -58,7 +60,7 @@ router.post('/login', validateLogin, async (req, res) => {
                 roles: user.roles.map((role) => role.code),
                 isAdmin: user.isAdmin,
             },
-            { expiresIn: '1h' }
+            { expiresIn: '24h' }
         )
 
         // write log for login
@@ -70,6 +72,7 @@ router.post('/login', validateLogin, async (req, res) => {
             success: true,
             message: 'Login successfully!',
             accessToken,
+            roles: user.roles.map((role) => role.code),
         })
     } catch (error) {
         res.status(500).json({
@@ -187,8 +190,8 @@ router.get('/confirm/:token', emailVerifyToken, async (req, res) => {
             })
 
         if (user.isVerified) {
-            return res.status(400).json({
-                success: false,
+            return res.status(200).json({
+                success: true,
                 message: 'User is email verified.',
             })
         }
@@ -274,13 +277,18 @@ router.post('/reset/:token', resetVerifyToken, async (req, res) => {
 router.get('/', verifyToken, async (req, res) => {
     try {
         const { userId } = req.payload
-        const user = await User.findById(userId).select('-password')
+        const user = await User.findById(userId).select('-password').populate({
+            path: 'roles',
+            select: 'code -_id',
+        })
+
         if (!user) {
             return res.status(404).json({
                 success: false,
                 message: 'User not found!',
             })
         }
+
         res.status(200).json({
             success: true,
             message: 'Authenticated!',

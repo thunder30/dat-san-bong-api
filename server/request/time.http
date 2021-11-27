@@ -36,3 +36,4 @@ GET http://localhost:5000/api/times/618d5c7d8a73d2a171b97336
 
 ###
 GET http://localhost:5000/api/times/reGenAllTimes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc1ODk1OTgsImV4cCI6MTYzNzY3NTk5OH0.y69ZP_Qg3j2Mj0pG5_C8OyxUq5AQKAKS5J_zViIOfiE

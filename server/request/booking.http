@@ -1,0 +1,89 @@
+POST http://localhost:5000/api/booking
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc3MzAxMTUsImV4cCI6MTYzNzgxNjUxNX0.-y2F9fRuFjD7p057qAFLWoQeyxZXMOTfbpBxqO8UNnk
+Content-Type: application/json
+
+{
+    "startDate": "11/12/2023",
+    "endDate": "29/12/2023",
+    "total": "20000000",
+    "isPaid": true,
+    "customer": "619ba213a6c8f7239ee1f169"
+
+}
+
+### //check booking
+{
+        "startTime": "12/11/2023 00:00",
+        "endTime": "12/11/2023 02:00",
+        "customer": "619ba213a6c8f7239ee1f169",
+        "pitch":"619bb2791637cd9082f29adb"
+}
+
+### //  booking confirm
+POST http://localhost:5000/api/booking/confirm
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
+Content-Type: application/json
+
+{
+        "startTime": "12/11/2023 07:30",
+        "endTime": "12/11/2023 08:30",
+        "status": "ST1",
+        "isPaid": true,
+        "customer": "619ba12394bbb8fcce69142b",
+        "pitch":"619bb43bb770e45c464db6f1"
+}
+
+###
+POST http://localhost:5000/api/booking/checkout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
+Content-Type: application/json
+
+{
+    "startTime": "12/11/2023 07:30",
+    "endTime": "12/11/2023 08:30",
+    "pitch":"619bb462b770e45c464db6f6"
+    //"customer": "619ba12394bbb8fcce69142b",
+}
+ 
+###
+GET http://localhost:5000/api/booking
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+
+###
+GET http://localhost:5000/api/booking?customerId=619ba12394bbb8fcce69142b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
+
+###
+GET http://localhost:5000/api/booking/619743880b34ce1c4b933c59
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+
+###
+PUT http://localhost:5000/api/booking/619743880b34ce1c4b933c59
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+Content-Type: application/json
+
+{
+    "startDate": "20/11",
+    "endDate": "20/11",
+    "total": "30000000",
+    "isPaid": true,
+    "customer": "6191ecfb29e45fcfe777c478"
+}
+
+###
+PUT http://localhost:5000/api/booking/checkin/fc8b90
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5MzgzNTAsImV4cCI6MTYzODAyNDc1MH0.qS_jx0Eap3MssAtmjE725MajkXj982fpffy5c2ljo6M
+Content-Type: application/json
+
+{
+    "status": "ST1"
+}
+
+###
+DELETE http://localhost:5000/api/booking/61974575a491e8f384c7cf35
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
+
+###
+GET http://localhost:5000/api/booking?ownerId=619ba93bba72b12e6ea9f2f6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc4NDk2NzAsImV4cCI6MTYzNzkzNjA3MH0.KmFgD-e4vglbtgyQAoj610DcU1_K-w9TQMf-G4rYJa8
+

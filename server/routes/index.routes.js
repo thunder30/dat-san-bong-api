@@ -6,6 +6,9 @@ const pitchBranchRouter = require('./pitchBranch.routes')
 const pitchTypeRouter = require('./pitchType.routes')
 const priceRouter = require('./price.routes')
 const pitchRouter = require('./pitch.routes')
+const bookingRouter = require('./booking.routes')
+const statusRouter = require('./status.routes')
+const bookingDetailRouter = require('./bookingDetail.routes')
 
 
 function routes(app) {
@@ -32,6 +35,15 @@ function routes(app) {
 
     // Router pitch
     app.use('/api/pitch', pitchRouter)
+
+    // Router booking
+    app.use('/api/booking', bookingRouter)
+
+    // Router status
+    app.use('/api/status', statusRouter)
+
+    // Router bookingDetail
+    app.use('/api/bookingdetail', bookingDetailRouter)
 
     // Home
     app.get('/', (req, res) => {

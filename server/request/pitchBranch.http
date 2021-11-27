@@ -1,19 +1,19 @@
 ###
 POST http://localhost:5000/api/pitchBranch
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjk1ODA0NiwiZXhwIjoxNjM2OTYxNjQ2fQ.u01uPh5vOp2nkBivUojYDKLgpRnYO2MhMlMlZDim5BM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5MzgzNTAsImV4cCI6MTYzODAyNDc1MH0.qS_jx0Eap3MssAtmjE725MajkXj982fpffy5c2ljo6M
 Content-Type: application/json
 
 {
-    "displayName": "Sân ku chuối",
+    "displayName": "Sân ba bà Ba",
     "phoneNumber": "0987654321",
-    "address": "số 304",
-    "ward": "phường 5",
-    "district": "quận 1",
+    "address": "số 113",
+    "ward": "phường 4",
+    "district": "quận 3",
     "province": "TP.HCM",
-    "description":"đá banh đá bóng đeee",
+    "description":"đá banh đá bóng nè",
     "startTime": "07:00",
     "endTime": "23:00",
-    "owner": "618e0c52a0b76f677e587e38"
+    "owner": "619ba213a6c8f7239ee1f169"
 
 }
 
@@ -24,7 +24,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlM
 ###
 
 GET http://localhost:5000/api/pitchBranch
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjk1ODA0NiwiZXhwIjoxNjM2OTYxNjQ2fQ.u01uPh5vOp2nkBivUojYDKLgpRnYO2MhMlMlZDim5BM
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
 
 ###
 GET http://localhost:5000/api/pitchBranch/owner
@@ -53,3 +53,5 @@ Content-Type: application/json
     "owner": "618cf4de63f7ea54d60b8cef"
 }
 
+###
+GET http://localhost:5000/api/pitchBranch/getDetail/619ba93bba72b12e6ea9f2f6

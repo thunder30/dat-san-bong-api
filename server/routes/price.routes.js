@@ -8,15 +8,42 @@ const {
     validateGetByid,
 } = require('../middlewares/price')
 const Price = require('../models/Price')
+const PitchType = require('../models/PitchType')
 
 /**
  * @POST /api/price
  * @desc Add new price
  */
 router.post('/', verifyToken, validatePost, async (req, res) => {
-    try {
-        const { pitchType, time, price } = req.body
+    try{
+        const { pitchType, time, price} = req.body
+        const { isAdmin, userId } = req.payload
 
+        // Check if user is admin
+        const valPriceOwner = await PitchType.find({})
+        .where('_id').equals(pitchType)
+        .populate(
+            {
+                path: 'pitchBranch',
+                match: { owner: userId },
+            }
+        )
+        console.log(valPriceOwner)
+        
+        let isOwner
+        isOwner = valPriceOwner.some((value) => {
+            return value.pitchBranch !== null
+        })
+
+        //check valid user 
+        if(!isOwner && !isAdmin){
+            return res.status(400).json({
+                success: false,
+                message: 'You are not owner of this PitchType!',
+            })
+        }
+            
+        // Check if price already exist
         const valprice = await Price.findOne({ pitchType, time })
         if (valprice) {
             return res.status(400).json({
@@ -25,18 +52,20 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             })
         }
 
-        const newPrice = await Price.create({
-            pitchType,
-            time,
-            price,
-        })
+        // const newPrice = await Price.create({
+        //     pitchType,
+        //     time,
+        //     price
+        // })
 
-        return res.status(201).json({
-            success: true,
-            message: 'Add new price success',
-            newPrice,
-        })
-    } catch (error) {
+        return res.status(201).json(
+            {
+                success: true,
+                message: 'Add new price success',
+                // newPrice
+            }
+        ) 
+    }catch(error){
         res.status(500).json({
             success: false,
             message: 'Internal server error!',
@@ -50,12 +79,29 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
  * @desc Update price by id
  */
 router.put('/:id', verifyToken, validatePut, async (req, res) => {
-    try {
-        const { id } = req.params
-        const price = await Price.findByIdAndUpdate(id, req.body.price, {
-            new: true,
+    try{
+        const {id} = req.params
+        const { isAdmin, userId } = req.payload
+
+        const _price = await Price.findById(id)
+        .populate({
+            path: 'pitchType',
+            populate: {
+                path: 'pitchBranch',
+                match: { owner: userId },
+            }
         })
-        if (!price) {
+
+        if(_price.pitchType.pitchBranch === null && !isAdmin){
+            return res.status(400).json({
+                success: false,
+                message: 'You are not owner of this PitchType!',
+            })
+        }
+
+
+        const price = await Price.findByIdAndUpdate(id, req.body.price, {new: true})
+        if(!price){
             return res.status(404).json({
                 success: false,
                 message: 'Price not found',
@@ -80,8 +126,26 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
  * @desc Delete price by id
  */
 router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
-    try {
-        const { id } = req.params
+    try{
+        const {id} = req.params
+        const { isAdmin, userId } = req.payload
+
+        const _price = await Price.findById(id)
+        .populate({
+            path: 'pitchType',
+            populate: {
+                path: 'pitchBranch',
+                match: { owner: userId },
+            }
+        })
+
+        if(!_price.pitchType.pitchBranch && !isAdmin){
+            return res.status(400).json({
+                success: false,
+                message: 'You are not owner of this PitchType!',
+            })
+        }
+
         await Price.findByIdAndDelete(id)
         return res.status(200).json({
             success: true,
@@ -104,8 +168,14 @@ router.get('/:id', verifyToken, validateGetByid, async (req, res) => {
     try {
         const { id } = req.params
         const price = await Price.findById(id).populate(
-            (path = 'pitchType time'),
-            (select = '-pitchBranch')
+            path = 'pitchType time',
+            )
+        return res.status(200).json(
+            {
+                success: true,
+                message: 'Get price success',
+                price
+            }
         )
         return res.status(200).json({
             success: true,
@@ -126,16 +196,17 @@ router.get('/:id', verifyToken, validateGetByid, async (req, res) => {
  * @desc Get price by pitchType
  */
 router.get('/', verifyToken, async (req, res) => {
-    try {
+    try{
+        const isAdmin = req.payload.isAdmin
+        console.log(isAdmin)
         //if req.query isEmpty
-        if (Object.keys(req.query).length === 0) {
-            const { isAdmin } = req.payload
-            if (!isAdmin) {
-                return res.status(403).json({
-                    success: false,
-                    message: 'You are not admin',
-                })
-            }
+        if(Object.keys(req.query).length === 0){
+            // if(!isAdmin){
+            //     return res.status(403).json({
+            //         success: false,
+            //         message: 'You are not admin'
+            //     })
+            // }
             //get all pitchType
             let _price = await Price.find({})
             //return
@@ -156,17 +227,10 @@ router.get('/', verifyToken, async (req, res) => {
         }
 
         const prices = await Price.find({})
-            .where('pitchType')
-            .equals(pitchTypeId)
-            .populate({
-                path: 'pitchType time',
-                select: '-pitchBranch',
-                match: { pitchType: pitchTypeId },
-            })
-        return res.status(200).json({
-            success: true,
-            message: 'Get prices success',
-            prices,
+        .where('pitchType').equals(pitchTypeId)
+        .populate({
+            path: 'pitchType time',
+            select: '-pitchBranch',
         })
     } catch (error) {
         res.status(500).json({

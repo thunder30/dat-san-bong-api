@@ -4,13 +4,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlM
 
 ###
 POST http://localhost:5000/api/pitchtype
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MDM5MzQyLCJleHAiOjE2MzcwNDI5NDJ9.bdGAVE-EFsOuliAcnEp_a7GbQP0XOU4zmTOvIIvkaNY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5MzgzNTAsImV4cCI6MTYzODAyNDc1MH0.qS_jx0Eap3MssAtmjE725MajkXj982fpffy5c2ljo6M
 Content-Type: application/json
 
 {
-    "displayName": "Sân 12",
-    "description": "Sân này có 12 người",
-    "pitchBranch":"6191ee94a487c92bab48d44e"
+    "displayName": "Sân 5",
+    "description": "Sân này có 5 người",
+    "pitchBranch":"619ba93bba72b12e6ea9f2f6"
 }
 
 ###
