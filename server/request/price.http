@@ -5,11 +5,11 @@ tris
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3NTkzMTY2LCJleHAiOjE2Mzc2Nzk1NjZ9.zrhNJOKqnVD3aiKSYi9NmryDKNgRg0ivi_-hRBpOtaA
 ###
 POST http://localhost:5000/api/price
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc1OTUyNTIsImV4cCI6MTYzNzY4MTY1Mn0.fNHwSsJOuTVMOVddqnFbvXDcyfPflkwWtSBk5xsMpjQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWExZTUwMjgwOTk5MTRlNzY4OTJjNzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5OTk5MDgsImV4cCI6MTYzODA4NjMwOH0.ApGrjqX6AYzuW74xrgIshj8Fq-A5roTqKdcfrP9cmnA
 Content-Type: application/json
 
 {
-    "pitchType": "619ba88fc99ae8e7b202c0cd",
+    "pitchType": "61a1e5898099914e76892c8d",
     "time": "619ba8d7c99ae8e7b202c0ef",
     "price": "10000"
 }
@@ -30,23 +30,26 @@ Content-Type: application/json
 
 {
     "pitchType": "6193475a5da96bc6c9721f0a",
-    "time": "618f41d01299ceb312bf5cc2",
+    "time": "619ba8d6c99ae8e7b202c0d5",
     "price": "2000"
 }
 
 ###
+POST http://localhost:5000/api/price/arrtime
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWExZTUwMjgwOTk5MTRlNzY4OTJjNzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM4MDg4MjY1LCJleHAiOjE2MzgxNzQ2NjV9.jomKQNzkInumiCWO5O9UdSY0VEFCQvZUcwQwLFol6so
+Content-Type: application/json
 
 {
-    "pitchType": "6193475a5da96bc6c9721f0a",
-    [
+    "pitchType": "61a1e5898099914e76892c8d",
+    "prices":[
         {
             "startTime": "01:30",
-            "endTime": "09:00",
-            "price": "2000"
-        }
+            "endTime": "03:00",
+            "price": "3000"
+        },
         {
-            "startTime": "10:30",
-            "endTime": "20:30",
+            "startTime": "05:30",
+            "endTime": "06:30",
             "price": "2000"
         }
     ]

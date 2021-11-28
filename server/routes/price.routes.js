@@ -6,9 +6,11 @@ const {
     validatePost,
     validatePut,
     validateGetByid,
+    validatePostArrTime
 } = require('../middlewares/price')
 const Price = require('../models/Price')
 const PitchType = require('../models/PitchType')
+const Time = require('../models/Time')
 
 /**
  * @POST /api/price
@@ -65,6 +67,91 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
                 // newPrice
             }
         ) 
+    }catch(error){
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+/**
+ * @POST /api/price/ArrTime
+ * @desc Add new price by array time
+ */
+router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
+    try{
+        const {pitchType, prices} = req.body
+
+        // set arrTimes as starTime, endTime in array time of every prices [ [ '01:30', '02:00', '02:30' ], [ '05:30', '06:00' ] ]
+        let arrTimes = []
+        for(let i = 0; i < prices.length; i++){
+            let { startTime, endTime } = prices[i]
+            // startTime and endTime to Dateformat
+            startTime = startTime.split(':')
+            let _startTime = new Date(2020, 0, 1, startTime[0], startTime[1])
+            endTime = endTime.split(':')
+            let _endTime = new Date(2020, 0, 1, endTime[0], endTime[1])
+
+            let arrTime = []
+            while ( _startTime < _endTime ){
+                times = _startTime.getHours() + ':' + _startTime.getMinutes()
+                if(_startTime.getHours() < 10){
+                    times = '0' + times
+                    // console.log(times)
+                }
+                if(_startTime.getMinutes() < 10){
+                    times = times + '0'
+                    // console.log(times)
+                }
+                arrTime.push(times)
+                _startTime.setMinutes(_startTime.getMinutes() + 30)
+            }
+            arrTimes.push(arrTime)
+        }
+        // console.log(arrTimes)
+        // save if price not exist 
+        let arrResult = []
+        for (let i = 0; i < arrTimes.length; i++){
+            for ( let j = 0; j < arrTimes[i].length ; j++ ){
+
+                const time = await Time.findOne({ startTime: arrTimes[i][j] })
+                const _price = await Price.find({pitchType, time : time._id}) 
+
+                // console.log(_price)
+                if(_price.length !== 0)
+                {
+                    //update price
+                    let upPrice = await Price.findOneAndUpdate({pitchType, time : time._id}, {price : prices[i].price})
+                    arrResult.push(upPrice)
+                }else{
+                     //save price
+                    let newPrice = await Price.create({
+                        pitchType,
+                        time: time._id,
+                        price: prices[i].price
+                    })
+                    arrResult.push(newPrice)
+                }
+            }
+        }
+
+        if(arrResult.length === 0){
+            return res.status(500).json({
+                success: false,
+                message: 'Something went wrong'
+            })
+        }
+
+        res.status(200).json(
+            {
+                success: true,
+                message: 'Config price success',
+                arrResult
+            }
+        )
+
     }catch(error){
         res.status(500).json({
             success: false,
