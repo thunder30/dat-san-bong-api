@@ -12,8 +12,11 @@ const {
     validateCheckoutFunction,
     validatePostConfirmFunction,
     validatePostConfirm,
-    validatePutCheckinFunction
+    validatePutCheckinFunction,
+    validatePutCancelFunction,
+    validatePutRefreshFunction
 } = require('../middlewares/booking')
+const sendmail = require('../helpers/mailerBooked')
 const Booking = require('../models/Booking')
 const BookingDetail = require('../models/BookingDetail')
 const User = require('../models/User')
@@ -49,7 +52,7 @@ router.post('/checkout', verifyToken, validateCheckout(), validateResult, valida
 router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, validatePostConfirmFunction, async (req, res) => {
     try {
         //create new booking
-        const { startDate, endDate, price, customer, pitch, startTime, endTime, status } = req.body
+        const { startDate, endDate, price, customer, pitch, startTime, endTime, status, address, pitchName, receiver } = req.body
 
         const booking = new Booking({
             startDate,
@@ -100,7 +103,6 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
             const userUpdate = await User.findOneAndUpdate({ _id: user.pitchType.pitchBranch.owner._id.toString() }, { $push: { users: customer } }, { new: true })
         }
 
-
         res.status(200).json({
             success: true,
             message: 'success',
@@ -109,6 +111,7 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
             code,
         })
 
+        sendmail(receiver,code,startTime,endTime,address,pitchName,price)
 
     } catch (err) {
         res.status(500).json({
@@ -117,7 +120,6 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
         })
     }
 })
-
 
 /**
  * @POST /api/booking
@@ -135,6 +137,146 @@ router.post('/', verifyToken, validatePost(), validateResult, validatePostFuncti
             success: true,
             message: 'Create successfully!',
             _booking
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+/**
+ * @PUT /api/booking/checkin/:id
+ * @desc update status by a bookingDetail code
+ */
+ router.put('/checkin/:id', verifyToken, validatePutCheckinFunction, async (req, res) => {
+    try {
+
+        const status = req.body.status
+        const statusId = await Status.findOne({ status: status })
+        if(!req.body.bookingDetailId){
+            return res.status(404).json({
+                success: false,
+                message: 'Not found',
+            })
+        }
+        let bookingDetailUpdate = await BookingDetail.findOneAndUpdate(
+            { 
+                _id: req.body.bookingDetailId
+            }, 
+            { status: statusId._id }, 
+            { new: true })
+            .select('status startTime endTime price booking pitch')
+            // console.log(bookingDetail[i]._id)
+        
+        res.status(200).json({
+            success: true,
+            message: 'Update successfully!',
+            bookingDetailUpdate
+        })
+
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+/**
+ * @PUT /api/booking/cancel/:id
+ * @desc update status by a bookingDetail code
+ */
+router.put('/cancel/:id', verifyToken, validatePutCancelFunction, async (req, res) => {
+    try {
+        
+        const status = req.body.status
+        const bookingDetailId = req.params.id
+        const statusId = await Status.findOne({ status: status })
+
+        let bookingDetailUpdate = await BookingDetail.findOneAndUpdate(
+            { 
+                _id: bookingDetailId
+            }, 
+            { status: statusId._id }, 
+            { new: true })
+        
+        res.status(200).json({
+            success: true,
+            message: 'Update successfully!',
+            bookingDetailUpdate
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+/**
+ * @PUT /api/booking/:id
+ * @desc Update a booking by id
+ */
+router.put('/:id', verifyToken, validatePut, async (req, res) => {
+    try {
+        const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+        })
+        return res.status(200).json({
+            success: true,
+            message: 'Update successfully!',
+            booking
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+// /**
+//  * @PUT /api/booking/refresh/:id
+//  * @desc Update a booking by branch id
+//  */
+// router.put('/refresh/:id', verifyToken, validatePutRefreshFunction, async (req, res) => {
+//     try {
+//         const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
+//             new: true,
+//         })
+//         return res.status(200).json({
+//             success: true,
+//             message: 'Update successfully!',
+//             booking
+//         })
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: 'Internal server error!',
+//             error: error.message
+//         })
+//     }
+// })
+
+/**
+ * @DELETE /api/booking/:id
+ * @desc Delete a booking by id
+ */
+router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
+    try {
+        const booking = await Booking.findByIdAndDelete(req.params.id)
+        return res.status(200).json({
+            success: true,
+            message: 'Delete successfully!',
+            booking
         })
     } catch (error) {
         res.status(500).json({
@@ -275,92 +417,6 @@ router.get('/', verifyToken, async (req, res) => {
             bookings: arrBookings
         })
 
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            error: error.message
-        })
-    }
-})
-
-
-/**
- * @PUT /api/booking/checkin/:id
- * @desc update status by a bookingDetail code
- */
- router.put('/checkin/:id', verifyToken, validatePutCheckinFunction, async (req, res) => {
-    try {
-
-        const status = req.body.status
-        const statusId = await Status.findOne({ status: status })
-        if(!req.body.bookingDetailId){
-            return res.status(404).json({
-                success: false,
-                message: 'Not found',
-            })
-        }
-        let bookingDetailUpdate = await BookingDetail.findOneAndUpdate(
-            { 
-                _id: req.body.bookingDetailId
-            }, 
-            { status: statusId._id }, 
-            { new: true })
-            .select('status startTime endTime price booking pitch')
-            // console.log(bookingDetail[i]._id)
-        
-        res.status(200).json({
-            success: true,
-            message: 'Update successfully!',
-            bookingDetailUpdate
-        })
-
-
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            error: error.message
-        })
-    }
-})
-
-/**
- * @PUT /api/booking/:id
- * @desc Update a booking by id
- */
-router.put('/:id', verifyToken, validatePut, async (req, res) => {
-    try {
-        const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        })
-        return res.status(200).json({
-            success: true,
-            message: 'Update successfully!',
-            booking
-        })
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error!',
-            error: error.message
-        })
-    }
-})
-
-
-/**
- * @DELETE /api/booking/:id
- * @desc Delete a booking by id
- */
-router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
-    try {
-        const booking = await Booking.findByIdAndDelete(req.params.id)
-        return res.status(200).json({
-            success: true,
-            message: 'Delete successfully!',
-            booking
-        })
     } catch (error) {
         res.status(500).json({
             success: false,

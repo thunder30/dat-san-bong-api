@@ -1,11 +1,12 @@
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Types.ObjectId
-const { check, validationResult } = require('express-validator')
+const { check, validationResult, body } = require('express-validator')
 const Status = require('../../models/Status')
 const Booking = require('../../models/Booking')
 const BookingDetail = require('../../models/BookingDetail')
 const Pitch = require('../../models/Pitch')
 const Price = require('../../models/Price')
+const User = require('../../models/User')
 
 const validatePost = (req, res, next) => {
 
@@ -41,108 +42,10 @@ const validatePostConfirm = (req, res, next) => {
     ]
 }
 
-const validatePutCheckinFunction = async (req, res, next) => {
-
-    if(!req.params.id || !req.body.status) {
-        return res.status(400).json({
-            success: false,
-            message: 'Bad request',
-        })
-    }
-
-    const userId = req.payload.userId
-
-    let bookingDetail = await BookingDetail.find({}).populate('status')
-    for (let i = 0; i < bookingDetail.length; i++) {
-        //get 6 last character of bookingDetailId
-        let code = bookingDetail[i]._id.toString().substring(bookingDetail[i]._id.toString().length - 6)
-        if(code === req.params.id) {
-            // update status
-            let ownerCheck = await BookingDetail.findOne(bookingDetail[i]._id).populate({
-                path: 'pitch',
-                populate: {
-                    path: 'pitchType',
-                    populate: {
-                        path: 'pitchBranch',
-                        select: 'owner',
-                    }
-                }
-            })
-
-            if(ownerCheck.pitch.pitchType.pitchBranch.owner.toString() !== userId) {
-                return res.status(403).json({
-                    success: false,
-                    message: 'You are not owner of this pitch!',
-                })
-            }
-            
-            var _bookingDetail = bookingDetail[i]
-
-            req.body.bookingDetailId = bookingDetail[i]._id.toString()
-            break
-        }
-    }
-    
-    console.log(_bookingDetail.status.status)
-
-    if(_bookingDetail.status.status === 'ST2') {
-        return res.status(400).json({
-            success: false,
-            message: 'This code is checkedIn',
-        })
-    }
-
-    // _bookingDetail.startTime = '26/11/2021 22:50'
-    // _bookingDetail.endTime = '25/11/2021 23:50'
-    const startTimeArray = _bookingDetail.startTime.split(' ')
-    const endTimeArray = _bookingDetail.endTime.split(' ')
-    const startDate = startTimeArray[0].split('/')
-    const endDate = endTimeArray[0].split('/')
-    const startTimeArray2 = startTimeArray[1].split(':')
-    const endTimeArray2 = endTimeArray[1].split(':')
-    const startDateTime = new Date(startDate[2], startDate[1] - 1, startDate[0], startTimeArray2[0], startTimeArray2[1])
-    const endDateTime = new Date(endDate[2], endDate[1] - 1, endDate[0], endTimeArray2[0], endTimeArray2[1])
-
-
-    const now = new Date()
-
-    //if entire booking is checked in
-    if(now > endDateTime) { 
-        return res.status(400).json({
-            success: false,
-            message: 'This booking is expired',
-        })
-    }
-
-    // if startTime - 30 <  now is true
-    // startDateTime - 30 minute
-    const startSub30 = new Date(startDateTime.getTime() - 30 * 60000)
-    if(!(now > startSub30)) {
-        return res.status(400).json({
-            success: false,
-            message: 'Start time is invalid!',
-        })
-    }
-
-    
-
-
-
-    next()
-}
-
 const validateCheckoutFunction = async (req, res, next) => {
 
     const {isAdmin, userId} = req.payload
     const {startTime, endTime, pitch} = req.body
-    // const {startTime, endTime, pitch, customer} = req.body
-
-    // if(customer !== userId){
-    //     return res.status(400).json({
-    //         success: false,
-    //         message: "Id not yours"
-    //     })
-    // }
 
     //check startTime is in format dd/mm/yyyy HH:mm
     const startTimeRegex = /^(0[1-9]|[12][0-9]|3[01])[\/](0[1-9]|1[012])[\/]\d{4} (0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9])$/
@@ -328,6 +231,157 @@ const validateCheckoutFunction = async (req, res, next) => {
     next()
 }
 
+const validatePutCheckinFunction = async (req, res, next) => {
+
+    if(!req.params.id || !req.body.status) {
+        return res.status(400).json({
+            success: false,
+            message: 'Bad request',
+        })
+    }
+
+    const userId = req.payload.userId
+
+    let bookingDetail = await BookingDetail.find({}).populate('status')
+    for (let i = 0; i < bookingDetail.length; i++) {
+        //get 6 last character of bookingDetailId
+        let code = bookingDetail[i]._id.toString().substring(bookingDetail[i]._id.toString().length - 6)
+        if(code === req.params.id) {
+            // update status
+            let ownerCheck = await BookingDetail.findOne(bookingDetail[i]._id).populate({
+                path: 'pitch',
+                populate: {
+                    path: 'pitchType',
+                    populate: {
+                        path: 'pitchBranch',
+                        select: 'owner',
+                    }
+                }
+            })
+
+            if(ownerCheck.pitch.pitchType.pitchBranch.owner.toString() !== userId) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'You are not owner of this pitch!',
+                })
+            }
+            
+            var _bookingDetail = bookingDetail[i]
+
+            req.body.bookingDetailId = bookingDetail[i]._id.toString()
+            break
+        }
+    }
+    
+    console.log(_bookingDetail.status.status)
+
+    if(_bookingDetail.status.status !== 'ST1') {
+        return res.status(400).json({
+            success: false,
+            message: 'This code is inval status',
+        })
+    }
+
+    // _bookingDetail.startTime = '26/11/2021 22:50'
+    // _bookingDetail.endTime = '25/11/2021 23:50'
+    const startTimeArray = _bookingDetail.startTime.split(' ')
+    const endTimeArray = _bookingDetail.endTime.split(' ')
+    const startDate = startTimeArray[0].split('/')
+    const endDate = endTimeArray[0].split('/')
+    const startTimeArray2 = startTimeArray[1].split(':')
+    const endTimeArray2 = endTimeArray[1].split(':')
+    const startDateTime = new Date(startDate[2], startDate[1] - 1, startDate[0], startTimeArray2[0], startTimeArray2[1])
+    const endDateTime = new Date(endDate[2], endDate[1] - 1, endDate[0], endTimeArray2[0], endTimeArray2[1])
+
+
+    const now = new Date()
+
+    //if entire booking is checked in
+    if(now > endDateTime) { 
+        return res.status(400).json({
+            success: false,
+            message: 'This booking is expired',
+        })
+    }
+
+    // if startTime - 30 <  now is true
+    // startDateTime - 30 minute
+    const startSub30 = new Date(startDateTime.getTime() - 30 * 60000)
+    if(!(now > startSub30)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Start time is invalid!',
+        })
+    }
+
+    next()
+}
+
+const validatePutCancelFunction = async (req, res, next) => {
+    
+
+    const bookingDetailId = req.params.id
+
+    //check bookingDetailId is valid id
+    if(!ObjectId.isValid(bookingDetailId)) {
+        return res.status(400).json({
+            success: false,
+            message: 'Bad request',
+        })
+    }
+
+    const userId = req.payload.userId
+    if(!bookingDetailId || !req.body.status) {
+        return res.status(400).json({
+            success: false,
+            message: 'Bad request',
+        })
+    }
+
+    const bookingDetail = await BookingDetail.findById(bookingDetailId).populate('status booking')
+
+    if(bookingDetail.booking.customer != userId) {
+        return res.status(400).json({
+            success: false,
+            message: 'You are not owner of this booking!',
+        })
+    }
+
+    if(bookingDetail.status.status !== 'ST1') {
+        return res.status(400).json({
+            success: false,
+            message: 'You cannot cancel this booking',
+        })
+    }
+
+    //startTime endTime to date object
+    bookingDetail.startTime = "29/11/2021 19:40"
+    const startTimeArray = bookingDetail.startTime.split(' ')
+    const startDate = startTimeArray[0].split('/')
+    const startTimeArray2 = startTimeArray[1].split(':')
+    const startDateTime = new Date(startDate[2], startDate[1] - 1, startDate[0], startTimeArray2[0], startTimeArray2[1])
+
+    // hủy trước 24h
+    // startDatetime - 24 hours
+    const now = new Date()
+    const startSub24 = new Date(startDateTime.getTime() - 24 * 3600000)
+    console.log(now.toString())
+    console.log(startSub24.toString())
+    if(startSub24 < now) {
+        return res.status(400).json({
+            success: false,
+            message: 'Entire time to cancel',
+        })
+    }
+
+    next()
+}
+
+const validatePutRefreshFunction = async (req, res, next) => {
+
+    next()
+}
+
 
 const validatePostFunction = (req, res, next) => {
     
@@ -384,6 +438,7 @@ const validatePostConfirmFunction = async (req, res, next) => {
             message: "Id not yours"
         })
     }
+
 
     //check startTime is in format dd/mm/yyyy HH:mm
     const startTimeRegex = /^(0[1-9]|[12][0-9]|3[01])[\/](0[1-9]|1[012])[\/]\d{4} (0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9])$/
@@ -571,7 +626,22 @@ const validatePostConfirmFunction = async (req, res, next) => {
 
     const status = await Status.findOne({status: 'ST1'})
     req.body.status = status._id.toString()
-    
+    // req.body.receiver = req.user._id.toString()
+    const email = await User.findById(customer)
+    req.body.receiver = email.email
+    req.body.pitchName = _pitch.displayName
+    const address = await Pitch.findById({_id:pitch}).populate({
+        path: 'pitchType',
+        populate: {
+            path: 'pitchBranch',
+            select: 'address ward district province'
+        }
+    })
+    console.log(address)
+
+    const add = address.pitchType.pitchBranch.address + ' ' + address.pitchType.pitchBranch.ward + ' ' + address.pitchType.pitchBranch.district + ' ' + address.pitchType.pitchBranch.province
+    req.body.address = add
+
     next()
 
 }
@@ -613,4 +683,5 @@ const validateResult = (req, res, next) => {
 module.exports = { validatePost, validateDelete, validatePut
     , validateGetByID, validateResult, validatePostFunction
     , validateCheckout, validateCheckoutFunction
-    , validatePostConfirm, validatePostConfirmFunction, validatePutCheckinFunction }
+    , validatePostConfirm, validatePostConfirmFunction, validatePutCheckinFunction
+    , validatePutCancelFunction, validatePutRefreshFunction }

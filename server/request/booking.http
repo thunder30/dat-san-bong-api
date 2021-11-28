@@ -21,12 +21,12 @@ Content-Type: application/json
 
 ### //  booking confirm
 POST http://localhost:5000/api/booking/confirm
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzgwOTc4MTQsImV4cCI6MTYzODE4NDIxNH0.oz_G8wxNA1Kjo5WG2V2s-i5tzILJY3YHQkoJoAXbAmQ
 Content-Type: application/json
 
 {
         "startTime": "12/11/2023 07:30",
-        "endTime": "12/11/2023 08:30",
+        "endTime": "12/11/2023 08:00",
         "status": "ST1",
         "isPaid": true,
         "customer": "619ba12394bbb8fcce69142b",
@@ -72,11 +72,20 @@ Content-Type: application/json
 
 ###
 PUT http://localhost:5000/api/booking/checkin/fc8b90
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5MzgzNTAsImV4cCI6MTYzODAyNDc1MH0.qS_jx0Eap3MssAtmjE725MajkXj982fpffy5c2ljo6M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzgwOTc4MTQsImV4cCI6MTYzODE4NDIxNH0.oz_G8wxNA1Kjo5WG2V2s-i5tzILJY3YHQkoJoAXbAmQ
 Content-Type: application/json
 
 {
     "status": "ST1"
+}
+
+###
+PUT http://localhost:5000/api/booking/cancel/61a363d45f845dbff84c088d
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzgwOTc4MTQsImV4cCI6MTYzODE4NDIxNH0.oz_G8wxNA1Kjo5WG2V2s-i5tzILJY3YHQkoJoAXbAmQ
+Content-Type: application/json
+
+{
+    "status": "ST3"
 }
 
 ###
