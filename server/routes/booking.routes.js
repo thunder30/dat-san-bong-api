@@ -22,6 +22,7 @@ const BookingDetail = require('../models/BookingDetail')
 const User = require('../models/User')
 const Pitch = require('../models/Pitch')
 const Status = require('../models/Status')
+const { where } = require('../models/User')
 
 /**
  * @POST /api/booking/checkout
@@ -243,28 +244,44 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
     }
 })
 
-// /**
-//  * @PUT /api/booking/refresh/:id
-//  * @desc Update a booking by branch id
-//  */
-// router.put('/refresh/:id', verifyToken, validatePutRefreshFunction, async (req, res) => {
-//     try {
-//         const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
-//             new: true,
-//         })
-//         return res.status(200).json({
-//             success: true,
-//             message: 'Update successfully!',
-//             booking
-//         })
-//     } catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: 'Internal server error!',
-//             error: error.message
-//         })
-//     }
-// })
+/**
+ * @PUT /api/booking/refresh/:id
+ * @desc Update a booking by branch id
+ */
+router.put('/refresh/:id', validatePutRefreshFunction, async (req, res) => {
+    try {
+        // const bookingDetail = await BookingDetail.find({})
+        // .populate({
+        //     path: 'pitch',
+        //     populate: {
+        //         path: 'pitchType',
+        //         match: { pitchBranch: req.params.id },
+        //     }
+        // })
+
+        // for(let i = 0; i < bookingDetail.length; i++){
+        //     if(bookingDetail[i].pitch.pitchType !== null){
+
+        //     }
+        // }
+
+
+
+        // console.log(bookingDetail)
+
+        return res.status(200).json({
+            success: true,
+            message: 'Update successfully!',
+            bookingDetail
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
 
 /**
  * @DELETE /api/booking/:id
@@ -289,6 +306,12 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
 
 
 /**
+ * @GET /api/booking/pitchbranch/:id
+ * @desc Get a booking by branch id
+ */
+
+
+/**
  * @GET /api/booking/:id
  * @desc Get a booking by id
  */
@@ -310,7 +333,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
 })
 
 /**
- * @GET /api/booking?customerId=:customerId?ownerId=:ownerId
+ * @GET /api/booking?customerId=:customerId?pitchBranchId=:pitchBranchId
  * @desc Get all bookings
  */
 router.get('/', verifyToken, async (req, res) => {
@@ -324,7 +347,15 @@ router.get('/', verifyToken, async (req, res) => {
                     message: 'You are not Admin !',
                 })
             }
-            let bookings = await Booking.find()
+            let bookings = await BookingDetail.find()
+            .populate({
+                path: 'booking',
+                select: '-createdAt -updatedAt -__v',
+                populate: {
+                    path: 'customer',
+                    select: 'name email phoneNumber'
+                }
+            })
             return res.status(200).json({ 
                 success: true,
                 message: 'Get all bookings successfully!',
@@ -369,7 +400,7 @@ router.get('/', verifyToken, async (req, res) => {
             let c = []
             for(let i = 0; i < b.length; i++) {
                 const booking = await BookingDetail
-                .find(b[i].toString()).populate({
+                .find({ _id:b[i].toString() }).populate({
                     path : 'booking',
                     populate: {
                         path: 'customer',

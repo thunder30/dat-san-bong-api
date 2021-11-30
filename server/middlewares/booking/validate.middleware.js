@@ -379,6 +379,42 @@ const validatePutCancelFunction = async (req, res, next) => {
 
 const validatePutRefreshFunction = async (req, res, next) => {
 
+    const bookingDetail = await BookingDetail.find({})
+    .populate({
+        path: 'pitch',
+        populate: {
+            path: 'pitchType',
+            match: { pitchBranch: req.params.id },
+        }
+    })
+
+    for(let i = 0; i < bookingDetail.length; i++){
+        if(bookingDetail[i].pitch.pitchType !== null){
+            // startTime endTime to date
+            // bookingDetail[i].startTime = "29/11/2021 19:40"
+            // bookingDetail[i].endTime = "29/11/2021 19:40"
+            const startTimeArray = bookingDetail[i].startTime.split(' ')
+            const startDate = startTimeArray[0].split('/')
+            const startTimeArray2 = startTimeArray[1].split(':')
+            const startDateTime = new Date(startDate[2], startDate[1] - 1, startDate[0], startTimeArray2[0], startTimeArray2[1])
+            const endTimeArray = bookingDetail[i].endTime.split(' ')
+            const endDate = endTimeArray[0].split('/')
+            const endTimeArray2 = endTimeArray[1].split(':')
+            const endDateTime = new Date(endDate[2], endDate[1] - 1, endDate[0], endTimeArray2[0], endTimeArray2[1])
+            
+            const statusST1 = await Status.findOne({ status: 'ST1' })
+            const statusST4 = await Status.findOne({ status: 'ST4' })
+
+            // now 
+            const now = new Date()
+            if(now > endDateTime && bookingDetail[i].status.status === 'ST1') {
+                bookingDetail[i].status = 'ST3'
+                bookingDetail[i].save()
+            }
+            
+        }
+    }
+
     next()
 }
 

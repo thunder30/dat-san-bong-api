@@ -263,6 +263,7 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
 router.get('/getDetail/:id', async (req, res) => {
     try {
         const pitchType = await PitchType.find()
+        .sort({ createdAt: 1 })
         .where('pitchBranch').equals(req.params.id)
 
         //sy help
@@ -312,7 +313,7 @@ router.get('/getDetail/:id', async (req, res) => {
                 id: item._id.toString(),
                 displayName: item.displayName,
                 description: item.description,
-                pitchs: pitch,
+                pitches: pitch,
                 prices: time
             })
         }

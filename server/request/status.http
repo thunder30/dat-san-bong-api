@@ -3,8 +3,8 @@ POST http://localhost:5000/api/status
 Content-Type: application/json
 
 {
-    "status": "ST1",
-    "description": "Đang chờ checkin"
+    "status": "ST4",
+    "description": "Đã đá xong"
 }
 
 ###
