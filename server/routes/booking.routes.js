@@ -374,12 +374,13 @@ router.get('/', verifyToken, async (req, res) => {
 
         if(pitchBranchId) {
 
+            //validate owner
             const pitchBranch = await PitchBranch.findById(pitchBranchId)
             .populate({
                 path: 'owner',
             })
-            console.log(pitchBranch)
-            console.log(req.payload.userId)
+            // console.log(pitchBranch)
+            // console.log(req.payload.userId)
             if(pitchBranch.owner._id.toString() !== req.payload.userId) {
                 return res.status(404).json({
                     success: false,
@@ -403,11 +404,18 @@ router.get('/', verifyToken, async (req, res) => {
                 },
             })
             
+            
             //get booking detail by pitch branch id
+
+
             let trueBookingDetail = []
             for(let j = 0; j < bookingDetail.length; j++) {
                 if(bookingDetail[j].pitch.pitchType !== null) {
+                    let stt = await Status.findById(bookingDetail[j].status.toString()).select('_id status description')
+                    bookingDetail[j].status = stt
+
                     trueBookingDetail.push(bookingDetail[j])
+
                 }
             }
 
@@ -427,13 +435,15 @@ router.get('/', verifyToken, async (req, res) => {
                         bookingDetails.push(trueBookingDetail[j])
                     }
                 }
+                let customer = await User.findById(booking[i].customer).select('email -_id')
                 if(bookingDetails.length > 0) {
                     bookings.push({
                         _id : booking[i]._id,
                         startDate: booking[i].startDate,
                         endDate: booking[i].endDate,
                         total: booking[i].total,
-                        customer: booking[i].customer,
+                        isPaid: booking[i].isPaid,
+                        customer,
                         bookingDetails
                     })
                 }
@@ -464,6 +474,8 @@ router.get('/', verifyToken, async (req, res) => {
             console.log(_bookingDetail)
             for(let j = 0 ; j < _bookingDetail.length ; j ++ )
             {
+                let stt = await Status.findById(_bookingDetail[j].status.toString()).select('_id status description')
+                _bookingDetail[j].status = stt
                 bookingDetails.push(_bookingDetail[j])
             }
             const customer = await User.findById(_bookings[i].customer).select('email -_id')
@@ -472,6 +484,7 @@ router.get('/', verifyToken, async (req, res) => {
                 startDate: _bookings[i].startDate,
                 endDate: _bookings[i].endDate,
                 total: _bookings[i].total,
+                ispaid: _bookings[i].ispaid,
                 customer,
                 bookingDetails
             })
