@@ -362,12 +362,10 @@ const validatePutCancelFunction = async (req, res, next) => {
     const startDateTime = new Date(startDate[2], startDate[1] - 1, startDate[0], startTimeArray2[0], startTimeArray2[1])
 
     // hủy trước 24h
-    // startDatetime - 24 hours
+    // startDatetime - 12 hours
     const now = new Date()
-    const startSub24 = new Date(startDateTime.getTime() - 24 * 3600000)
-    console.log(now.toString())
-    console.log(startSub24.toString())
-    if(startSub24 < now) {
+    const startSub = new Date(startDateTime.getTime() - 12 * 3600000)
+    if(startSub < now) {
         return res.status(400).json({
             success: false,
             message: 'Entire time to cancel',

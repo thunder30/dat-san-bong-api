@@ -21,7 +21,7 @@ Content-Type: application/json
 
 ### //  booking confirm
 POST http://localhost:5000/api/booking/confirm
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzgwOTc4MTQsImV4cCI6MTYzODE4NDIxNH0.oz_G8wxNA1Kjo5WG2V2s-i5tzILJY3YHQkoJoAXbAmQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWExZTYzYTgwOTk5MTRlNzY4OTJjOWIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzg1MDAyNzQsImV4cCI6MTYzODU4NjY3NH0.VZFSG9gQgiJNgWcX7f8xfRfOWQHVZT5YIF3PgSNMujM
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
         "endTime": "12/11/2023 08:00",
         "status": "ST1",
         "isPaid": true,
-        "customer": "619ba12394bbb8fcce69142b",
+        "customer": "61a1e63a8099914e76892c9b",
         "pitch":"619bb43bb770e45c464db6f1"
 }
 
@@ -50,8 +50,13 @@ GET http://localhost:5000/api/booking
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNzMwMjg3OCwiZXhwIjoxNjM3MzA2NDc4fQ.qXlYfxdvPJqgcwBEka0bvBU52JKiOnZwKQzfYpMcdhM
 
 ###
-GET http://localhost:5000/api/booking?customerId=619ba12394bbb8fcce69142b
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
+GET http://localhost:5000/api/booking?customerId=61a1e63a8099914e76892c9b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWExZTYzYTgwOTk5MTRlNzY4OTJjOWIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzg1MDAyNzQsImV4cCI6MTYzODU4NjY3NH0.VZFSG9gQgiJNgWcX7f8xfRfOWQHVZT5YIF3PgSNMujM
+
+###
+GET http://localhost:5000/api/booking?pitchBranchId=619ba93bba72b12e6ea9f2f6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzg0NjAwNTksImV4cCI6MTYzODU0NjQ1OX0.UiyqgNL6FUT890zOjMONyykeQSMOmjaI4HysadqGihM
+
 
 ###
 GET http://localhost:5000/api/booking/619743880b34ce1c4b933c59

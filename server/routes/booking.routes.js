@@ -22,7 +22,7 @@ const BookingDetail = require('../models/BookingDetail')
 const User = require('../models/User')
 const Pitch = require('../models/Pitch')
 const Status = require('../models/Status')
-const { where } = require('../models/User')
+const PitchBranch = require('../models/PitchBranch')
 
 /**
  * @POST /api/booking/checkout
@@ -373,79 +373,115 @@ router.get('/', verifyToken, async (req, res) => {
         }
 
         if(pitchBranchId) {
+
+            const pitchBranch = await PitchBranch.findById(pitchBranchId)
+            .populate({
+                path: 'owner',
+            })
+            console.log(pitchBranch)
+            console.log(req.payload.userId)
+            if(pitchBranch.owner._id.toString() !== req.payload.userId) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'You are not owner of this branch !',
+                })
+            }
+
+            //get all bookingDetail match pitchBranchId
             const bookingDetail = await BookingDetail.find({})
             .populate({
                 path: 'pitch',
-                select: '_id',
+                select : 'displayName',
                 populate: {
                     path: 'pitchType',
-                    select: '_id',
+                    select: 'displayName',
+                    match: { pitchBranch: pitchBranchId },
                     populate: {
                         path: 'pitchBranch',
-                        
-                        // match: {owner : ownerId}
+                        select: 'owner'
                     }
                 },
             })
-
-            // Get all booking detail by pitchBranchId
-            let b = []
-            for(let i = 0; i < bookingDetail.length; i++) {
-                if(bookingDetail[i].pitch.pitchType.pitchBranch._id.toString() === pitchBranchId && bookingDetail[i].pitch.pitchType.pitchBranch.owner.toString() === req.payload.userId) {
-                    b.push(bookingDetail[i]._id)
+            
+            //get booking detail by pitch branch id
+            let trueBookingDetail = []
+            for(let j = 0; j < bookingDetail.length; j++) {
+                if(bookingDetail[j].pitch.pitchType !== null) {
+                    trueBookingDetail.push(bookingDetail[j])
                 }
             }
 
-            // Get all booking by bookingDetailId
-            let c = []
-            for(let i = 0; i < b.length; i++) {
-                const booking = await BookingDetail
-                .find({ _id:b[i].toString() }).populate({
-                    path : 'booking',
-                    populate: {
-                        path: 'customer',
-                        select: '_id email firstName lastName',
+        
+
+            // push bookingDetail to booking
+            const booking = await Booking.find({})
+            let bookings = []
+            //for all booking to get bookingDetail
+            for(let i = 0; i < booking.length; i++) {
+                //filter by booking
+                let bookingDetails = []
+                for(let j = 0; j < trueBookingDetail.length; j++) {
+                    if(booking[i]._id.toString() === trueBookingDetail[j].booking._id.toString() 
+                    && (trueBookingDetail[j].pitch.pitchType.pitchBranch.owner.toString() === req.payload.userId 
+                    || req.payload.isAdmin)) {
+                        bookingDetails.push(trueBookingDetail[j])
                     }
-                })
-                c[i] = booking
+                }
+                if(bookingDetails.length > 0) {
+                    bookings.push({
+                        _id : booking[i]._id,
+                        startDate: booking[i].startDate,
+                        endDate: booking[i].endDate,
+                        total: booking[i].total,
+                        customer: booking[i].customer,
+                        bookingDetails
+                    })
+                }
             }
 
             return res.status(200).json({
                 success: true,
-                message: 'Get bookings successfully!',
-                bookings: c
+                message: 'Get successfully!',
+                bookings
             })
         }
 
-        let customerIdd = '619dbcd6bc930d10be70a60e'
-        
-        let bookings = await BookingDetail.find({})
+        //validate customerId
+        if(customerId !== req.payload.userId && !req.payload.isAdmin) {
+            return res.status(403).json({
+                success: false,
+                message: 'You don\'t have permission to get this booking!',
+            })
+        }
 
-        .where('customer').equals(customerId)
-        .populate({
-            path: 'booking',
-            populate: {
-                path: 'customer',
-                match: { _id: customerId },
-                select: '_id',
+        //get all Booking match customerId
+        let bookings = []
+        let _bookings = await Booking.find({}).where('customer').equals(customerId)
+        for(let i = 0 ; i < _bookings.length ; i ++ )
+        {
+            let bookingDetails = []
+            let _bookingDetail = await BookingDetail.find({}).where('booking').equals(_bookings[i]._id.toString())
+            console.log(_bookingDetail)
+            for(let j = 0 ; j < _bookingDetail.length ; j ++ )
+            {
+                bookingDetails.push(_bookingDetail[j])
             }
-        })
+            const customer = await User.findById(_bookings[i].customer).select('email -_id')
+            bookings.push({ 
+                _id: _bookings[i]._id,
+                startDate: _bookings[i].startDate,
+                endDate: _bookings[i].endDate,
+                total: _bookings[i].total,
+                customer,
+                bookingDetails
+            })
 
-        // console.log(bookings)
-
-        let arrBookings = []
-
-        for(let i = 0; i < bookings.length; i++) {
-            if(bookings[i].booking.customer._id.toString() === customerId) {
-                arrBookings.push(bookings[i])
-                console.log(bookings[i])
-            }
         }
 
         return res.status(200).json({
             success: true,
             message: 'Get successfully!',
-            bookings: arrBookings
+            bookings
         })
 
     } catch (error) {
