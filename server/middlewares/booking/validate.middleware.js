@@ -416,7 +416,6 @@ const validatePutRefreshFunction = async (req, res, next) => {
     next()
 }
 
-
 const validatePostFunction = (req, res, next) => {
     
     //check startDate is dd/mm/yyyy
@@ -680,6 +679,47 @@ const validatePostConfirmFunction = async (req, res, next) => {
 
 }
 
+const validatePostStaticFunction = async (req, res, next) => {
+
+    if(!req.body.startDate || !req.body.endDate || !req.body.pitchBranchId){
+        return res.status(400).send({
+            success: false,
+            message: 'Missing information',
+        })
+    }
+
+    const { startDate, endDate, pitchBranchId } = req.body
+    //check startDate and endDate in format dd/MM/yyyy regex
+    const regex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
+    if (!regex.test(startDate) || !regex.test(endDate)) {
+        return res.status(400).send({
+            success: false,
+            message: 'StartDate and EndDate must be in format dd/MM/yyyy',
+        })
+    }
+
+    //check startDate > endDate
+    _startDate = convertStringToDate(startDate)
+    _endDate = convertStringToDate(endDate)
+
+    if (_startDate > _endDate) {
+        return res.status(400).send({
+            success: false,
+            message: 'StartDate must be less than EndDate',
+        })
+    }
+
+    //check pitchBranchId is MongoId
+    if (!mongoose.Types.ObjectId.isValid(pitchBranchId)) {
+        return res.status(400).send({
+            success: false,
+            message: 'pitchBranchId is not valid',
+        })
+    }
+
+    next()
+}
+
 const validateDelete = (req, res, next) => {
 
     validateResult(req, res, next)
@@ -714,8 +754,14 @@ const validateResult = (req, res, next) => {
     next()
 }
 
+function convertStringToDate(s) {
+    const splDay = s.split('/')
+    const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
+    return dateTime
+}
+
 module.exports = { validatePost, validateDelete, validatePut
     , validateGetByID, validateResult, validatePostFunction
     , validateCheckout, validateCheckoutFunction
     , validatePostConfirm, validatePostConfirmFunction, validatePutCheckinFunction
-    , validatePutCancelFunction, validatePutRefreshFunction }
+    , validatePutCancelFunction, validatePutRefreshFunction, validatePostStaticFunction }
