@@ -23,7 +23,10 @@ router.get('/', verifyToken, async (req, res) => {
                 success: false,
                 message: 'You do not have permission to access',
             })
-        const users = await User.find({})
+        const users = await User.find({}).populate({
+            path: 'roles',
+            select: 'code',
+        })
         res.status(200).json({
             success: true,
             message: 'Successfully!',
