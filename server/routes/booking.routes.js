@@ -426,15 +426,25 @@ router.get('/', verifyToken, async (req, res) => {
                     message: 'You are not Admin !',
                 })
             }
-            let bookings = await BookingDetail.find()
-            .populate({
-                path: 'booking',
-                select: '-createdAt -updatedAt -__v',
-                populate: {
-                    path: 'customer',
-                    select: 'name email phoneNumber'
+            let bookings = []
+            let booking = await Booking.find()
+            for(let i = 0; i < booking.length; i++){
+                let bookingsDetails = []
+                let bookingDetail = await BookingDetail.find({ booking: booking[i]._id })
+                for(let j = 0 ; j < bookingDetail.length; j++){
+                    bookingsDetails.push(bookingDetail[j])
                 }
-            })
+                let customer = await User.findById(booking[i].customer).select('email -_id')
+                bookings.push({
+                    _id : booking[i]._id,
+                    startDate: booking[i].startDate,
+                    endDate: booking[i].endDate,
+                    total: booking[i].total,
+                    isPaid: booking[i].isPaid,
+                    customer,
+                    bookingsDetails
+                })
+            }
             return res.status(200).json({ 
                 success: true,
                 message: 'Get all bookings successfully!',
@@ -460,7 +470,7 @@ router.get('/', verifyToken, async (req, res) => {
             })
             // console.log(pitchBranch)
             // console.log(req.payload.userId)
-            if(pitchBranch.owner._id.toString() !== req.payload.userId) {
+            if(pitchBranch.owner._id.toString() !== req.payload.userId && !req.payload.isAdmin) {
                 return res.status(404).json({
                     success: false,
                     message: 'You are not owner of this branch !',
@@ -485,8 +495,6 @@ router.get('/', verifyToken, async (req, res) => {
             
             
             //get booking detail by pitch branch id
-
-
             let trueBookingDetail = []
             for(let j = 0; j < bookingDetail.length; j++) {
                 if(bookingDetail[j].pitch.pitchType !== null) {
