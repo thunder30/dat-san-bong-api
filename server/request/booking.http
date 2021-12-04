@@ -103,3 +103,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliO
 
 ###
 PUT http://localhost:5000/api/booking/refresh/619ba93bba72b12e6ea9f2f6
+
+###
+POST http://localhost:5000/api/booking/static
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzg0NjAwNTksImV4cCI6MTYzODU0NjQ1OX0.UiyqgNL6FUT890zOjMONyykeQSMOmjaI4HysadqGihM
+Content-Type: application/json
+
+{
+    "startDate": "12/11/2023",
+    "endDate": "30/12/2023",
+    "pitchBranchId": "619ba93bba72b12e6ea9f2f6"
+}

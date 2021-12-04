@@ -14,7 +14,8 @@ const {
     validatePostConfirm,
     validatePutCheckinFunction,
     validatePutCancelFunction,
-    validatePutRefreshFunction
+    validatePutRefreshFunction,
+    validatePostStaticFunction
 } = require('../middlewares/booking')
 const sendmail = require('../helpers/mailerBooked')
 const Booking = require('../models/Booking')
@@ -121,6 +122,83 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
         })
     }
 })
+
+/**
+ * @POST /api/booking/static
+ * @desc get sum countBookings, Price as time, pitchBranchId
+ */
+ router.post('/static', verifyToken, validatePostStaticFunction, async (req, res) => {
+    try {
+        
+        const { startDate, endDate, pitchBranchId } = req.body
+        const _startDate = convertStringToDate(startDate)
+        const _endDate = convertStringToDate(endDate)
+
+        const bookingDetail = await BookingDetail.find({})
+        .populate({
+            path: 'pitch',
+            populate: {
+                path: 'pitchType',
+                match: { pitchBranch: pitchBranchId },
+            }
+        })
+
+        let _bookingDetail = []
+        bookingDetail.forEach(element => {
+            if(element.pitch.pitchType !== null){
+                _bookingDetail.push(element)
+            }
+        });
+        // console.log(_bookingDetail)
+
+        const booking = await Booking.find({})
+        // console.log(booking)
+        const bk = []
+
+        let count = 0
+        let price = 0
+
+        for(let i = 0; i < booking.length; i++){
+            if(convertStringToDate(booking[i].startDate).getTime() >= _startDate.getTime() && convertStringToDate(booking[i].endDate).getTime() <= _endDate.getTime()){
+                const bd = await BookingDetail.findOne({ booking: booking[i]._id })
+                .populate({
+                    path: 'pitch',
+                    populate: {
+                        path: 'pitchType',
+                        match: { pitchBranch: pitchBranchId },
+                    }
+                })
+                if(bd === null)
+                    continue
+                if(bd.pitch.pitchType !== null)
+                {
+                    count++
+                    price += booking[i].total
+                }
+            }
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Get successfully!',
+            count,
+            price,
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+//function convert StringDate to Date
+function convertStringToDate(s) {
+    const splDay = s.split('/')
+    const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
+    return dateTime
+}
 
 /**
  * @POST /api/booking
@@ -332,6 +410,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     }
 })
 
+
 /**
  * @GET /api/booking?customerId=:customerId?pitchBranchId=:pitchBranchId
  * @desc Get all bookings
@@ -347,15 +426,25 @@ router.get('/', verifyToken, async (req, res) => {
                     message: 'You are not Admin !',
                 })
             }
-            let bookings = await BookingDetail.find()
-            .populate({
-                path: 'booking',
-                select: '-createdAt -updatedAt -__v',
-                populate: {
-                    path: 'customer',
-                    select: 'name email phoneNumber'
+            let bookings = []
+            let booking = await Booking.find()
+            for(let i = 0; i < booking.length; i++){
+                let bookingsDetails = []
+                let bookingDetail = await BookingDetail.find({ booking: booking[i]._id })
+                for(let j = 0 ; j < bookingDetail.length; j++){
+                    bookingsDetails.push(bookingDetail[j])
                 }
-            })
+                let customer = await User.findById(booking[i].customer).select('email -_id')
+                bookings.push({
+                    _id : booking[i]._id,
+                    startDate: booking[i].startDate,
+                    endDate: booking[i].endDate,
+                    total: booking[i].total,
+                    isPaid: booking[i].isPaid,
+                    customer,
+                    bookingsDetails
+                })
+            }
             return res.status(200).json({ 
                 success: true,
                 message: 'Get all bookings successfully!',
@@ -381,7 +470,7 @@ router.get('/', verifyToken, async (req, res) => {
             })
             // console.log(pitchBranch)
             // console.log(req.payload.userId)
-            if(pitchBranch.owner._id.toString() !== req.payload.userId) {
+            if(pitchBranch.owner._id.toString() !== req.payload.userId && !req.payload.isAdmin) {
                 return res.status(404).json({
                     success: false,
                     message: 'You are not owner of this branch !',
@@ -406,8 +495,6 @@ router.get('/', verifyToken, async (req, res) => {
             
             
             //get booking detail by pitch branch id
-
-
             let trueBookingDetail = []
             for(let j = 0; j < bookingDetail.length; j++) {
                 if(bookingDetail[j].pitch.pitchType !== null) {
