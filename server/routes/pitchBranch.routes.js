@@ -337,7 +337,7 @@ router.get('/getDetail/:id', async (req, res) => {
  * @GET /api/pitchBranch?getAsBranch=id
  * @description Get all pitchBranch
  */
-router.get('/', verifyToken, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
 
         const pitchBranch = await PitchBranch.find().populate({
