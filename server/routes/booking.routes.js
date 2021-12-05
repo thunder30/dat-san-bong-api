@@ -435,6 +435,14 @@ router.get('/', verifyToken, async (req, res) => {
                     let status = await Status.findById(bookingDetail[j].status).select("-createdAt -updatedAt -__v")
                     bookingDetail[j].status = status
                     let pitch = await Pitch.findById(bookingDetail[j].pitch).select("displayName")
+                        .populate({
+                            path: 'pitchType',
+                            select: 'displayName description',
+                            populate: {
+                                path: 'pitchBranch',
+                                select: 'displayName description'
+                            }
+                        })
                     bookingDetail[j].pitch = pitch
                     bookingDetails.push(bookingDetail[j])
                 }
@@ -488,11 +496,11 @@ router.get('/', verifyToken, async (req, res) => {
                 select : 'displayName',
                 populate: {
                     path: 'pitchType',
-                    select: 'displayName',
+                    select: 'displayName description',
                     match: { pitchBranch: pitchBranchId },
                     populate: {
                         path: 'pitchBranch',
-                        select: 'owner'
+                        select: 'displayName description owner',
                     }
                 },
             })
@@ -561,7 +569,14 @@ router.get('/', verifyToken, async (req, res) => {
             {
                 let stt = await Status.findById(_bookingDetail[j].status.toString()).select('_id status description')
                 _bookingDetail[j].status = stt
-                let pitch = await Pitch.findById(_bookingDetail[j].pitch).select('displayName')
+                let pitch = await Pitch.findById(_bookingDetail[j].pitch).select('displayName').populate({
+                    path: 'pitchType',
+                    select: 'displayName description',
+                    populate: {
+                        path: 'pitchBranch',
+                        select: 'displayName description',
+                    }
+                })
                 _bookingDetail[j].pitch = pitch
                 bookingDetails.push(_bookingDetail[j])
             }
