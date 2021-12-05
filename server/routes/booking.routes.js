@@ -384,14 +384,10 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     try {
         const { startDate, endDate, pitchBranchId } = req.query
         const isAdmin = req.payload.isAdmin
-        const _startDate = convertStringToDate(startDate)
-        const _endDate = convertStringToDate(endDate)
 
         const booking = await Booking.find({})
-        const bk = []
+        // const bk = []
 
-        // let count = 0
-        // let price = 0
         const static = []
         let staticAsPitchBranch = {
             pitchBranchId: '',
@@ -424,34 +420,22 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
                 staticAsPitchBranch.pitchBranchId = bookingDetail.pitch.pitchType.pitchBranch._id.toString()
                 staticAsPitchBranch.branchName = bookingDetail.pitch.pitchType.pitchBranch.displayName
                 static.push(staticAsPitchBranch)
-                // console.log(staticAsPitchBranch)
-                // if(convertStringToDate(booking[i].startDate).getTime() >= _startDate.getTime() && convertStringToDate(booking[i].endDate).getTime() <= _endDate.getTime()){
-                //     const bd = await BookingDetail.findOne({ booking: booking[i]._id })
-                //     let stt = await Status.findOne({ _id: bd.status })
-                //     let bookingDetail = await BookingDetail.findOne({ booking: booking[i]._id })
-                //         .populate({
-                //             path: 'pitch',
-                //             populate: {
-                //                 path: 'pitchType',
-                //                 populate: {
-                //                     path: 'pitchBranch',
-                //                     select: 'displayName'
-                //                 }
-                //             }
-                //         })
-                //     console.log(bookingDetail)
-                //     let {displayName,_id} = bookingDetail.pitch.pitchType.pitchBranch
-                //     staticAsPitchBranch.displayName = displayName
-                //     staticAsPitchBranch.pitchBranchId = _id
-
-                //     if(bd !== null && (stt.status !== 'ST3' || stt.status !== 'ST4')){
-                //         // bk.push(bd)
-                //         staticAsPitchBranch.count++
-                //         staticAsPitchBranch.price += booking[i].total
-                //         static.push(staticAsPitchBranch)
-                //     }
-                // }
             }
+
+            // sum bookingamount and total for similar pitchBranchId
+            for(let i = 0; i < static.length; i++){
+                for(let j = i+1; j < static.length; j++){
+                    if(static[i].pitchBranchId === static[j].pitchBranchId){
+                        static[i].bookingAmount += static[j].bookingAmount
+                        static[i].total += static[j].total
+                        static.splice(j,1)
+                        j--
+                    }
+                }
+            }
+
+
+            console.log(static)
         return res.status(200).json({
             success: true,
             message: 'Get successfully!',
@@ -460,6 +444,8 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         }else{
             // console.log(await getStaticAsPitchBranch(pitchBranchId ,booking ))
             staticAsPitchBranch = await getStaticAsPitchBranch(pitchBranchId ,booking )
+            delete staticAsPitchBranch.pitchBranchId
+            delete staticAsPitchBranch.branchName
             return res.status(200).json({
                 success: true,
                 message: 'Get successfully!',
@@ -477,7 +463,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
 
 
 let getStaticAsPitchBranch = async (pitchBranchId, booking) => {
-    console.log(pitchBranchId)
+    // console.log(pitchBranchId)
     let staticAsPitchBranch = {
         pitchBranchId: '',
         branchName: '',
@@ -507,7 +493,7 @@ let getStaticAsPitchBranch = async (pitchBranchId, booking) => {
         }
     }
     }
-    console.log(staticAsPitchBranch)
+    // console.log(staticAsPitchBranch)
     return staticAsPitchBranch
 }
 
