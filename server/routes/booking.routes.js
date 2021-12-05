@@ -432,6 +432,10 @@ router.get('/', verifyToken, async (req, res) => {
                 let bookingsDetails = []
                 let bookingDetail = await BookingDetail.find({ booking: booking[i]._id })
                 for(let j = 0 ; j < bookingDetail.length; j++){
+                    let status = await Status.findById(bookingDetail[j].status).select("-createdAt -updatedAt -__v")
+                    bookingDetail[j].status = status
+                    let pitch = await Pitch.findById(bookingDetail[j].pitch).select("displayName")
+                    bookingDetail[j].pitch = pitch
                     bookingsDetails.push(bookingDetail[j])
                 }
                 let customer = await User.findById(booking[i].customer).select('email -_id')
@@ -500,14 +504,9 @@ router.get('/', verifyToken, async (req, res) => {
                 if(bookingDetail[j].pitch.pitchType !== null) {
                     let stt = await Status.findById(bookingDetail[j].status.toString()).select('_id status description')
                     bookingDetail[j].status = stt
-
                     trueBookingDetail.push(bookingDetail[j])
-
                 }
             }
-
-        
-
             // push bookingDetail to booking
             const booking = await Booking.find({})
             let bookings = []
@@ -558,11 +557,12 @@ router.get('/', verifyToken, async (req, res) => {
         {
             let bookingDetails = []
             let _bookingDetail = await BookingDetail.find({}).where('booking').equals(_bookings[i]._id.toString())
-            console.log(_bookingDetail)
             for(let j = 0 ; j < _bookingDetail.length ; j ++ )
             {
                 let stt = await Status.findById(_bookingDetail[j].status.toString()).select('_id status description')
                 _bookingDetail[j].status = stt
+                let pitch = await Pitch.findById(_bookingDetail[j].pitch).select('displayName')
+                _bookingDetail[j].pitch = pitch
                 bookingDetails.push(_bookingDetail[j])
             }
             const customer = await User.findById(_bookings[i].customer).select('email -_id')
@@ -575,7 +575,6 @@ router.get('/', verifyToken, async (req, res) => {
                 customer,
                 bookingDetails
             })
-
         }
 
         return res.status(200).json({
