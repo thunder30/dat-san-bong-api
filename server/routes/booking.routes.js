@@ -417,6 +417,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
  */
 router.get('/', verifyToken, async (req, res) => {
     try {
+        let pitchBranch
         if(Object.keys(req.query).length === 0) {
             //check if user is admin
             const isAdmin = req.payload.isAdmin
@@ -440,9 +441,10 @@ router.get('/', verifyToken, async (req, res) => {
                             select: 'displayName description',
                             populate: {
                                 path: 'pitchBranch',
-                                select: 'displayName description'
+                                select: 'displayName description',
                             }
                         })
+                    pitchBranch = pitch.pitchType.pitchBranch
                     bookingDetail[j].pitch = pitch
                     bookingDetails.push(bookingDetail[j])
                 }
@@ -453,6 +455,7 @@ router.get('/', verifyToken, async (req, res) => {
                     endDate: booking[i].endDate,
                     total: booking[i].total,
                     isPaid: booking[i].isPaid,
+                    pitchBranch,
                     customer,
                     bookingDetails
                 })
@@ -476,13 +479,13 @@ router.get('/', verifyToken, async (req, res) => {
         if(pitchBranchId) {
 
             //validate owner
-            const pitchBranch = await PitchBranch.findById(pitchBranchId)
+            const _pitchBranch = await PitchBranch.findById(pitchBranchId)
             .populate({
                 path: 'owner',
             })
             // console.log(pitchBranch)
             // console.log(req.payload.userId)
-            if(pitchBranch.owner._id.toString() !== req.payload.userId && !req.payload.isAdmin) {
+            if(_pitchBranch.owner._id.toString() !== req.payload.userId && !req.payload.isAdmin) {
                 return res.status(404).json({
                     success: false,
                     message: 'You are not owner of this branch !',
@@ -504,8 +507,6 @@ router.get('/', verifyToken, async (req, res) => {
                     }
                 },
             })
-            
-            
             //get booking detail by pitch branch id
             let trueBookingDetail = []
             for(let j = 0; j < bookingDetail.length; j++) {
@@ -526,6 +527,7 @@ router.get('/', verifyToken, async (req, res) => {
                     if(booking[i]._id.toString() === trueBookingDetail[j].booking._id.toString() 
                     && (trueBookingDetail[j].pitch.pitchType.pitchBranch.owner.toString() === req.payload.userId 
                     || req.payload.isAdmin)) {
+                        pitchBranch = trueBookingDetail[j].pitch.pitchType.pitchBranch
                         bookingDetails.push(trueBookingDetail[j])
                     }
                 }
@@ -537,6 +539,7 @@ router.get('/', verifyToken, async (req, res) => {
                         endDate: booking[i].endDate,
                         total: booking[i].total,
                         isPaid: booking[i].isPaid,
+                        pitchBranch: pitchBranch,
                         customer,
                         bookingDetails
                     })
@@ -577,6 +580,7 @@ router.get('/', verifyToken, async (req, res) => {
                         select: 'displayName description',
                     }
                 })
+                pitchBranch = pitch.pitchType.pitchBranch
                 _bookingDetail[j].pitch = pitch
                 bookingDetails.push(_bookingDetail[j])
             }
@@ -587,6 +591,7 @@ router.get('/', verifyToken, async (req, res) => {
                 endDate: _bookings[i].endDate,
                 total: _bookings[i].total,
                 ispaid: _bookings[i].ispaid,
+                pitchBranch: pitchBranch,
                 customer,
                 bookingDetails
             })
