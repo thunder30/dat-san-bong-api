@@ -429,14 +429,14 @@ router.get('/', verifyToken, async (req, res) => {
             let bookings = []
             let booking = await Booking.find()
             for(let i = 0; i < booking.length; i++){
-                let bookingsDetails = []
+                let bookingDetails = []
                 let bookingDetail = await BookingDetail.find({ booking: booking[i]._id })
                 for(let j = 0 ; j < bookingDetail.length; j++){
                     let status = await Status.findById(bookingDetail[j].status).select("-createdAt -updatedAt -__v")
                     bookingDetail[j].status = status
                     let pitch = await Pitch.findById(bookingDetail[j].pitch).select("displayName")
                     bookingDetail[j].pitch = pitch
-                    bookingsDetails.push(bookingDetail[j])
+                    bookingDetails.push(bookingDetail[j])
                 }
                 let customer = await User.findById(booking[i].customer).select('email -_id')
                 bookings.push({
@@ -446,7 +446,7 @@ router.get('/', verifyToken, async (req, res) => {
                     total: booking[i].total,
                     isPaid: booking[i].isPaid,
                     customer,
-                    bookingsDetails
+                    bookingDetails
                 })
             }
             return res.status(200).json({ 
