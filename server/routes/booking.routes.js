@@ -131,25 +131,9 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
     try {
         
         const { startDate, endDate, pitchBranchId } = req.body
+        const isAdmin = req.payload.isAdmin
         const _startDate = convertStringToDate(startDate)
         const _endDate = convertStringToDate(endDate)
-
-        const bookingDetail = await BookingDetail.find({})
-        .populate({
-            path: 'pitch',
-            populate: {
-                path: 'pitchType',
-                match: { pitchBranch: pitchBranchId },
-            }
-        })
-
-        let _bookingDetail = []
-        bookingDetail.forEach(element => {
-            if(element.pitch.pitchType !== null){
-                _bookingDetail.push(element)
-            }
-        });
-        // console.log(_bookingDetail)
 
         const booking = await Booking.find({})
         // console.log(booking)
@@ -158,6 +142,19 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
         let count = 0
         let price = 0
 
+        if(isAdmin){
+            for(let i = 0; i < booking.length; i++){
+                if(convertStringToDate(booking[i].startDate).getTime() >= _startDate.getTime() && convertStringToDate(booking[i].endDate).getTime() <= _endDate.getTime()){
+                    const bd = await BookingDetail.findOne({ booking: booking[i]._id })
+                    let stt = await Status.findOne({ _id: bd.status })
+                    if(bd !== null && (stt.status !== 'ST3' || stt.status !== 'ST4')){
+                        // bk.push(bd)
+                        count++
+                        price += booking[i].total
+                    }
+                }
+            }
+        }else
         for(let i = 0; i < booking.length; i++){
             if(convertStringToDate(booking[i].startDate).getTime() >= _startDate.getTime() && convertStringToDate(booking[i].endDate).getTime() <= _endDate.getTime()){
                 const bd = await BookingDetail.findOne({ booking: booking[i]._id })
@@ -170,12 +167,16 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
                 })
                 if(bd === null)
                     continue
-                if(bd.pitch.pitchType !== null)
+                let stt = await Status.findOne({ _id: bd.status })
+                if(bd.pitch.pitchType !== null && (stt.status !== 'ST3' || stt.status !== 'ST4')){
                 {
+                    // bk.push(bd)
                     count++
                     price += booking[i].total
                 }
+                
             }
+        }
         }
 
         return res.status(200).json({
@@ -192,13 +193,6 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
         })
     }
 })
-
-//function convert StringDate to Date
-function convertStringToDate(s) {
-    const splDay = s.split('/')
-    const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
-    return dateTime
-}
 
 /**
  * @POST /api/booking
@@ -382,6 +376,140 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     }
 })
 
+/**
+ * @POST /api/booking/static
+ * @desc get sum countBookings, Price as time, pitchBranchId
+ */
+ router.get('/static', verifyToken, validatePostStaticFunction, async (req, res) => {
+    try {
+        const { startDate, endDate, pitchBranchId } = req.query
+        const isAdmin = req.payload.isAdmin
+        const _startDate = convertStringToDate(startDate)
+        const _endDate = convertStringToDate(endDate)
+
+        const booking = await Booking.find({})
+        const bk = []
+
+        // let count = 0
+        // let price = 0
+        const static = []
+        let staticAsPitchBranch = {
+            pitchBranchId: '',
+            branchName: '',
+            bookingAmount: 0,
+            total: 0
+        }
+
+        if(isAdmin){
+            for(let i = 0; i < booking.length; i++){
+                staticAsPitchBranch = {
+                    pitchBranchId: '',
+                    branchName: '',
+                    bookingAmount: 0,
+                    total: 0
+                }
+                const bookingDetail = await BookingDetail.findOne({ booking: booking[i]._id })
+                    .populate({
+                        path: 'pitch',
+                        populate: {
+                            path: 'pitchType',
+                            populate: {
+                                path: 'pitchBranch',
+                                select: '_id displayName'
+                            }
+                        }
+                    })
+                // console.log(bookingDetail.pitch.pitchType.pitchBranch._id.toString())
+                staticAsPitchBranch = await getStaticAsPitchBranch(bookingDetail.pitch.pitchType.pitchBranch._id.toString(),booking)
+                staticAsPitchBranch.pitchBranchId = bookingDetail.pitch.pitchType.pitchBranch._id.toString()
+                staticAsPitchBranch.branchName = bookingDetail.pitch.pitchType.pitchBranch.displayName
+                static.push(staticAsPitchBranch)
+                // console.log(staticAsPitchBranch)
+                // if(convertStringToDate(booking[i].startDate).getTime() >= _startDate.getTime() && convertStringToDate(booking[i].endDate).getTime() <= _endDate.getTime()){
+                //     const bd = await BookingDetail.findOne({ booking: booking[i]._id })
+                //     let stt = await Status.findOne({ _id: bd.status })
+                //     let bookingDetail = await BookingDetail.findOne({ booking: booking[i]._id })
+                //         .populate({
+                //             path: 'pitch',
+                //             populate: {
+                //                 path: 'pitchType',
+                //                 populate: {
+                //                     path: 'pitchBranch',
+                //                     select: 'displayName'
+                //                 }
+                //             }
+                //         })
+                //     console.log(bookingDetail)
+                //     let {displayName,_id} = bookingDetail.pitch.pitchType.pitchBranch
+                //     staticAsPitchBranch.displayName = displayName
+                //     staticAsPitchBranch.pitchBranchId = _id
+
+                //     if(bd !== null && (stt.status !== 'ST3' || stt.status !== 'ST4')){
+                //         // bk.push(bd)
+                //         staticAsPitchBranch.count++
+                //         staticAsPitchBranch.price += booking[i].total
+                //         static.push(staticAsPitchBranch)
+                //     }
+                // }
+            }
+        return res.status(200).json({
+            success: true,
+            message: 'Get successfully!',
+            static
+        })
+        }else{
+            // console.log(await getStaticAsPitchBranch(pitchBranchId ,booking ))
+            staticAsPitchBranch = await getStaticAsPitchBranch(pitchBranchId ,booking )
+            return res.status(200).json({
+                success: true,
+                message: 'Get successfully!',
+                static: staticAsPitchBranch
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+
+let getStaticAsPitchBranch = async (pitchBranchId, booking) => {
+    console.log(pitchBranchId)
+    let staticAsPitchBranch = {
+        pitchBranchId: '',
+        branchName: '',
+        bookingAmount: 0,
+        total: 0
+    }
+
+    for(let i = 0; i < booking.length; i++){
+        if(convertStringToDate(booking[i].startDate).getTime() >= _startDate.getTime() && convertStringToDate(booking[i].endDate).getTime() <= _endDate.getTime()){
+            const bd = await BookingDetail.findOne({ booking: booking[i]._id })
+            .populate({
+                path: 'pitch',
+                populate: {
+                    path: 'pitchType',
+                    match: { pitchBranch: pitchBranchId },
+                }
+            })
+            if(bd === null)
+                continue
+            let stt = await Status.findOne({ _id: bd.status })
+            if(bd.pitch.pitchType !== null && (stt.status !== 'ST3' || stt.status !== 'ST4')){
+            {
+                // bk.push(bd)
+                staticAsPitchBranch.bookingAmount++
+                staticAsPitchBranch.total += booking[i].total
+            }
+        }
+    }
+    }
+    console.log(staticAsPitchBranch)
+    return staticAsPitchBranch
+}
 
 /**
  * @GET /api/booking/pitchbranch/:id
@@ -612,5 +740,12 @@ router.get('/', verifyToken, async (req, res) => {
     }
 })
 
+
+//function convert StringDate to Date
+function convertStringToDate(s) {
+    const splDay = s.split('/')
+    const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
+    return dateTime
+}
 
 module.exports = router

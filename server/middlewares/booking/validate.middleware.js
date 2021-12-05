@@ -681,14 +681,15 @@ const validatePostConfirmFunction = async (req, res, next) => {
 
 const validatePostStaticFunction = async (req, res, next) => {
 
-    if(!req.body.startDate || !req.body.endDate || !req.body.pitchBranchId){
+    const isAdmin = req.payload.isAdmin
+    // if(!isAdmin){
+    const { startDate, endDate} = req.query
+    if(!startDate || !endDate){
         return res.status(400).send({
             success: false,
             message: 'Missing information',
         })
     }
-
-    const { startDate, endDate, pitchBranchId } = req.body
     //check startDate and endDate in format dd/MM/yyyy regex
     const regex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
     if (!regex.test(startDate) || !regex.test(endDate)) {
@@ -709,13 +710,24 @@ const validatePostStaticFunction = async (req, res, next) => {
         })
     }
 
-    //check pitchBranchId is MongoId
-    if (!mongoose.Types.ObjectId.isValid(pitchBranchId)) {
-        return res.status(400).send({
-            success: false,
-            message: 'pitchBranchId is not valid',
-        })
+    if(!isAdmin){
+        let pitchBranchId = req.query.pitchBranchId
+        if(!pitchBranchId){
+            return res.status(400).send({
+                success: false,
+                message: 'Missing information',
+            })
+        }
+        //check pitchBranchId is MongoId
+        if (!mongoose.Types.ObjectId.isValid(pitchBranchId)) {
+            return res.status(400).send({
+                success: false,
+                message: 'pitchBranchId is not valid',
+            })
+        }
     }
+    
+
 
     next()
 }
