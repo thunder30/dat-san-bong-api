@@ -486,6 +486,18 @@ const validatePostConfirmFunction = async (req, res, next) => {
         })
     }
 
+    //check true phone
+    if(req.body.phone){
+        //check phone is valid VN number
+        const phone = req.body.phone
+        const phoneFormat = /^(0|\+84)(\s|\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.)?(\d{3})(\s|\.)?(\d{3})$/
+        if (!phone.match(phoneFormat)) {
+            return res.status(400).json({
+                message: "phone is not valid"
+            })
+        }
+    }
+
 
     //check startTime is in format dd/mm/yyyy HH:mm
     const startTimeRegex = /^(0[1-9]|[12][0-9]|3[01])[\/](0[1-9]|1[012])[\/]\d{4} (0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9])$/
@@ -676,7 +688,7 @@ const validatePostConfirmFunction = async (req, res, next) => {
             }
         }
     }
-
+    
     req.body.price = sumPrice
 
     req.body.startDate = startTimeArrayAdd[0]

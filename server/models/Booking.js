@@ -7,6 +7,8 @@ const BookingSchema = new Schema(
         endDate: { type: String, required: true },
         total: { type: Number, required: true },
         isPaid: { type: Boolean, default: false },
+        name: { type: String, default: ""  },
+        phone: { type: String, default: ""  },
         customer:
         {
             type: Schema.Types.ObjectId,

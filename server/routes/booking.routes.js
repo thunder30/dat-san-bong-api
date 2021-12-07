@@ -24,6 +24,7 @@ const User = require('../models/User')
 const Pitch = require('../models/Pitch')
 const Status = require('../models/Status')
 const PitchBranch = require('../models/PitchBranch')
+const toCommas = require('../helpers/toCommas')
 
 /**
  * @POST /api/booking/checkout
@@ -54,11 +55,13 @@ router.post('/checkout', verifyToken, validateCheckout(), validateResult, valida
 router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, validatePostConfirmFunction, async (req, res) => {
     try {
         //create new booking
-        const { startDate, endDate, price, customer, pitch, startTime, endTime, status, address, pitchName, receiver } = req.body
+        const { startDate, endDate, price, customer, pitch, startTime, endTime, status, address, pitchName, receiver, name, phone } = req.body
 
         const booking = new Booking({
             startDate,
             endDate,
+            name,
+            phone,
             total: price,
             isPaid: true,
             customer,
@@ -94,11 +97,10 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
             }
         })
         let checkRepeatUser = false
-        console.log(user)
-        for(let i = 0; i < user.length; i++){
-            // console.log(user[i].pitchType.pitchBranch.owner )
-            // console.log(customer)
-            if(user.pitchType.pitchBranch.owner.users[i]._id.toString() === customer.toString()){
+        let users = user.pitchType.pitchBranch.owner.users
+
+        for(let i = 0; i < users.length; i++){
+            if(users[i].toString() === customer.toString()){
                 checkRepeatUser = true
                 break
             }
@@ -116,7 +118,7 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
             code,
         })
 
-        sendmail(receiver,code,startTime,endTime,address,pitchName,price)
+        // sendmail(receiver,code,startTime,endTime,address,pitchName,toCommas(price)+" VND")
 
     } catch (err) {
         res.status(500).json({
