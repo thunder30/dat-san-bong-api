@@ -104,7 +104,7 @@ const validateCheckoutFunction = async (req, res, next) => {
             message: 'pitch is not actived!',
         })
     }
-    
+
     if(!_pitch.pitchType.pitchBranch.isActived){
         return res.status(400).json({
             success: false,
@@ -133,6 +133,7 @@ const validateCheckoutFunction = async (req, res, next) => {
     // console.log(alEndTime)
     // console.log(startTimeArray2Add)
     // console.log(endTimeArray2Add)
+
     if (!alStartTime.includes(startTimeArrayAdd[1]) || !alStartTime.includes(endTimeArrayAdd[1]) && !alEndTime.includes(startTimeArrayAdd[1]) || !alEndTime.includes(endTimeArrayAdd[1])) {
         return res.status(400).send({
             success: false,
@@ -200,39 +201,34 @@ const validateCheckoutFunction = async (req, res, next) => {
     // create array Time of bookingDetail request
     const startTimeArrayAdd2 = startTimeArrayAdd[1].split(':')
     const startTimeArrayAdd3 = endTimeArrayAdd[1].split(':')
-    let le = 30
+    let le = '30'
     if(startTimeArrayAdd2[1] == '00')
-    le = 00
+    le = '00'
     let arrTime = []
-    for (let i = startTimeArrayAdd2[0].toString(); i <= startTimeArrayAdd3[0]; i++) {
-        if(le == 00){
-            if(i<10){
-                if(i == startTimeArrayAdd2[0])
-                arrTime.push(i + ':' + '00')
-                arrTime.push('0' + i + ':' + '00')
-            }
-            else
+    for (let i = startTimeArrayAdd2[0]; i <= startTimeArrayAdd3[0]; i++) {
+        if(i == startTimeArrayAdd2[0]){
+                // arrTime.push(i + ':' + le)
+                if(le == '00'){
+                    arrTime.push(i + ':' + '00')
+                    arrTime.push(i + ':' + '30')
+                }
+                else{
+                    arrTime.push(i + ':' + '30')
+                }
+                continue
+        }
+
+        if(i<10)
+            arrTime.push('0' +i + ':' + '00')
+        else
             arrTime.push(i + ':' + '00')
-            le = 30
-        }else{
-            if(i<10){
-                if(i == startTimeArrayAdd2[0])
-                arrTime.push(i + ':' + '30')
-                else
-                arrTime.push('0' + i + ':'+ '30')
-            }
-            else
+        le = 30
+        if(i<10)
+            arrTime.push('0' +i + ':' + '30')
+        else
             arrTime.push(i + ':' + '30')
-            le = 00
-        }
-        if(i == startTimeArrayAdd3[0] && startTimeArrayAdd3[1] == '30'){
-            if(i<10)
-            arrTime.push('0' + i + ':'+ '30')
-            else
-            arrTime.push(i + ':' + '30')
-        }
-            
-    }
+        le = 00
+    }    
 
     //compare time for money
     let sumPrice = 0
@@ -647,33 +643,28 @@ const validatePostConfirmFunction = async (req, res, next) => {
     le = 00
     let arrTime = []
     for (let i = startTimeArrayAdd2[0].toString(); i <= startTimeArrayAdd3[0]; i++) {
-        if(le == 00){
-            if(i<10){
-                if(i == startTimeArrayAdd2[0])
+        if(i == startTimeArrayAdd2[0]){
+            // arrTime.push(i + ':' + le)
+            if(le == '00'){
                 arrTime.push(i + ':' + '00')
-                arrTime.push('0' + i + ':' + '00')
-            }
-            else
-            arrTime.push(i + ':' + '00')
-            le = 30
-        }else{
-            if(i<10){
-                if(i == startTimeArrayAdd2[0])
                 arrTime.push(i + ':' + '30')
-                else
-                arrTime.push('0' + i + ':'+ '30')
             }
-            else
-            arrTime.push(i + ':' + '30')
-            le = 00
+            else{
+                arrTime.push(i + ':' + '30')
+            }
+            continue
         }
-        if(i == startTimeArrayAdd3[0] && startTimeArrayAdd3[1] == '30'){
-            if(i<10)
-            arrTime.push('0' + i + ':'+ '30')
-            else
+
+        if(i<10)
+            arrTime.push('0' +i + ':' + '00')
+        else
+            arrTime.push(i + ':' + '00')
+        le = 30
+        if(i<10)
+            arrTime.push('0' +i + ':' + '30')
+        else
             arrTime.push(i + ':' + '30')
-        }
-            
+        le = 00
     }
 
     //compare time for money
@@ -704,7 +695,6 @@ const validatePostConfirmFunction = async (req, res, next) => {
             select: 'address ward district province'
         }
     })
-    console.log(address)
 
     const add = address.pitchType.pitchBranch.address + ' ' + address.pitchType.pitchBranch.ward + ' ' + address.pitchType.pitchBranch.district + ' ' + address.pitchType.pitchBranch.province
     req.body.address = add

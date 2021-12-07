@@ -94,9 +94,12 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
             }
         })
         let checkRepeatUser = false
-        for(let i = 0; i < user.pitchType.pitchBranch.owner.users.length; i++){
+        console.log(user)
+        for(let i = 0; i < user.length; i++){
+            // console.log(user[i].pitchType.pitchBranch.owner )
+            // console.log(customer)
             if(user.pitchType.pitchBranch.owner.users[i]._id.toString() === customer.toString()){
-                check = true
+                checkRepeatUser = true
                 break
             }
         }
