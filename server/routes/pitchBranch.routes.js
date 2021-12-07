@@ -292,7 +292,7 @@ router.get('/getDetail/:id', async (req, res) => {
                 return 0;
             });
 
-            time = []
+            let time = []
             // merge startTime to endTime by same price
             for(let i = 1; i < price.length; i++)
             {
@@ -310,7 +310,7 @@ router.get('/getDetail/:id', async (req, res) => {
             }
 
             pitchTypes.push({
-                id: item._id.toString(),
+                _id: item._id.toString(),
                 displayName: item.displayName,
                 description: item.description,
                 pitches: pitch,
