@@ -92,7 +92,25 @@ const validateCheckoutFunction = async (req, res, next) => {
     .where('_id').equals(req.body.pitch)
     .populate({
         path: 'pitchType',
+        populate: {
+            path: 'pitchBranch',
+            select: 'isActived'
+        }
     })
+
+    if (!_pitch.pitchType.pitchBranch.isActived) {
+        return res.status(400).send({
+            success: false,
+            message: 'pitch is not actived!',
+        })
+    }
+    
+    if(!_pitch.pitchType.pitchBranch.isActived){
+        return res.status(400).json({
+            success: false,
+            message: "Pitch branch is not actived"
+        })
+    }
 
     const _price = await Price.find({})
     .sort({time: 1})
@@ -518,7 +536,23 @@ const validatePostConfirmFunction = async (req, res, next) => {
     .where('_id').equals(req.body.pitch)
     .populate({
         path: 'pitchType',
+        populate: {
+            path: 'pitchBranch',
+            select: 'isActived'
+        }
     })
+    if(!_pitch.pitchType.pitchBranch.isActived){
+        return res.status(400).json({
+            success: false,
+            message: "Pitch branch is not actived"
+        })
+    }
+    if(!_pitch.isActive){
+        return res.status(400).json({
+            success: false,
+            message: "Pitch is not actived"
+        })
+    }
 
     const _price = await Price.find({})
     .sort({time: 1})

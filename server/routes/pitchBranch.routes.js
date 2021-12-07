@@ -265,6 +265,10 @@ router.get('/getDetail/:id', async (req, res) => {
         const pitchType = await PitchType.find()
         .sort({ createdAt: 1 })
         .where('pitchBranch').equals(req.params.id)
+        .populate({
+            path: 'pitchBranch',
+            select : 'isActive',
+        })
 
         //sy help
         let pitchTypes =[]
@@ -343,7 +347,7 @@ router.get('/', async (req, res) => {
         const pitchBranch = await PitchBranch.find().populate({
             path: 'owner',
             select: '-password -accessToken -users',
-        })
+        }).where('isActived').equals(true)
 
         res.status(200).json({
             success: true,

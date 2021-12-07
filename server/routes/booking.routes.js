@@ -60,7 +60,7 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
             startDate,
             endDate,
             total: price,
-            ispaid: true,
+            isPaid: true,
             customer,
         })
 
