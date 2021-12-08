@@ -35,3 +35,6 @@ Content-Type: application/json
 
 GET http://localhost:5000/api/bookingdetail/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MzA3NDkyLCJleHAiOjE2MzczMTEwOTJ9.v6wV0EK77TLhFo89riXlEOIrLPb1AqEQ9agvZ49QVGg
+
+###
+GET http://localhost:5000/api/bookingdetail/bookedTime?pitch=61a1089dc0e40d948fdf9b2e

@@ -72,7 +72,7 @@ const validateCheckoutFunction = async (req, res, next) => {
     const endTimeArray2Add = endTimeArrayAdd[1].split(':')
     const startDateTimeAdd = new Date(startDate[2], startDate[1] - 1, startDate[0], startTimeArray2Add[0], startTimeArray2Add[1])
     const endDateTimeAdd = new Date(endDate[2], endDate[1] - 1, endDate[0], endTimeArray2Add[0], endTimeArray2Add[1])
-    if (startDateTimeAdd > endDateTimeAdd) {
+    if (startDateTimeAdd >= endDateTimeAdd) {
         return res.status(400).send({
             success: false,
             message: 'startTime is after endTime!',
@@ -127,22 +127,16 @@ const validateCheckoutFunction = async (req, res, next) => {
     const alEndTime = _price.map(item => {
         return item.time.endTime
     })
+    
 
     //check startTime is in _price
-    // console.log(alStartTime)
-    // console.log(alEndTime)
-    // console.log(startTimeArray2Add)
-    // console.log(endTimeArray2Add)
-
     if (!alStartTime.includes(startTimeArrayAdd[1]) || !alStartTime.includes(endTimeArrayAdd[1]) && !alEndTime.includes(startTimeArrayAdd[1]) || !alEndTime.includes(endTimeArrayAdd[1])) {
+        if(!(alStartTime.includes(startTimeArrayAdd[1]) && alEndTime.includes(endTimeArrayAdd[1])))
         return res.status(400).send({
             success: false,
             message: 'this time don\'t have price!',
         })
     }
-
-    // console.log(alStartTime)
-    // console.log(alEndTime)
 
     // check time not conflict with other bookingDetail
     const bookingDetails = await BookingDetail.find({})
@@ -524,7 +518,7 @@ const validatePostConfirmFunction = async (req, res, next) => {
     const endTimeArray2Add = endTimeArrayAdd[1].split(':')
     const startDateTimeAdd = new Date(startDate[2], startDate[1] - 1, startDate[0], startTimeArray2Add[0], startTimeArray2Add[1])
     const endDateTimeAdd = new Date(endDate[2], endDate[1] - 1, endDate[0], endTimeArray2Add[0], endTimeArray2Add[1])
-    if (startDateTimeAdd > endDateTimeAdd) {
+    if (startDateTimeAdd >= endDateTimeAdd) {
         return res.status(400).send({
             success: false,
             message: 'startTime is after endTime!',
@@ -584,6 +578,7 @@ const validatePostConfirmFunction = async (req, res, next) => {
     // console.log(startTimeArray2Add)
     // console.log(endTimeArray2Add)
     if (!alStartTime.includes(startTimeArrayAdd[1]) || !alStartTime.includes(endTimeArrayAdd[1]) && !alEndTime.includes(startTimeArrayAdd[1]) || !alEndTime.includes(endTimeArrayAdd[1])) {
+        if(!(alStartTime.includes(startTimeArrayAdd[1]) && alEndTime.includes(endTimeArrayAdd[1])))
         return res.status(400).send({
             success: false,
             message: 'this time don\'t have price!',
