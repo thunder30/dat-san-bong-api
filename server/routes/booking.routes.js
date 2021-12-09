@@ -251,7 +251,8 @@ router.post('/', verifyToken, validatePost(), validateResult, validatePostFuncti
         
         res.status(200).json({
             success: true,
-            message: 'Update successfully!',
+            messageEn: 'Check in successfully!',
+            message: 'Check in thành công!',
             bookingDetailUpdate
         })
 

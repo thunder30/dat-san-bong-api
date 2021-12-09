@@ -283,7 +283,8 @@ const validatePutCheckinFunction = async (req, res, next) => {
     if(!_bookingDetail) {
         return res.status(400).json({
             success: false,
-            message: 'Bad request',
+            messageEn: 'Bad request or Code is not exist!',
+            message: 'Mã không tồn tại!',
         })
     }
     
