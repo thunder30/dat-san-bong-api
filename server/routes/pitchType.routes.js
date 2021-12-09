@@ -33,8 +33,6 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
             }
         )
 
-        console.log(_pitchBranch)
-
         const isOwner = _pitchBranch.some((value,index) => {
             return value._id.toString() === req.body.pitchBranch
         })
@@ -55,7 +53,7 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         res.status(201).json({
             success: true,
             message: 'Create successfully!',
-            _pitchType,
+            pitchType: _pitchType,
         })
 
    }

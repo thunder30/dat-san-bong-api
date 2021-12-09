@@ -439,8 +439,6 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
                 }
             }
 
-
-            console.log(static)
         return res.status(200).json({
             success: true,
             message: 'Get successfully!',
