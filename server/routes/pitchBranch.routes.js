@@ -117,11 +117,11 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         }
 
         // delete
-        await pitchBranch.remove()
+        let _pitchBranch = await PitchBranch.findByIdAndUpdate(req.params.id, { isActived: false }, { new: true })
         res.status(200).json({
             success: true,
             message: 'Delete successfully!',
-            pitchBranch
+            pitchBranch: _pitchBranch
         })
     } catch (error) {
         res.status(500).json({
@@ -262,6 +262,15 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
  */
 router.get('/getDetail/:id', async (req, res) => {
     try {
+
+        const pitchBranch = await PitchBranch.findById(req.params.id).where('isActived').equals(true)
+        if(!pitchBranch){
+            return res.status(404).json({
+                success: false,
+                message: 'PitchBranch not found!',
+            })
+        }
+
         const pitchType = await PitchType.find()
         .sort({ createdAt: 1 })
         .where('pitchBranch').equals(req.params.id)
@@ -274,9 +283,19 @@ router.get('/getDetail/:id', async (req, res) => {
         let pitchTypes =[]
         for(let item of pitchType)
         {
+            if(item.isActive !== true)
+            {
+                continue
+            }
             // console.log (item._id.toString())
             let pitch = await Pitch.find({pitchType: item._id.toString()}).select('_id displayName description isActive pitchType')
-
+            for(let i = 0; i < pitch.length; i++)
+            {
+                if(pitch[i].isActive == false)
+                {
+                    pitch.splice(i, 1)
+                }
+            }
             let price = await Price.find({pitchType: item._id.toString()})
                 .select('-_id price time')
                 .populate({path : 'time', 

@@ -127,7 +127,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
             })
         }
 
-        let pitch = await Pitch.findByIdAndDelete(id)
+        let pitch = await Pitch.findByIdAndUpdate(req.params.id, { isActive: false }, { new: true })
 
         if(!pitch){
             return res.status(404).json({

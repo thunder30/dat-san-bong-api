@@ -143,7 +143,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
             })
         }
         // delete from database _pitchType
-        const pitchTypeDel = await PitchType.findByIdAndDelete(id)
+        const pitchTypeDel = await PitchType.findByIdAndUpdate(id, { isActive: false }, { new: true })
 
         // const _pitchType = await PitchType.findOneAndDelete({ _id: req.params.id })
         if(!pitchTypeDel){
