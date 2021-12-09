@@ -97,29 +97,100 @@ router.get('/bookedTime', async (req, res) => {
             })
         let times = []
         const bookedTime = await BookingDetail.find({ pitch }).sort({ startTime: 1 })
-        for (let i = 0; i < bookedTime.length; i++) {
-            let time = {
-                startTime: '',
-                endTime: '',
-            }
+        let time =[]
+        /**
+         * set output to format 
+         * "times": [
+                {
+                "date": "10/12/2021",
+                "time": [
+                    {
+                    "startTime": "08:30",
+                    "endTime": "09:00"
+                    },
+                    {
+                    "startTime": "09:00",
+                    "endTime": "09:30"
+                    }
+                ]
+                },
+            ]
+         * 
+         */
+        for (let i = 0; i < bookedTime.length - 1; i++) {
             const start = convertStringToDate(bookedTime[i].startTime)
             const end = convertStringToDate(bookedTime[i].endTime)
-            //endtime + 7days
-            const endTime = new Date(end.getTime() + 7 * 24 * 60 * 60 * 1000)
-            // now +7days
-            const nowPlus7Days = new Date(new Date().getTime() + 15 * 24 * 60 * 60 * 1000)
-            if (start.getTime() > Date.now() && start.getTime() < nowPlus7Days) {
-                time.startTime = bookedTime[i].startTime
-                time.endTime = bookedTime[i].endTime
-                times.push(time)
+            const startNext = convertStringToDate(bookedTime[i+1].startTime)
+            const endNext = convertStringToDate(bookedTime[i+1].endTime)
+            // get current time
+            time.push({
+                startTime: bookedTime[i].startTime.split(' ')[1],
+                endTime: bookedTime[i].endTime.split(' ')[1]
+            })
+            //if current time == next time => push to Time
+            if(start.getTime() === startNext.getTime()){
+                // pop last time
+                time.pop()
+                time.push({
+                    startTime: bookedTime[i].startTime.split(' ')[1],
+                    endTime: bookedTime[i].endTime.split(' ')[1]
+                })
+            // if current time != next time => push to big array Times
+            }else{
+                times.push({
+                    date: start.getDate() + '/' + (start.getMonth() + 1) + '/' + start.getFullYear() ,
+                    time
+                })
+                time = []
             }
-            
-
+            // take the last time in bookedTime and push to big array
+            if(i+2 === bookedTime.length){
+                let _startTime = convertStringToDate(bookedTime[i+1].startTime)
+                console.log(_startTime.getTime() + " "+ startNext.getTime())
+                // for case same last time and last time -1 is same day
+                if(_startTime.getTime() == start.getTime()){
+                    time.push({
+                        startTime: bookedTime[i+1].startTime.split(' ')[1],
+                        endTime: bookedTime[i+1].endTime.split(' ')[1]
+                    })
+                    times.push({
+                        date: start.getDate() + '/' + (start.getMonth() + 1) + '/' + start.getFullYear()  + "ngu",
+                        time
+                    })
+                    time = []
+                }else
+                {
+                    time = []
+                    time.push({
+                        startTime: bookedTime[i+1].startTime.split(' ')[1],
+                        endTime: bookedTime[i+1].endTime.split(' ')[1],
+                    })
+                    times.push({
+                        date: _startTime.getDate() + '/' + (_startTime.getMonth() + 1) + '/' + _startTime.getFullYear(),
+                        time
+                    })
+                }
+            }
         }
+
+        let _times = []
+        // compare to take the day after now and before 14 days
+        for (let i = 0; i < times.length; i++) {
+            let day = convertStringToDay(times[i].date)
+            // declare now date only day
+            let now = new Date()
+            now.setHours(0, 0, 0, 0)
+            //now flus 17 days
+            let nowPlusDays = now.setDate(now.getDate() + 14)
+            if(day >= Date.now() && day < nowPlusDays){
+                _times.push(times[i])
+            }
+        }
+
         res.status(200).send({
             success: true,
             message: 'Get bookedTime successfully!',
-            times
+            times: _times
         })
     } catch (error) {
         res.status(400).send({
@@ -223,6 +294,11 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
 function convertStringToDate(s) {
     const splDayTime = s.split(' ')
     const splDay = splDayTime[0].split('/')
+    const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
+    return dateTime
+}
+function convertStringToDay(s) {
+    const splDay = s.split('/')
     const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
     return dateTime
 }
