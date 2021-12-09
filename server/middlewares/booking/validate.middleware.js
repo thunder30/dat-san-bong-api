@@ -241,7 +241,7 @@ const validateCheckoutFunction = async (req, res, next) => {
 
 const validatePutCheckinFunction = async (req, res, next) => {
 
-    if(!req.params.id || !req.body.status) {
+    if(!req.params.id) {
         return res.status(400).json({
             success: false,
             message: 'Bad request',
@@ -280,13 +280,19 @@ const validatePutCheckinFunction = async (req, res, next) => {
             break
         }
     }
+    if(!_bookingDetail) {
+        return res.status(400).json({
+            success: false,
+            message: 'Bad request',
+        })
+    }
     
-    console.log(_bookingDetail.status.status)
+    // console.log(_bookingDetail)
 
     if(_bookingDetail.status.status !== 'ST1') {
         return res.status(400).json({
             success: false,
-            message: 'This code is inval status',
+            message: 'This code have inval status',
         })
     }
 

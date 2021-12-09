@@ -232,8 +232,8 @@ router.post('/', verifyToken, validatePost(), validateResult, validatePostFuncti
  router.put('/checkin/:id', verifyToken, validatePutCheckinFunction, async (req, res) => {
     try {
 
-        const status = req.body.status
-        const statusId = await Status.findOne({ status: status })
+        // const status = req.body.status
+        const statusId = await Status.findOne({ status: 'ST2' })
         if(!req.body.bookingDetailId){
             return res.status(404).json({
                 success: false,
