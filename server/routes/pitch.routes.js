@@ -49,7 +49,7 @@ router.post('/', verifyToken, validatePost(), validateResult, async (req, res) =
         res.status(201).json({
             success: true,
             message: 'Create successfully!',
-            _pitch,
+            pitch: _pitch,
         })
     }
     catch(error){
