@@ -26,11 +26,7 @@ const validateDelete = (req, res, next) => {
 }
 
 const validatePut = (req, res, next) => {
-
-    return [check('pitchType').not().isEmpty().withMessage('pitchType is required'),
-    check('displayName').not().isEmpty().withMessage('displayName is required'),
-    check('pitchType').isMongoId().withMessage('pitchType is invalid id'),
-    param('id').isMongoId().withMessage('_id is invalid id')]
+    return [param('id').isMongoId().withMessage('_id is invalid id')]
 }
 
 const validateGetById = (req, res, next) => {

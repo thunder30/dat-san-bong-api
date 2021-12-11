@@ -427,18 +427,18 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
                 staticAsPitchBranch.branchName = bookingDetail.pitch.pitchType.pitchBranch.displayName
                 static.push(staticAsPitchBranch)
             }
-
             // sum bookingamount and total for similar pitchBranchId
             for(let i = 0; i < static.length; i++){
                 for(let j = i+1; j < static.length; j++){
                     if(static[i].pitchBranchId === static[j].pitchBranchId){
-                        static[i].bookingAmount += static[j].bookingAmount
-                        static[i].total += static[j].total
+                        // static[i].bookingAmount += static[j].bookingAmount
+                        // static[i].total += static[j].total
                         static.splice(j,1)
                         j--
                     }
                 }
             }
+            console.log(static)
 
         return res.status(200).json({
             success: true,
