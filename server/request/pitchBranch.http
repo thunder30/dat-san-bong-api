@@ -54,7 +54,8 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:5000/api/pitchBranch/getDetail/619ba817e6475ccdb08eea12
+GET http://localhost:5000/api/pitchBranch/getDetail/619ba93bba72b12e6ea9f2f6
 
 ###
-GET http://localhost:5000/api/pitchBranch/getDetail/619ba817e6475ccdb08eea12
+GET http://localhost:5000/api/pitchBranch/getDetailOwner/619ba93bba72b12e6ea9f2f6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkyMDQzNTgsImV4cCI6MTYzOTI5MDc1OH0.tZAwxAxpeQvN3S039R7mVHu3Xaj2uzI6ecndY8MdaPU
