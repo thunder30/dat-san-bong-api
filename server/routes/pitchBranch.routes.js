@@ -357,6 +357,98 @@ router.get('/getDetail/:id', async (req, res) => {
 })
 
 /**
+ * @GET /api/pitchBranch/getDetailOwner/:id
+ * @description Get all detail pitchBranch 
+ */
+router.get('/getDetailOwner/:id', verifyToken, async (req, res) => {
+    try {
+        let pitchBranch
+        if(req.payload.isAdmin)
+        pitchBranch = await PitchBranch.findById(req.params.id)
+        else
+        pitchBranch = await PitchBranch.findById(req.params.id).where('owner').equals(req.payload.userId)
+        if(!pitchBranch){
+            return res.status(404).json({
+                success: false,
+                message: 'PitchBranch not found!',
+            })
+        }
+
+        const pitchType = await PitchType.find()
+        .sort({ createdAt: 1 })
+        .where('pitchBranch').equals(req.params.id)
+        .populate({
+            path: 'pitchBranch',
+            select : 'isActive',
+        })
+
+        //sy help
+        let pitchTypes =[]
+        for(let item of pitchType)
+        {
+            // console.log (item._id.toString())
+            let pitch = await Pitch.find({pitchType: item._id.toString()}).select('_id displayName description isActive pitchType')
+            let price = await Price.find({pitchType: item._id.toString()})
+                .select('-_id price time')
+                .populate({path : 'time', 
+                        select : '-_id startTime endTime description'
+                    })
+
+            price.sort((a, b) => {
+                let fa = a.time.startTime,
+                    fb = b.time.startTime;
+            
+                if (fa < fb) {
+                    return -1;
+                }
+                if (fa > fb) {
+                    return 1;
+                }
+                return 0;
+            });
+
+            let time = []
+            // merge startTime to endTime by same price
+            for(let i = 1; i < price.length; i++)
+            {
+                if(price[i].time.startTime === price[i-1].time.endTime && price[i].price === price[i-1].price)
+                {
+                    price[i].time.startTime = price[i-1].time.startTime
+                    price[i].time.description = price[i-1].time.description
+                }else{
+                    time.push(price[i-1])
+                }
+                if(i === price.length - 1)
+                {
+                    time.push(price[i])
+                }
+            }
+
+            pitchTypes.push({
+                _id: item._id.toString(),
+                displayName: item.displayName,
+                description: item.description,
+                pitches: pitch,
+                prices: time
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Get successfully!',
+            pitchTypes,
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message,
+        })
+    }
+})
+
+/**
  * @GET /api/pitchBranch?getAsBranch=id
  * @description Get all pitchBranch
  */
