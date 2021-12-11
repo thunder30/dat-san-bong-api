@@ -36,14 +36,17 @@ router.post('/checkout', verifyToken, validateCheckout(), validateResult, valida
 
         res.status(200).json({
             success: true,
-            message: 'success',
+            messageEn: 'success',
+            message: 'thành công',
             price: req.body.price,
         })
 
     }catch(err){
         res.status(400).json({
             success: false,
-            message: err.message
+            messageEn: 'Internal server error',
+            message: 'Có lỗi xảy ra',
+            error: err
         })
     }
 })
@@ -112,18 +115,21 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
 
         res.status(200).json({
             success: true,
-            message: 'success',
+            messageEn: 'success',
+            message: 'thành công',
             Booking: newBooking,
             BookingDetail: newBookingDetail,
             code,
         })
 
-        // sendmail(receiver,code,startTime,endTime,address,pitchName,toCommas(price)+" VND")
+        sendmail(receiver,code,startTime,endTime,address,pitchName,toCommas(price)+" VND")
 
     } catch (err) {
         res.status(500).json({
             success: false,
-            message: err.message
+            messageEn: 'Internal server error',
+            message: 'Có lỗi xảy ra',
+            error: err
         })
     }
 })
@@ -186,14 +192,16 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
 
         return res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'thành công',
             count,
             price,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra',
             error: error.message
         })
     }
@@ -213,7 +221,8 @@ router.post('/', verifyToken, validatePost(), validateResult, validatePostFuncti
         const _booking = await booking.save()
         res.status(201).json({
             success: true,
-            message: 'Create successfully!',
+            messageEn: 'Create successfully!',
+            message: 'thành công',
             _booking
         })
     } catch (error) {

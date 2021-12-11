@@ -41,7 +41,8 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         if(!isOwner && !isAdmin){
             return res.status(400).json({
                 success: false,
-                message: 'You are not owner of this PitchType!',
+                messageEn: 'You are not owner of this PitchType!',
+                message: 'Bạn không phải chủ sân này!'
             })
         }
             
@@ -50,27 +51,29 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         if(valprice) {
             return res.status(400).json({
                 success: false,
-                message: 'Price already exists',
+                messageEn: 'Price already exists',
+                message: 'Giá đã tồn tại'
             })
         }
 
-        // const newPrice = await Price.create({
-        //     pitchType,
-        //     time,
-        //     price
-        // })
+        const newPrice = await Price.create({
+            pitchType,
+            time,
+            price
+        })
 
         return res.status(201).json(
             {
                 success: true,
                 message: 'Add new price success',
-                // newPrice
+                newPrice
             }
         ) 
     }catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error: error.message
         })
     }
@@ -90,7 +93,8 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
         if(!pitchBranch){
             return res.status(400).json({
                 success: false,
-                message: 'PitchType not found!',
+                messageEn: 'PitchType not found!',
+                message: 'Không tìm thấy sân!'
             })
         }
         let pbStartTime = pitchBranch.pitchBranch.startTime.split(':')
@@ -121,7 +125,7 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
                 times = _startTime.getHours() + ':' + _startTime.getMinutes()
                 if(_startTime.getHours() < 10){
                     times = '0' + times
-                    // console.log(times)
+                    console.log(times)
                 }
                 if(_startTime.getMinutes() < 10){
                     times = times + '0'
@@ -162,14 +166,16 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
         if(arrResult.length === 0){
             return res.status(500).json({
                 success: false,
-                message: 'Something went wrong'
+                messageEn: 'Something went wrong',
+                message: 'Có lỗi xảy ra'
             })
         }
 
         res.status(200).json(
             {
                 success: true,
-                message: 'Config price success',
+                messageEn: 'Config price success',
+                message: 'Cấu hình giá thành công',
                 arrResult
             }
         )
@@ -177,7 +183,8 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
     }catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error: error.message
         })
     }
@@ -204,7 +211,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         if(_price.pitchType.pitchBranch === null && !isAdmin){
             return res.status(400).json({
                 success: false,
-                message: 'You are not owner of this PitchType!',
+                messageEn: 'You are not owner of this PitchType!',
+                message: 'Bạn không phải chủ của sân này!'
             })
         }
 
@@ -213,13 +221,15 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         if(!price){
             return res.status(404).json({
                 success: false,
-                message: 'Price not found'
+                messageEn: 'Price not found',
+                message: 'Không tìm thấy giá'
             })
         }
         return res.status(200).json(
             {
                 success: true,
-                message: 'Update price success',
+                messageEn: 'Update price success',
+                message: 'Cập nhật giá thành công',
                 price
             }
         )
@@ -227,7 +237,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
     }catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error: error.message
         })
     }
@@ -254,7 +265,8 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         if(!_price.pitchType.pitchBranch && !isAdmin){
             return res.status(400).json({
                 success: false,
-                message: 'You are not owner of this PitchType!',
+                messageEn: 'You are not owner of this PitchType!',
+                message: 'Bạn không phải chủ của sân này!'
             })
         }
 
@@ -262,14 +274,16 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         return res.status(200).json(
             {
                 success: true,
-                message: 'Delete price success'
+                messageEn: 'Delete price success',
+                message: 'Xóa giá thành công'
             }
         )
     }
     catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error: error.message
         })
     }
@@ -289,7 +303,8 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         return res.status(200).json(
             {
                 success: true,
-                message: 'Get price success',
+                messageEn: 'Get price success',
+                message: 'Lấy giá thành công',
                 price
             }
         )
@@ -297,7 +312,8 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
     catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error: error.message
         })
     }
@@ -314,18 +330,13 @@ router.get('/', verifyToken, async (req, res) => {
         console.log(isAdmin)
         //if req.query isEmpty
         if(Object.keys(req.query).length === 0){
-            // if(!isAdmin){
-            //     return res.status(403).json({
-            //         success: false,
-            //         message: 'You are not admin'
-            //     })
-            // }
             //get all pitchType
             let _price = await Price.find({})
             //return 
             return res.status(200).json({
                 success: true,
-                message: 'Get all price successfully!',
+                messageEn: 'Get all price successfully!',
+                message: 'Lấy tất cả giá thành công',
                 _price,
             })
         }
@@ -335,7 +346,8 @@ router.get('/', verifyToken, async (req, res) => {
         if(!pitchTypeId){
             return res.status(400).json({
                 success: false,
-                message: 'Bad request!',
+                messageEn: 'Bad request!',
+                message: 'Yêu cầu không hợp lệ!'
             })
         }
 
@@ -348,7 +360,8 @@ router.get('/', verifyToken, async (req, res) => {
         return res.status(200).json(
             {
                 success: true,
-                message: 'Get prices success',
+                messageEn: 'Get prices success',
+                message: 'Lấy giá thành công',
                 prices
             }
         )
@@ -356,7 +369,8 @@ router.get('/', verifyToken, async (req, res) => {
     }catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error: error.message
         })
     }

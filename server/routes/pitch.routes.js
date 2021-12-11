@@ -37,7 +37,8 @@ router.post('/', verifyToken, validatePost(), validateResult, async (req, res) =
         {
             return res.status(400).json({
                 success: false,
-                message: 'You dont have permission to create this pitch',
+                messageEn: 'You dont have permission to create this pitch',
+                message: 'Bạn không có quyền tạo sân này'
             })
         }
         }
@@ -48,14 +49,16 @@ router.post('/', verifyToken, validatePost(), validateResult, async (req, res) =
         let _pitch = await pitch.save()
         res.status(201).json({
             success: true,
-            message: 'Create successfully!',
+            messageEn: 'Create successfully!',
+            message: 'Tạo sân thành công!',
             pitch: _pitch,
         })
     }
     catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình tạo sân!',
             error: error.message
         })
     }
@@ -81,7 +84,8 @@ router.put('/:id', verifyToken, validatePut(), validateResult, async (req, res) 
         if(!_pitch.pitchType.pitchBranch && !isAdmin){
             return res.status(403).json({
                 success: false,
-                message: 'You don\'t have permission!',
+                messageEn: 'You don\'t have permission!',
+                message: 'Bạn không có quyền sửa sân này!'
             })
         }
 
@@ -89,14 +93,16 @@ router.put('/:id', verifyToken, validatePut(), validateResult, async (req, res) 
         let pitch = await Pitch.findByIdAndUpdate(req.params.id, req.body, { new: true })
         res.status(200).json({
             success: true,
-            message: 'Update successfully!',
+            messageEn: 'Update successfully!',
+            message: 'Cập nhật thành công!',
             pitch,
         })
     }
     catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình cập nhật sân!',
             error: error.message
         })
     }
@@ -123,7 +129,8 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         if(!_pitch.pitchType.pitchBranch && !isAdmin){
             return res.status(403).json({
                 success: false,
-                message: 'You don\'t have permission!',
+                messageEn: 'You don\'t have permission!',
+                message: 'Bạn không có quyền xóa sân này!'
             })
         }
 
@@ -132,57 +139,27 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         if(!pitch){
             return res.status(404).json({
                 success: false,
-                message: 'Pitch not found!',
+                messageEn: 'Pitch not found!',
+                message: 'Không tìm thấy sân!'
             })
         }
 
         res.status(200).json({
             success: true,
-            message: 'Delete successfully!',
+            messageEn: 'Delete successfully!',
+            message: 'Xóa thành công!',
             pitch,
         })
     }
     catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xóa sân!',
             error: error.message
         })
     }
 })
-
-
-// /**
-//  * @GET /api/pitch
-//  * @desc Get all pitches
-//  */
-//  router.get('/', verifyToken, async (req, res) => {
-//     try{
-
-//         //check if user is admin
-//         const {isAdmin} = req.payload.isAdmin
-//         if(!isAdmin){
-//             return res.status(403).json({
-//                 success: false,
-//                 message: 'You are not Admin !',
-//             })
-//         }
-
-//         let pitches = await Pitch.find()
-//         res.status(200).json({
-//             success: true,
-//             message: 'Get successfully!',
-//             pitches,
-//         })
-//     }
-//     catch(error){
-//         res.status(500).json({
-//             success: false,
-//             message: 'Internal server error!',
-//             error: error.message
-//         })
-//     }
-// })
 
 /**
  * @GET /api/pitch/:id
@@ -193,14 +170,16 @@ router.get('/:id', verifyToken, validateGetById(), validateResult, async (req, r
         let pitch = await Pitch.findById(req.params.id).populate(path = 'pitchType', select = '-pitchBranch')
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitch,
         })
     }
     catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình lấy sân!',
             error: error.message
         })
     }
@@ -218,7 +197,8 @@ router.get('/', verifyToken, validateGetByPitchType, async (req, res) => {
             let pitches = await Pitch.find()
             return res.status(200).json({
                 success: true,
-                message: 'Get successfully!',
+                messageEn: 'Get successfully!',
+                message: 'Lấy thành công!',
                 pitches,
             })
         }
@@ -227,14 +207,16 @@ router.get('/', verifyToken, validateGetByPitchType, async (req, res) => {
         let pitches = await Pitch.find({ pitchType: pitchTypeId })
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitches,
         })
     }
     catch(error){
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình lấy sân!',
             error: error.message
         })
     }

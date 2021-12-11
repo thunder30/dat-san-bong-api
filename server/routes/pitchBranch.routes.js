@@ -29,7 +29,8 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         if (!isAdmin && userId !== owner) {
             return res.status(401).json({
                 success: false,
-                message: `You don't have permission`,
+                messageEn: `You don't have permission`,
+                message: `Bạn không có quyền`,
             })
         }
 
@@ -74,13 +75,15 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         let _pitchBranch = await pitchBranch.save()
         res.status(201).json({
             success: true,
-            message: 'Create successfully!',
+            messageEn: 'Create successfully!',
+            message: 'Tạo thành công!',
             _pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -112,7 +115,8 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         if (!pitchBranch) {
             return res.status(404).json({
                 success: false,
-                message: 'PitchBranch not found!',
+                messageEn: 'PitchBranch not found!',
+                message: 'Không tìm thấy sân bóng!',
             })
         }
 
@@ -120,13 +124,15 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         let _pitchBranch = await PitchBranch.findByIdAndUpdate(req.params.id, { isActived: false }, { new: true })
         res.status(200).json({
             success: true,
-            message: 'Delete successfully!',
+            messageEn: 'Delete successfully!',
+            message: 'Xóa thành công!',
             pitchBranch: _pitchBranch
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -147,7 +153,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         if (!isAdmin) {
             return res.status(403).json({
                 success: false,
-                message: `You don't have permission`,
+                messageEn: `You don't have permission`,
+                message: `Bạn không có quyền`,
             })
         }
 
@@ -156,7 +163,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         if (!pitchBranch) {
             return res.status(404).json({
                 success: false,
-                message: 'PitchBranch not found!',
+                messageEn: 'PitchBranch not found!',
+                message: 'Không tìm thấy sân bóng!',
             })
         }
 
@@ -167,12 +175,14 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         await pitchBranch.updateOne(req.body)
         res.status(200).json({
             success: true,
-            message: 'Update successfully!',
+            messageEn: 'Update successfully!',
+            message: 'Cập nhật thành công!',
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -196,7 +206,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         console.log(pitchBranch)
         res.status(200).json({
             success: true,
-            message: 'Get pitchBranch successfully!',
+            messageEn: 'Get pitchBranch successfully!',
+            message: 'Lấy sân bóng thành công!',
             pitchBranch,
         })
         
@@ -205,7 +216,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -232,7 +244,8 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
         if (pitchBranch.length === 0 && !isAdmin) {
             return res.status(403).json({
                 success: false,
-                message: 'Not found',
+                messageEn: 'Not found',
+                message: 'Không tìm thấy sân bóng',
             })
         }
         // nếu là admin thì get luôn
@@ -244,13 +257,15 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -267,7 +282,8 @@ router.get('/getDetail/:id', async (req, res) => {
         if(!pitchBranch){
             return res.status(404).json({
                 success: false,
-                message: 'PitchBranch not found!',
+                messageEn: 'PitchBranch not found!',
+                message: 'Không tìm thấy sân bóng!',
             })
         }
 
@@ -343,14 +359,16 @@ router.get('/getDetail/:id', async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitchTypes,
         })
     }
     catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message,
         })
     }
@@ -370,7 +388,8 @@ router.get('/getDetailOwner/:id', verifyToken, async (req, res) => {
         if(!pitchBranch){
             return res.status(404).json({
                 success: false,
-                message: 'PitchBranch not found!',
+                messageEn: 'PitchBranch not found!',
+                message: 'Không tìm thấy sân bóng!',
             })
         }
 
@@ -435,14 +454,16 @@ router.get('/getDetailOwner/:id', verifyToken, async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitchTypes,
         })
     }
     catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message,
         })
     }
@@ -462,13 +483,15 @@ router.get('/', async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
