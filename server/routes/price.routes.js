@@ -83,7 +83,21 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
 router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
     try{
         const {pitchType, prices} = req.body
-
+        
+        //check time in pitchBranch
+        const pitchBranch = await PitchType.findOne({_id: pitchType})
+        .populate('pitchBranch').select('startTime endTime')
+        if(!pitchBranch){
+            return res.status(400).json({
+                success: false,
+                message: 'PitchType not found!',
+            })
+        }
+        let pbStartTime = pitchBranch.pitchBranch.startTime.split(':')
+        let pbEndTime = pitchBranch.pitchBranch.endTime.split(':')
+        let _pbStartTime = new Date(2020, 0, 1, pbStartTime[0], pbStartTime[1])
+        let _pbEndTime = new Date(2020, 0, 1, pbEndTime[0], pbEndTime[1])
+        pitchBranch.startTime = new Date(pitchBranch.startTime)
         // set arrTimes as starTime, endTime in array time of every prices [ [ '01:30', '02:00', '02:30' ], [ '05:30', '06:00' ] ]
         let arrTimes = []
         for(let i = 0; i < prices.length; i++){
@@ -93,6 +107,14 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
             let _startTime = new Date(2020, 0, 1, startTime[0], startTime[1])
             endTime = endTime.split(':')
             let _endTime = new Date(2020, 0, 1, endTime[0], endTime[1])
+
+            if(_startTime < _pbStartTime || _endTime > _pbEndTime){
+                return res.status(400).json({
+                    success: false,
+                    messageEn: 'Time not in pitchBranch!',
+                    message: 'Thời gian không trong vòng thời gian của chi nhánh!',
+                })
+            }
 
             let arrTime = []
             while ( _startTime < _endTime ){
@@ -120,20 +142,20 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
                 const _price = await Price.find({pitchType, time : time._id}) 
 
                 // console.log(_price)
-                if(_price.length !== 0)
-                {
-                    //update price
-                    let upPrice = await Price.findOneAndUpdate({pitchType, time : time._id}, {price : prices[i].price})
-                    arrResult.push(upPrice)
-                }else{
-                     //save price
-                    let newPrice = await Price.create({
-                        pitchType,
-                        time: time._id,
-                        price: prices[i].price
-                    })
-                    arrResult.push(newPrice)
-                }
+                // if(_price.length !== 0)
+                // {
+                //     //update price
+                //     let upPrice = await Price.findOneAndUpdate({pitchType, time : time._id}, {price : prices[i].price})
+                //     arrResult.push(upPrice)
+                // }else{
+                //      //save price
+                //     let newPrice = await Price.create({
+                //         pitchType,
+                //         time: time._id,
+                //         price: prices[i].price
+                //     })
+                //     arrResult.push(newPrice)
+                // }
             }
         }
 
