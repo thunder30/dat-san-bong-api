@@ -19,7 +19,8 @@ const validateDelete = (req, res, next) => {
     if (!ObjectId.isValid(id))
     return res.status(400).json({
         success: false,
-        message: '_id invalid',
+        messageEn: '_id invalid',
+        message: '_id không hợp lệ',
     })
 
     validateResult(req, res, next)
@@ -45,7 +46,8 @@ const validateGetByPitchType = (req, res, next) => {
         if(!pitchTypeId){
             return res.status(400).json({
                 success: false,
-                message: 'Bad request',
+                messageEn: 'Bad request',
+                message: 'Yêu cầu không hợp lệ',
             })
         }
     }
@@ -66,7 +68,8 @@ const validateResult = (req, res, next) => {
         // { errors: [ "body[password]: must be at least 10 chars long" ] }
         return res.status(400).json({
             success: false,
-            message: 'Validate error!',
+            messageEn: 'Validate error!',
+            message: 'Lỗi xác thực!',
             errors: result.array(),
         })
     }

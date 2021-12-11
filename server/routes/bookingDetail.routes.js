@@ -28,7 +28,8 @@ router.post('/pitchType', verifyToken, validatePostbyPitchType(), validateResult
         if (!req.body.pitch) {
             return res.status(400).json({
                 success: false,
-                message: 'No pitch available'
+                messageEn: 'No pitch available!',
+                message: 'Không có sân nào!'
             })
         }
 
@@ -41,13 +42,16 @@ router.post('/pitchType', verifyToken, validatePostbyPitchType(), validateResult
         })
         const newBookingDetail = await _bookingDetail.save()
         res.status(201).json({
-            message: 'BookingDetail created successfully',
+            success: true,
+            messageEn: 'BookingDetail created successfully',
+            message: 'Đặt sân thành công!',
             newBookingDetail
         })
     } catch (error) {
         res.status(400).send({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message
         })
     }
@@ -65,13 +69,15 @@ router.post('/', verifyToken, validatePost(), validateResult, validatePostFuncti
         const _bookingDetail = await bookingDetail.save()
         res.status(201).send({
             success: true,
-            message: 'Create bookingDetail successfully!',
+            messageEn: 'Create bookingDetail successfully!',
+            message: 'Đặt sân thành công!',
             _bookingDetail
         })
     } catch (error) {
         res.status(400).send({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message
         })
     }
@@ -86,37 +92,21 @@ router.get('/bookedTime', async (req, res) => {
         if(!req.query.pitch){
             return res.status(400).send({
                 success: false,
-                message: 'No pitch available'
+                messageEn: 'No pitch available',
+                message: 'Không có sân nào!'
             })
         }
         const { pitch } = req.query
         if (!ObjectId.isValid(pitch))
             return res.status(400).json({
                 success: false,
-                message: 'pitch invalid',
+                messageEn: 'pitch invalid',
+                message: 'Sân không hợp lệ!'
             })
         let times = []
         const bookedTime = await BookingDetail.find({ pitch }).sort({ startTime: 1 })
         let time =[]
-        /**
-         * set output to format 
-         * "times": [
-                {
-                "date": "10/12/2021",
-                "time": [
-                    {
-                    "startTime": "08:30",
-                    "endTime": "09:00"
-                    },
-                    {
-                    "startTime": "09:00",
-                    "endTime": "09:30"
-                    }
-                ]
-                },
-            ]
-         * 
-         */
+       
         for (let i = 0; i < bookedTime.length - 1; i++) {
             const start = convertStringToDate(bookedTime[i].startTime)
             const end = convertStringToDate(bookedTime[i].endTime)
@@ -189,13 +179,15 @@ router.get('/bookedTime', async (req, res) => {
 
         res.status(200).send({
             success: true,
-            message: 'Get bookedTime successfully!',
+            messageEn: 'Get bookedTime successfully!',
+            message: 'Lấy thời gian đặt sân thành công!',
             times: _times
         })
     } catch (error) {
         res.status(400).send({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message
         })
     }
@@ -214,13 +206,15 @@ router.get('/', verifyToken, async (req, res) => {
         )
         res.status(200).send({
             success: true,
-            message: 'Get all bookingDetails successfully!',
+            messageEn: 'Get all bookingDetails successfully!',
+            message: 'Lấy tất cả bookingDetails thành công!',
             bookingDetails
         })
     } catch (error) {
         res.status(400).send({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message
         })
     }
@@ -237,13 +231,15 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         })
         res.status(200).send({
             success: true,
-            message: 'Update bookingDetail successfully!',
+            messageEn: 'Update bookingDetail successfully!',
+            message: 'Cập nhật bookingDetail thành công!',
             bookingDetail
         })
     } catch (error) {
         res.status(400).send({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message
         })
     }
@@ -258,13 +254,15 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         const bookingDetail = await BookingDetail.findByIdAndDelete(req.params.id)
         res.status(200).send({
             success: true,
-            message: 'Delete bookingDetail successfully!',
+            messageEn: 'Delete bookingDetail successfully!',
+            message: 'Xóa bookingDetail thành công!',
             bookingDetail
         })
     } catch (error) {
         res.status(400).send({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message
         })
     }
@@ -279,13 +277,15 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         const bookingDetail = await BookingDetail.findByIdAndDelete(req.params.id)
         res.status(200).send({
             success: true,
-            message: 'Delete bookingDetail successfully!',
+            messageEn: 'Delete bookingDetail successfully!',
+            message: 'Xóa bookingDetail thành công!',
             bookingDetail
         })
     } catch (error) {
         res.status(400).send({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message
         })
     }

@@ -29,12 +29,14 @@ router.get('/', verifyToken, async (req, res) => {
         })
         res.status(200).json({
             success: true,
-            message: 'Successfully!',
+            messageEn: 'Successfully!',
+            message: 'Thành công!',
             users,
         })
     } catch (error) {
         res.status(500).json({
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error,
         })
     }
@@ -54,25 +56,29 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
         if (!user)
             return res.status(400).json({
                 success: false,
-                message: 'User not found!',
+                messageEn: 'User not found!',
+                message: 'Không tìm thấy người dùng!',
             })
 
         if (id === userId || isAdmin) {
             res.status(200).json({
                 success: true,
-                message: 'Successfully!',
+                messageEn: 'Successfully!',
+                message: 'Thành công!',
                 user,
             })
         } else {
             res.status(403).json({
                 success: false,
-                message: 'You do not have permission to access',
+                messageEn: 'You do not have permission to access',
+                message: 'Bạn không có quyền truy cập',
             })
         }
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error,
         })
     }
@@ -88,14 +94,16 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         if (!req.payload.isAdmin)
             return res.status(403).json({
                 success: false,
-                message: 'You do not have permission to access',
+                messageEn: 'You do not have permission to access',
+                message: 'Bạn không có quyền truy cập',
             })
 
         const _user = await User.findOne({ email })
         if (_user)
             return res.status(400).json({
                 success: false,
-                message: 'User already exists!',
+                messageEn: 'User already exists!',
+                message: 'Người dùng đã tồn tại!',
             })
 
         // get roles
@@ -104,7 +112,8 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         if (dbRoles.length !== roles.length)
             return res.status(400).json({
                 success: false,
-                message: `A role doesn't exists at least`,
+                messageEn: `A role doesn't exists at least`,
+                message: `Vai trò không tồn tại ít nhất`,
             })
 
         const user = new User({
@@ -127,13 +136,15 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: 'Create user successfully!',
+            messageEn: 'Create user successfully!',
+            message: 'Tạo người dùng thành công!',
             newUser,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error',
+            messageEn: 'Internal server error',
+            message: 'Lỗi server!',
             error,
         })
     }
@@ -151,7 +162,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         if (!isAdmin && userId !== id) {
             return res.status(403).json({
                 success: false,
-                message: `You don't have permission to access`,
+                messageEn: `You don't have permission to access`,
+                message: `Bạn không có quyền truy cập`,
             })
         }
         // overwrite password
@@ -166,7 +178,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
                 if (dbRoles.length !== roles.length)
                     return res.status(400).json({
                         success: false,
-                        message: `A role doesn't exists at least`,
+                        messageEn: `A role doesn't exists at least`,
+                        message: `Vai trò không tồn tại`,
                     })
 
                 req.body.roles = dbRoles.map((role) => role._id)
@@ -195,18 +208,21 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         if (!user)
             return res.status(400).json({
                 success: false,
-                message: 'User not found!',
+                messageEn: 'User not found!',
+                message: 'Không tìm thấy người dùng!',
             })
 
         res.status(200).json({
             success: true,
-            message: 'Update successfully!',
+            messageEn: 'Update successfully!',
+            message: 'Cập nhật thành công!',
             user,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error',
+            messageEn: 'Internal server error',
+            message: 'Lỗi server!',
             error,
         })
     }
@@ -221,13 +237,15 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
         if (!isAdmin)
             return res.status(403).json({
                 success: false,
-                message: `You don't have permission to access`,
+                messageEn: `You don't have permission to access`,
+                message: `Bạn không có quyền truy cập`,
             })
         const user = await User.findByIdAndDelete(req.params.id)
         if (!user)
             return res.status(404).json({
                 success: false,
-                message: 'User not found',
+                messageEn: 'User not found',
+                message: 'Không tìm thấy người dùng',
             })
 
         // update role
@@ -246,12 +264,14 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: 'Delete successfully!',
+            messageEn: 'Delete successfully!',
+            message: 'Xóa thành công!',
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error',
+            messageEn: 'Internal server error',
+            message: 'Lỗi server!',
             error,
         })
     }

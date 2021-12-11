@@ -28,14 +28,16 @@ router.post('/login', validateLogin(), validateResult , async (req, res) => {
         if (!user)
             return res.status(400).json({
                 success: false,
-                message: 'Wrong email or password!',
+                messageEn: 'Wrong email or password!',
+                message: 'Sai email hoặc mật khẩu!',
             })
 
         const originalPassword = hashPassword.decrypt(user.password)
         if (password !== originalPassword)
             return res.status(400).json({
                 success: false,
-                message: 'Wrong email or password!',
+                messageEn: 'Wrong email or password!',
+                message: 'Sai email hoặc mật khẩu!',
             })
 
         // check email verify
@@ -43,14 +45,16 @@ router.post('/login', validateLogin(), validateResult , async (req, res) => {
             sendMailVerify(req, email, user._id)
             return res.status(401).json({
                 success: false,
-                message: 'User is not email verify. Please check my email.',
+                messageEn: 'User is not email verify. Please check my email.',
+                message: 'Tài khoản chưa được xác thực. Vui lòng kiểm tra email của bạn.',
             })
         }
 
         if (!user.isActived)
             return res.status(403).json({
                 success: false,
-                message: 'The user is deactivated!',
+                messageEn: 'The user is deactivated!',
+                message: 'Tài khoản đã bị khóa!',
             })
 
         // generation access token
@@ -70,14 +74,16 @@ router.post('/login', validateLogin(), validateResult , async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: 'Login successfully!',
+            messageEn: 'Login successfully!',
+            message: 'Đăng nhập thành công!',
             accessToken,
             roles: user.roles.map((role) => role.code),
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error.',
+            messageEn: 'Internal server error.',
+            message: 'Lỗi server!',
             error,
         })
     }
@@ -97,7 +103,8 @@ router.post('/register', validateRegister, async (req, res) => {
         if (dbRoles.length !== roles.length)
             return res.status(400).json({
                 success: false,
-                message: `A role doesn't exists at least`,
+                messageEn: `A role doesn't exists at least`,
+                message: `Vai trò không tồn tại!`,
             })
 
         const inputRoles = dbRoles.map((role) => role._id) // [46dac35, 3abd3c4, ...]
@@ -119,7 +126,8 @@ router.post('/register', validateRegister, async (req, res) => {
             if (newRoles.length === 0)
                 return res.status(422).json({
                     success: false,
-                    message: 'User already exists!',
+                    messageEn: 'User already exists!',
+                    message: 'Tài khoản đã tồn tại!',
                 })
 
             // update user
@@ -128,7 +136,8 @@ router.post('/register', validateRegister, async (req, res) => {
             await _user.save()
             return res.status(201).json({
                 success: true,
-                message: 'Register successfully!',
+                messageEn: 'Register successfully!',
+                message: 'Đăng ký thành công!',
                 _user,
             })
         }
@@ -150,7 +159,8 @@ router.post('/register', validateRegister, async (req, res) => {
                 if (error)
                     return res.status(500).json({
                         success: false,
-                        message: 'Internal server error!',
+                        messageEn: 'Internal server error!',
+                        message: 'Lỗi server!',
                         error,
                     })
             })
@@ -161,13 +171,15 @@ router.post('/register', validateRegister, async (req, res) => {
 
         res.status(201).json({
             success: true,
-            message: 'Register successfully!',
+            messageEn: 'Register successfully!',
+            message: 'Đăng ký thành công!',
             newUser,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error,
         })
     }
@@ -186,13 +198,15 @@ router.get('/confirm/:token', emailVerifyToken, async (req, res) => {
         if (!user)
             return res.status(404).json({
                 success: false,
-                message: 'User not found!',
+                messageEn: 'User not found!',
+                message: 'Tài khoản không tồn tại!',
             })
 
         if (user.isVerified) {
             return res.status(200).json({
                 success: true,
-                message: 'User is email verified.',
+                messageEn: 'User is email verified.',
+                message: 'Tài khoản đã được xác thực!',
             })
         }
         user.isVerified = user.isActived = true
@@ -200,12 +214,14 @@ router.get('/confirm/:token', emailVerifyToken, async (req, res) => {
         await user.save()
         res.status(200).json({
             success: true,
-            message: 'Verified email successfully!',
+            messageEn: 'Verified email successfully!',
+            message: 'Xác thực email thành công!',
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error,
         })
     }
@@ -220,14 +236,16 @@ router.get('/reset/:id', async (req, res) => {
         if (!isValidObjectId(req.params.id))
             return res.status(400).json({
                 succes: false,
-                message: 'User not exists!',
+                messageEn: 'User not exists!',
+                message: 'Tài khoản không tồn tại!',
             })
 
         const user = await User.findById(req.params.id)
         if (!user)
             return res.status(404).json({
                 success: false,
-                message: 'User not found!',
+                messageEn: 'User not found!',
+                message: 'Tài khoản không tồn tại!',
             })
 
         // send mail reset
@@ -235,7 +253,8 @@ router.get('/reset/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error,
         })
     }
@@ -254,17 +273,20 @@ router.post('/reset/:token', resetVerifyToken, async (req, res) => {
         if (!user)
             return res.status(404).json({
                 success: false,
-                message: 'User not found!',
+                messageEn: 'User not found!',
+                message: 'Tài khoản không tồn tại!',
             })
 
         res.status(200).json({
             success: true,
-            message: 'Verify successfully!',
+            messageEn: 'Verify successfully!',
+            message: 'Xác thực thành công!',
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error,
         })
     }
@@ -285,19 +307,22 @@ router.get('/', verifyToken, async (req, res) => {
         if (!user) {
             return res.status(404).json({
                 success: false,
-                message: 'User not found!',
+                messageEn: 'User not found!',
+                message: 'Tài khoản không tồn tại!',
             })
         }
 
         res.status(200).json({
             success: true,
-            message: 'Authenticated!',
+            messageEn: 'Authenticated!',
+            message: 'Đăng nhập thành công!',
             user,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Lỗi server!',
             error,
         })
     }

@@ -45,13 +45,15 @@ const validatePostbyPitchTypeFunction = async (req, res, next) => {
     if (!startTimeRegex.test(startTime)) {
         return res.status(400).send({
             success: false,
-            message: 'startTime is invalid!',
+            messageEn: 'startTime is invalid!',
+            message: 'Thời gian bắt đầu không hợp lệ!',
         })
     }
     if (!endTimeRegex.test(endTime)) {
         return res.status(400).send({
             success: false,
-            message: 'endTime is invalid!',
+            messageEn: 'endTime is invalid!',
+            message: 'Thời gian kết thúc không hợp lệ!',
         })
     }
 
@@ -68,7 +70,8 @@ const validatePostbyPitchTypeFunction = async (req, res, next) => {
     if (startDateTimeAdd > endDateTimeAdd) {
         return res.status(400).send({
             success: false,
-            message: 'startTime is after endTime!',
+            messageEn: 'startTime is after endTime!',
+            message: 'Thời gian bắt đầu phải trước thời gian kết thúc!',
         })
     }
 
@@ -77,7 +80,8 @@ const validatePostbyPitchTypeFunction = async (req, res, next) => {
     if (startDateTimeAdd < currentDate) {
         return res.status(400).send({
             success: false,
-            message: 'startTime must be in future!',
+            messageEn: 'startTime must be in future!',
+            message: 'Thời gian bắt đầu phải là thời gian tương lai!',
         })
     }
 
@@ -191,13 +195,15 @@ const validatePostFunction = async (req, res, next) => {
     if (!startTimeRegex.test(startTime)) {
         return res.status(400).send({
             success: false,
-            message: 'startTime is invalid!',
+            messageEn: 'startTime is invalid!',
+            message: 'Thời gian bắt đầu không hợp lệ!',
         })
     }
     if (!endTimeRegex.test(endTime)) {
         return res.status(400).send({
             success: false,
-            message: 'endTime is invalid!',
+            messageEn: 'endTime is invalid!',
+            message: 'Thời gian kết thúc không hợp lệ!',
         })
     }
 
@@ -213,7 +219,8 @@ const validatePostFunction = async (req, res, next) => {
     if (startDateTimeAdd > endDateTimeAdd) {
         return res.status(400).send({
             success: false,
-            message: 'startTime is after endTime!',
+            messageEn: 'startTime is after endTime!',
+            message: 'Thời gian bắt đầu phải trước thời gian kết thúc!',
         })
     }
 
@@ -222,7 +229,8 @@ const validatePostFunction = async (req, res, next) => {
     if (startDateTimeAdd < currentDate) {
         return res.status(400).send({
             success: false,
-            message: 'startTime must be in future!',
+            messageEn: 'startTime must be in future!',
+            message: 'Thời gian bắt đầu phải là thời gian tương lai!',
         })
     }
 
@@ -256,7 +264,8 @@ const validatePostFunction = async (req, res, next) => {
     if (!alStartTime.includes(startTimeArrayAdd[1]) || !alStartTime.includes(endTimeArrayAdd[1]) && !alEndTime.includes(startTimeArrayAdd[1]) || !alEndTime.includes(endTimeArrayAdd[1])) {
         return res.status(400).send({
             success: false,
-            message: 'this time don\'t have price!',
+            messageEn: 'this time don\'t have price!',
+            message: 'Thời gian này không có giá!',
         })
     }
 
@@ -282,31 +291,34 @@ const validatePostFunction = async (req, res, next) => {
             return res.status(400).send({
                 success: false,
                 code: '0101',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước',
             })
         }
         if (startDateTime < endDateTimeAdd && endDateTime > endDateTimeAdd) {
             return res.status(400).send({
                 success: false,
                 code: '1010',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước',
             })
         }
         if (startDateTime > startDateTimeAdd && endDateTime < endDateTimeAdd) {
             return res.status(400).send({
                 success: false,
                 code: '1001',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước',
             })
         }
         if (startDateTime <= startDateTimeAdd && endDateTime >= endDateTimeAdd) {
             return res.status(400).send({
                 success: false,
                 code: '0110',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước',
             })
         }
-
     }
 
     //check status is valid
@@ -317,7 +329,8 @@ const validatePostFunction = async (req, res, next) => {
     if (!statusIds.includes(status.toString())) {
         return res.status(400).send({
             success: false,
-            message: 'status is invalid!',
+            messageEn: 'status is invalid!',
+            message: 'Trạng thái không hợp lệ!',
         })
     }
 
@@ -330,7 +343,8 @@ const validatePostFunction = async (req, res, next) => {
     if (!bookings.customer) {
         return res.status(400).send({
             success: false,
-            message: 'booking is not yours!',
+            messageEn: 'booking is not yours!',
+            message: 'Đặt trước không phải của bạn!',
         })
     }
 
@@ -359,7 +373,8 @@ const validateResult = (req, res, next) => {
         // { errors: [ "body[password]: must be at least 10 chars long" ] }
         return res.status(400).json({
             success: false,
-            message: 'Validate error!',
+            messageEn: 'Validate error!',
+            message: 'Xác thực lỗi!',
             errors: result.array(),
         })
     }

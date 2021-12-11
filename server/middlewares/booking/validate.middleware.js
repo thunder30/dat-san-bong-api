@@ -53,13 +53,15 @@ const validateCheckoutFunction = async (req, res, next) => {
     if (!startTimeRegex.test(startTime)) {
         return res.status(400).send({
             success: false,
-            message: 'startTime is invalid!',
+            messageEn: 'startTime is invalid!',
+            message: 'Thời gian bắt đầu không hợp lệ!',
         })
     }
     if (!endTimeRegex.test(endTime)) {
         return res.status(400).send({
             success: false,
-            message: 'endTime is invalid!',
+            messageEn: 'endTime is invalid!',
+            message: 'Thời gian kết thúc không hợp lệ!',
         })
     }
 
@@ -75,7 +77,8 @@ const validateCheckoutFunction = async (req, res, next) => {
     if (startDateTimeAdd >= endDateTimeAdd) {
         return res.status(400).send({
             success: false,
-            message: 'startTime is after endTime!',
+            messageEn: 'startTime is after endTime!',
+            message: 'Thời gian bắt đầu phải trước thời gian kết thúc!',
         })
     }
 
@@ -84,7 +87,8 @@ const validateCheckoutFunction = async (req, res, next) => {
     if (startDateTimeAdd < currentDate) {
         return res.status(400).send({
             success: false,
-            message: 'startTime must be in future!',
+            messageEn: 'startTime must be in future!',
+            message: 'Thời gian bắt đầu phải là thời gian tương lai!',
         })
     }
 
@@ -101,14 +105,16 @@ const validateCheckoutFunction = async (req, res, next) => {
     if (!_pitch.pitchType.pitchBranch.isActived) {
         return res.status(400).send({
             success: false,
-            message: 'pitch is not actived!',
+            messageEn: 'pitch is not actived!',
+            message: 'Sân không được kích hoạt!',
         })
     }
 
     if(!_pitch.pitchType.pitchBranch.isActived){
         return res.status(400).json({
             success: false,
-            message: "Pitch branch is not actived"
+            messageEn: "Pitch branch is not actived",
+            message: "Sân chưa được kích hoạt!"
         })
     }
 
@@ -134,7 +140,8 @@ const validateCheckoutFunction = async (req, res, next) => {
         if(!(alStartTime.includes(startTimeArrayAdd[1]) && alEndTime.includes(endTimeArrayAdd[1])))
         return res.status(400).send({
             success: false,
-            message: 'this time don\'t have price!',
+            messageEn: 'this time don\'t have price!',
+            message: 'Thời gian này chưa có giá!',
         })
     }
 
@@ -156,7 +163,8 @@ const validateCheckoutFunction = async (req, res, next) => {
             return res.status(400).send({
                 success: false,
                 code: '0000',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước đó!',
             })
         }
 
@@ -165,28 +173,32 @@ const validateCheckoutFunction = async (req, res, next) => {
             return res.status(400).send({
                 success: false,
                 code: '0101',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước đó!',
             })
         }
         if (startDateTime < endDateTimeAdd && endDateTime > endDateTimeAdd) {
             return res.status(400).send({
                 success: false,
                 code: '1010',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước đó!',
             })
         }
         if (startDateTime > startDateTimeAdd && endDateTime < endDateTimeAdd) {
             return res.status(400).send({
                 success: false,
                 code: '1001',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước đó!',
             })
         }
         if (startDateTime < startDateTimeAdd && endDateTime > endDateTimeAdd) {
             return res.status(400).send({
                 success: false,
                 code: '0110',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước đó!',
             })
         }
 
@@ -244,7 +256,8 @@ const validatePutCheckinFunction = async (req, res, next) => {
     if(!req.params.id) {
         return res.status(400).json({
             success: false,
-            message: 'Bad request',
+            messageEn: 'Bad request',
+            message: 'Yêu cầu không hợp lệ',
         })
     }
 
@@ -270,7 +283,8 @@ const validatePutCheckinFunction = async (req, res, next) => {
             if(ownerCheck.pitch.pitchType.pitchBranch.owner.toString() !== userId) {
                 return res.status(403).json({
                     success: false,
-                    message: 'You are not owner of this pitch!',
+                    messageEn: 'You are not owner of this pitch!',
+                    message: 'Bạn không phải chủ sở hữu của sân này!',
                 })
             }
             
@@ -293,7 +307,8 @@ const validatePutCheckinFunction = async (req, res, next) => {
     if(_bookingDetail.status.status !== 'ST1') {
         return res.status(400).json({
             success: false,
-            message: 'This code have inval status',
+            messageEn: 'This code have inval status',
+            message: 'Mã đã được sử dụng!',
         })
     }
 
@@ -315,7 +330,8 @@ const validatePutCheckinFunction = async (req, res, next) => {
     if(now > endDateTime) { 
         return res.status(400).json({
             success: false,
-            message: 'This booking is expired',
+            messageEn: 'This booking is expired',
+            message: 'Đã hết hạn phiếu đặt sân!',
         })
     }
 
@@ -325,7 +341,8 @@ const validatePutCheckinFunction = async (req, res, next) => {
     if(!(now > startSub30)) {
         return res.status(400).json({
             success: false,
-            message: 'Start time is invalid!',
+            messageEn: 'Start time is invalid!',
+            message: 'Thời gian bắt đầu đặt sân không hợp lệ!',
         })
     }
 
@@ -341,7 +358,8 @@ const validatePutCancelFunction = async (req, res, next) => {
     if(!ObjectId.isValid(bookingDetailId)) {
         return res.status(400).json({
             success: false,
-            message: 'Bad request',
+            messageEn: 'Bad request',
+            message: 'Yêu cầu không hợp lệ',
         })
     }
 
@@ -349,7 +367,8 @@ const validatePutCancelFunction = async (req, res, next) => {
     if(!bookingDetailId || !req.body.status) {
         return res.status(400).json({
             success: false,
-            message: 'Bad request',
+            messageEn: 'Bad request',
+            message: 'Yêu cầu không hợp lệ',
         })
     }
 
@@ -358,14 +377,16 @@ const validatePutCancelFunction = async (req, res, next) => {
     if(bookingDetail.booking.customer != userId) {
         return res.status(400).json({
             success: false,
-            message: 'You are not owner of this booking!',
+            messageEn: 'You are not owner of this booking!',
+            message: 'Bạn không phải chủ sở hữu đặt sân này!',
         })
     }
 
     if(bookingDetail.status.status !== 'ST1') {
         return res.status(400).json({
             success: false,
-            message: 'You cannot cancel this booking',
+            messageEn: 'You cannot cancel this booking',
+            message: 'Bạn không thể hủy đặt sân này!',
         })
     }
 
@@ -383,7 +404,8 @@ const validatePutCancelFunction = async (req, res, next) => {
     if(startSub < now) {
         return res.status(400).json({
             success: false,
-            message: 'Entire time to cancel',
+            messageEn: 'Entire time to cancel',
+            message: 'Đã hết hạn hủy sân!',
         })
     }
 
@@ -440,31 +462,40 @@ const validatePostFunction = (req, res, next) => {
     const endDateFormat = /^\d{1,2}\/\d{1,2}\/\d{4}$/
     if (!startDate.match(startDateFormat)) {
         return res.status(400).json({
-            message: "startDate is not valid"
+            success: false,
+            messageEn: "startDate is not valid",
+            message: "Ngày bắt đầu không hợp lệ",
         })
     }
     if (!endDate.match(endDateFormat)) {
         return res.status(400).json({
-            message: "endDate is not valid"
+            success: false,
+            messageEn: "endDate is not valid",
+            message: "Ngày kết thúc không hợp lệ",
         })
     }
 
     if (new Date(startDate) > new Date(endDate)) {
         return res.status(400).json({
-            message: "startDate is greater than endDate"
+            success: false,
+            messageEn: "startDate is greater than endDate",
+            message: "Ngày bắt đầu phải nhỏ hơn ngày kết thúc",
         })
     }
 
     if (new Date(startDate) < new Date()) {
         return res.status(400).json({
-            message: "startDate must be greater than today"
+            success: false,
+            messageEn: "startDate must be greater than today",
+            message: "Ngày bắt đầu phải lớn hơn ngày hiện tại",
         })
     }
 
     if(req.body.customer !== req.payload.userId){
         return res.status(400).json({
             success: false,
-            message: "Id not yours"
+            messageEn: "Id not yours",
+            message: "Id không phải của bạn",
         })
     }
 
@@ -483,7 +514,8 @@ const validatePostConfirmFunction = async (req, res, next) => {
     if(customer !== userId){
         return res.status(400).json({
             success: false,
-            message: "Id not yours"
+            messageEn: "Id not yours",
+            message: "Id không phải của bạn",
         })
     }
 
@@ -494,7 +526,9 @@ const validatePostConfirmFunction = async (req, res, next) => {
         const phoneFormat = /^(0|\+84)(\s|\.)?((3[2-9])|(5[689])|(7[06-9])|(8[1-689])|(9[0-46-9]))(\d)(\s|\.)?(\d{3})(\s|\.)?(\d{3})$/
         if (!phone.match(phoneFormat)) {
             return res.status(400).json({
-                message: "phone is not valid"
+                success: false,
+                messageEn: "phone is not valid",
+                message: "Số điện thoại không hợp lệ",
             })
         }
     }
@@ -506,13 +540,15 @@ const validatePostConfirmFunction = async (req, res, next) => {
     if (!startTimeRegex.test(startTime)) {
         return res.status(400).send({
             success: false,
-            message: 'startTime is invalid!',
+            messageEn: 'startTime is invalid!',
+            message: 'Thời gian bắt đầu không hợp lệ',
         })
     }
     if (!endTimeRegex.test(endTime)) {
         return res.status(400).send({
             success: false,
-            message: 'endTime is invalid!',
+            messageEn: 'endTime is invalid!',
+            message: 'Thời gian kết thúc không hợp lệ',
         })
     }
 
@@ -528,7 +564,8 @@ const validatePostConfirmFunction = async (req, res, next) => {
     if (startDateTimeAdd >= endDateTimeAdd) {
         return res.status(400).send({
             success: false,
-            message: 'startTime is after endTime!',
+            messageEn: 'startTime is after endTime!',
+            message: 'Thời gian bắt đầu phải trước thời gian kết thúc',
         })
     }
 
@@ -537,7 +574,8 @@ const validatePostConfirmFunction = async (req, res, next) => {
     if (startDateTimeAdd < currentDate) {
         return res.status(400).send({
             success: false,
-            message: 'startTime must be in future!',
+            messageEn: 'startTime must be in future!',
+            message: 'Thời gian bắt đầu phải lớn hơn thời gian hiện tại',
         })
     }
 
@@ -553,13 +591,15 @@ const validatePostConfirmFunction = async (req, res, next) => {
     if(!_pitch.pitchType.pitchBranch.isActived){
         return res.status(400).json({
             success: false,
-            message: "Pitch branch is not actived"
+            messageEn: "Pitch branch is not actived",
+            message: "Chi nhánh của sân chưa được kích hoạt",
         })
     }
     if(!_pitch.isActive){
         return res.status(400).json({
             success: false,
-            message: "Pitch is not actived"
+            messageEn: "Pitch is not actived",
+            message: "Sân chưa được kích hoạt",
         })
     }
 
@@ -588,7 +628,8 @@ const validatePostConfirmFunction = async (req, res, next) => {
         if(!(alStartTime.includes(startTimeArrayAdd[1]) && alEndTime.includes(endTimeArrayAdd[1])))
         return res.status(400).send({
             success: false,
-            message: 'this time don\'t have price!',
+            messageEn: 'this time don\'t have price!',
+            message: 'Thời gian này không có giá',
         })
     }
 
@@ -613,7 +654,8 @@ const validatePostConfirmFunction = async (req, res, next) => {
             return res.status(400).send({
                 success: false,
                 code: '0000',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước',
             })
         }
 
@@ -622,28 +664,32 @@ const validatePostConfirmFunction = async (req, res, next) => {
             return res.status(400).send({
                 success: false,
                 code: '0101',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước',
             })
         }
         if (startDateTime < endDateTimeAdd && endDateTime > endDateTimeAdd) {
             return res.status(400).send({
                 success: false,
                 code: '1010',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước',
             })
         }
         if (startDateTime > startDateTimeAdd && endDateTime < endDateTimeAdd) {
             return res.status(400).send({
                 success: false,
                 code: '1001',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước',
             })
         }
         if (startDateTime < startDateTimeAdd && endDateTime > endDateTimeAdd) {
             return res.status(400).send({
                 success: false,
                 code: '0110',
-                message: 'Booked already',
+                messageEn: 'Booked already',
+                message: 'Đã đặt trước',
             })
         }
 
@@ -725,7 +771,8 @@ const validatePostStaticFunction = async (req, res, next) => {
     if(!startDate || !endDate){
         return res.status(400).send({
             success: false,
-            message: 'Missing information',
+            messageEn: 'Missing information',
+            message: 'Thiếu thông tin',
         })
     }
     //check startDate and endDate in format dd/MM/yyyy regex
@@ -733,7 +780,8 @@ const validatePostStaticFunction = async (req, res, next) => {
     if (!regex.test(startDate) || !regex.test(endDate)) {
         return res.status(400).send({
             success: false,
-            message: 'StartDate and EndDate must be in format dd/MM/yyyy',
+            messageEn: 'StartDate and EndDate must be in format dd/MM/yyyy',
+            message: 'Ngày bắt đầu và ngày kết thúc phải đúng định dạng dd/MM/yyyy',
         })
     }
 
@@ -744,7 +792,8 @@ const validatePostStaticFunction = async (req, res, next) => {
     if (_startDate > _endDate) {
         return res.status(400).send({
             success: false,
-            message: 'StartDate must be less than EndDate',
+            messageEn: 'StartDate must be less than EndDate',
+            message: 'Ngày bắt đầu phải nhỏ hơn ngày kết thúc',
         })
     }
 
@@ -753,14 +802,16 @@ const validatePostStaticFunction = async (req, res, next) => {
         if(!pitchBranchId){
             return res.status(400).send({
                 success: false,
-                message: 'Missing information',
+                messageEn: 'Missing information',
+                message: 'Thiếu thông tin',
             })
         }
         //check pitchBranchId is MongoId
         if (!mongoose.Types.ObjectId.isValid(pitchBranchId)) {
             return res.status(400).send({
                 success: false,
-                message: 'pitchBranchId is not valid',
+                messageEn: 'pitchBranchId is not valid',
+                message: 'pitchBranchId không hợp lệ',
             })
         }
     }
