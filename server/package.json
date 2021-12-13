@@ -23,5 +23,8 @@
     "main": "server.js",
     "author": "Thunder",
     "license": "ISC",
-    "description": ""
+    "description": "",
+    "engines": {
+        "node": "16.x"
+    }
 }
