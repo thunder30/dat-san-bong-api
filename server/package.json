@@ -1,5 +1,6 @@
 {
     "dependencies": {
+        "@heroku/buildpack-registry": "^1.0.1",
         "cors": "^2.8.5",
         "crypto-js": "^4.1.1",
         "dotenv": "^10.0.0",
