@@ -29,7 +29,8 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         if (!isAdmin && userId !== owner) {
             return res.status(401).json({
                 success: false,
-                message: `You don't have permission`,
+                messageEn: `You don't have permission`,
+                message: `Bạn không có quyền`,
             })
         }
 
@@ -74,13 +75,15 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         let _pitchBranch = await pitchBranch.save()
         res.status(201).json({
             success: true,
-            message: 'Create successfully!',
+            messageEn: 'Create successfully!',
+            message: 'Tạo thành công!',
             _pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -111,21 +114,24 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         if (!pitchBranch) {
             return res.status(404).json({
                 success: false,
-                message: 'PitchBranch not found!',
+                messageEn: 'PitchBranch not found!',
+                message: 'Không tìm thấy sân bóng!',
             })
         }
 
         // delete
-        await pitchBranch.remove()
+        let _pitchBranch = await PitchBranch.findByIdAndUpdate(req.params.id, { isActived: false }, { new: true })
         res.status(200).json({
             success: true,
-            message: 'Delete successfully!',
-            pitchBranch
+            messageEn: 'Delete successfully!',
+            message: 'Xóa thành công!',
+            pitchBranch: _pitchBranch
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -146,7 +152,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         if (!isAdmin) {
             return res.status(403).json({
                 success: false,
-                message: `You don't have permission`,
+                messageEn: `You don't have permission`,
+                message: `Bạn không có quyền`,
             })
         }
 
@@ -155,7 +162,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         if (!pitchBranch) {
             return res.status(404).json({
                 success: false,
-                message: 'PitchBranch not found!',
+                messageEn: 'PitchBranch not found!',
+                message: 'Không tìm thấy sân bóng!',
             })
         }
 
@@ -166,12 +174,14 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         await pitchBranch.updateOne(req.body)
         res.status(200).json({
             success: true,
-            message: 'Update successfully!',
+            messageEn: 'Update successfully!',
+            message: 'Cập nhật thành công!',
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -195,13 +205,15 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         console.log(pitchBranch)
         res.status(200).json({
             success: true,
-            message: 'Get pitchBranch successfully!',
+            messageEn: 'Get pitchBranch successfully!',
+            message: 'Lấy sân bóng thành công!',
             pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -228,7 +240,8 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
         if (pitchBranch.length === 0 && !isAdmin) {
             return res.status(403).json({
                 success: false,
-                message: 'Not found',
+                messageEn: 'Not found',
+                message: 'Không tìm thấy sân bóng',
             })
         }
         // nếu là admin thì get luôn
@@ -240,13 +253,15 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
 
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -258,16 +273,41 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
  */
 router.get('/getDetail/:id', async (req, res) => {
     try {
+
+        const pitchBranch = await PitchBranch.findById(req.params.id).where('isActived').equals(true)
+        if(!pitchBranch){
+            return res.status(404).json({
+                success: false,
+                messageEn: 'PitchBranch not found!',
+                message: 'Không tìm thấy sân bóng!',
+            })
+        }
+
         const pitchType = await PitchType.find()
+        .sort({ createdAt: 1 })
         .where('pitchBranch').equals(req.params.id)
+        .populate({
+            path: 'pitchBranch',
+            select : 'isActive',
+        })
 
         //sy help
         let pitchTypes =[]
         for(let item of pitchType)
         {
+            if(item.isActive !== true)
+            {
+                continue
+            }
             // console.log (item._id.toString())
             let pitch = await Pitch.find({pitchType: item._id.toString()}).select('_id displayName description isActive pitchType')
-
+            for(let i = 0; i < pitch.length; i++)
+            {
+                if(pitch[i].isActive == false)
+                {
+                    pitch.splice(i, 1)
+                }
+            }
             let price = await Price.find({pitchType: item._id.toString()})
                 .select('-_id price time')
                 .populate({path : 'time', 
@@ -287,7 +327,7 @@ router.get('/getDetail/:id', async (req, res) => {
                 return 0;
             });
 
-            time = []
+            let time = []
             // merge startTime to endTime by same price
             for(let i = 1; i < price.length; i++)
             {
@@ -305,24 +345,121 @@ router.get('/getDetail/:id', async (req, res) => {
             }
 
             pitchTypes.push({
-                id: item._id.toString(),
+                _id: item._id.toString(),
                 displayName: item.displayName,
                 description: item.description,
-                pitchs: pitch,
+                pitches: pitch,
                 prices: time
             })
         }
 
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitchTypes,
         })
     }
     catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
+            error: error.message,
+        })
+    }
+})
+
+/**
+ * @GET /api/pitchBranch/getDetailOwner/:id
+ * @description Get all detail pitchBranch 
+ */
+router.get('/getDetailOwner/:id', verifyToken, async (req, res) => {
+    try {
+        let pitchBranch
+        if(req.payload.isAdmin)
+        pitchBranch = await PitchBranch.findById(req.params.id)
+        else
+        pitchBranch = await PitchBranch.findById(req.params.id).where('owner').equals(req.payload.userId)
+        if(!pitchBranch){
+            return res.status(404).json({
+                success: false,
+                messageEn: 'PitchBranch not found!',
+                message: 'Không tìm thấy sân bóng!',
+            })
+        }
+
+        const pitchType = await PitchType.find()
+        .sort({ createdAt: 1 })
+        .where('pitchBranch').equals(req.params.id)
+        .populate({
+            path: 'pitchBranch',
+            select : 'isActive',
+        })
+
+        //sy help
+        let pitchTypes =[]
+        for(let item of pitchType)
+        {
+            // console.log (item._id.toString())
+            let pitch = await Pitch.find({pitchType: item._id.toString()}).select('_id displayName description isActive pitchType')
+            let price = await Price.find({pitchType: item._id.toString()})
+                .select('-_id price time')
+                .populate({path : 'time', 
+                        select : '-_id startTime endTime description'
+                    })
+
+            price.sort((a, b) => {
+                let fa = a.time.startTime,
+                    fb = b.time.startTime;
+            
+                if (fa < fb) {
+                    return -1;
+                }
+                if (fa > fb) {
+                    return 1;
+                }
+                return 0;
+            });
+
+            let time = []
+            // merge startTime to endTime by same price
+            for(let i = 1; i < price.length; i++)
+            {
+                if(price[i].time.startTime === price[i-1].time.endTime && price[i].price === price[i-1].price)
+                {
+                    price[i].time.startTime = price[i-1].time.startTime
+                    price[i].time.description = price[i-1].time.description
+                }else{
+                    time.push(price[i-1])
+                }
+                if(i === price.length - 1)
+                {
+                    time.push(price[i])
+                }
+            }
+
+            pitchTypes.push({
+                _id: item._id.toString(),
+                displayName: item.displayName,
+                description: item.description,
+                pitches: pitch,
+                prices: time
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
+            pitchTypes,
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error: error.message,
         })
     }
@@ -332,23 +469,25 @@ router.get('/getDetail/:id', async (req, res) => {
  * @GET /api/pitchBranch?getAsBranch=id
  * @description Get all pitchBranch
  */
-router.get('/', verifyToken, async (req, res) => {
+router.get('/', async (req, res) => {
     try {
 
         const pitchBranch = await PitchBranch.find().populate({
             path: 'owner',
             select: '-password -accessToken -users',
-        })
+        }).where('isActived').equals(true)
 
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitchBranch,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }

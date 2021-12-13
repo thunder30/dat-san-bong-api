@@ -30,8 +30,6 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
                 match: { owner: userId },
             })
 
-        console.log(_pitchBranch)
-
         const isOwner = _pitchBranch.some((value, index) => {
             return value._id.toString() === req.body.pitchBranch
         })
@@ -39,7 +37,8 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         if (!isOwner && !isAdmin) {
             return res.status(403).json({
                 success: false,
-                message: 'You are not owner of this branch!',
+                messageEn: 'You are not owner of this branch!',
+                message: 'Bạn không phải là chủ của sân này',
             })
         }
 
@@ -52,12 +51,13 @@ router.post('/', verifyToken, validatePost, async (req, res) => {
         res.status(201).json({
             success: true,
             message: 'Create successfully!',
-            _pitchType,
+            pitchType: _pitchType,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -91,7 +91,8 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         if (!isOwner && !isAdmin) {
             return res.status(403).json({
                 success: false,
-                message: 'You are not owner of this branch!',
+                messageEn: 'You are not owner of this branch!',
+                message: 'Bạn không phải là chủ của sân này',
             })
         }
 
@@ -102,13 +103,15 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
         })
         res.status(200).json({
             success: true,
-            message: 'Update successfully!',
+            messageEn: 'Update successfully!',
+            message: 'Cập nhật thành công!',
             _pitchType,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -119,44 +122,53 @@ router.put('/:id', verifyToken, validatePut, async (req, res) => {
  * @description Delete a pitchType
  */
 router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
-    try{
+    try {
         // //check if branch of user
         const id = req.params.id
         const { isAdmin, userId } = req.payload
         const _pitchType = await PitchType.findById(id)
-        .where('owner').equals(userId)
-        .populate(
-                path = 'pitchBranch',
-                select = 'owner',
-                match = {owner: userId}
-        )
+            .where('owner')
+            .equals(userId)
+            .populate(
+                (path = 'pitchBranch'),
+                (select = 'owner'),
+                (match = { owner: userId })
+            )
         console.log(userId)
         console.log(_pitchType.pitchBranch)
-        if(!_pitchType.pitchBranch){
+        if (!_pitchType.pitchBranch) {
             return res.status(403).json({
                 success: false,
-                message: 'You are not owner of this branch!',
+                messageEn: 'You are not owner of this branch!',
+                message: 'Bạn không phải là chủ của sân này',
             })
         }
         // delete from database _pitchType
-        const pitchTypeDel = await PitchType.findByIdAndDelete(id)
+        const pitchTypeDel = await PitchType.findByIdAndUpdate(
+            id,
+            { isActive: false },
+            { new: true }
+        )
 
         // const _pitchType = await PitchType.findOneAndDelete({ _id: req.params.id })
-        if(!pitchTypeDel){
+        if (!pitchTypeDel) {
             return res.status(404).json({
                 success: false,
-                message: 'PitchType not found!',
+                messageEn: 'PitchType not found!',
+                message: 'Không tìm thấy sân này!',
             })
         }
         res.status(200).json({
             success: true,
-            message: 'Delete successfully!',
+            messageEn: 'Delete successfully!',
+            message: 'Xóa thành công!',
             pitchTypeDel,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -176,7 +188,8 @@ router.get('/', verifyToken, validateGetByBranch, async (req, res) => {
             //return nos veef
             return res.status(200).json({
                 success: true,
-                message: 'Get all pitchType successfully!',
+                messageEn: 'Get all pitchType successfully!',
+                message: 'Lấy tất cả loại sân thành công!',
                 _pitchType,
             })
         }
@@ -184,50 +197,28 @@ router.get('/', verifyToken, validateGetByBranch, async (req, res) => {
         if (!req.query.branchId) {
             return res.status(400).json({
                 success: false,
-                message: 'Bad request!',
+                messageEn: 'Bad request!',
+                message: 'Yêu cầu không hợp lệ!',
             })
         }
 
-        // //check if branch of user
-        // const  id = req.query.branchId
-        // const { isAdmin, userId } = req.payload
-        // const _pitchBranch = await PitchBranch.find({})
-        // .where('owner').equals(userId)
-        // .select('_id')
-        // .populate(
-        //     {
-        //         path: 'owner',
-        //         select: 'id',
-        //         match: {owner: userId}
-        //     }
-        // )
-        // let isOwner
-        // isOwner = _pitchBranch.some((value,index) => {
-        //     return value._id.toString() === id
-        // })
-
-        // if(!isOwner && !isAdmin){
-        //     return res.status(403).json({
-        //         success: false,
-        //         message: 'You are not owner of this branch!',
-        //     })
-        // }
-
         const pitchType = await PitchType.find({})
-        .where('pitchBranch').equals(id)
-        .populate
-        ({
-            path: 'pitchBranch',
-        })
+            .where('pitchBranch')
+            .equals(id)
+            .populate({
+                path: 'pitchBranch',
+            })
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             pitchType,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
@@ -244,48 +235,18 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
         )
         res.status(200).json({
             success: true,
-            message: 'Get successfully!',
+            messageEn: 'Get successfully!',
+            message: 'Lấy thành công!',
             _pitchType,
         })
     } catch (error) {
         res.status(500).json({
             success: false,
-            message: 'Internal server error!',
+            messageEn: 'Internal server error!',
+            message: 'Có lỗi xảy ra trong quá trình xử lý!',
             error,
         })
     }
 })
-
-// /**
-//  * @GET /api/pitchType
-//  * @desc Get all pitchTypes
-//  */
-//  router.get('/', verifyToken, async (req, res) => {
-
-//     try{
-//         const { isAdmin, userId } = req.payload
-//         if(!isAdmin){
-//             return res.status(403).json({
-//                 success: false,
-//                 message: 'You are not admin!',
-//             })
-//         }
-
-//         const pitchTypes = await PitchType.find({})
-//         res.status(200).json({
-//             success: true,
-//             message: 'Get all pitchType',
-//             pitchTypes,
-//         })
-//     }
-//     catch (error) {
-//         res.status(500).json({
-//             success: false,
-//             message: 'Internal server error!',
-//             error,
-//         })
-//     }
-
-// })
 
 module.exports = router

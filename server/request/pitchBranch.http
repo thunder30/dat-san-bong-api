@@ -1,19 +1,19 @@
 ###
 POST http://localhost:5000/api/pitchBranch
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5MzgzNTAsImV4cCI6MTYzODAyNDc1MH0.qS_jx0Eap3MssAtmjE725MajkXj982fpffy5c2ljo6M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTE4M2E2YzhmNzIzOWVlMWYxNjIiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzg2NzkyMjgsImV4cCI6MTYzODc2NTYyOH0._HbBDfyhF3QHjminiig-AcPZcBtsX7WjYPHIHbm4x8c
 Content-Type: application/json
 
 {
-    "displayName": "Sân ba bà Ba",
+    "displayName": "Sân Ông Tám mập",
     "phoneNumber": "0987654321",
-    "address": "số 113",
-    "ward": "phường 4",
-    "district": "quận 3",
-    "province": "TP.HCM",
-    "description":"đá banh đá bóng nè",
-    "startTime": "07:00",
-    "endTime": "23:00",
-    "owner": "619ba213a6c8f7239ee1f169"
+    "address": "số 352",
+    "ward": "phường 2",
+    "district": "quận 2",
+    "province": "HCM",
+    "description":"zui là tám",
+    "startTime": "06:00",
+    "endTime": "22:00",
+    "owner": "619ba183a6c8f7239ee1f162"
 
 }
 
@@ -24,34 +24,38 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlM
 ###
 
 GET http://localhost:5000/api/pitchBranch
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
+//Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
 
 ###
 GET http://localhost:5000/api/pitchBranch/owner
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjk1ODA0NiwiZXhwIjoxNjM2OTYxNjQ2fQ.u01uPh5vOp2nkBivUojYDKLgpRnYO2MhMlMlZDim5BM
 
 ###
-DELETE  http://localhost:5000/api/pitchBranch/618f3a5245381fbbb7905e28
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZjRkZTYzZjdlYTU0ZDYwYjhjZWYiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzY3ODk2ODUsImV4cCI6MTYzNjc5MzI4NX0.Itk9SaGuIfkmyi_QkQDbaM40gDi1JTcLSR5WVGz-iwU
+DELETE  http://localhost:5000/api/pitchBranch/619ba817e6475ccdb08eea12
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkwNjc0ODgsImV4cCI6MTYzOTE1Mzg4OH0.qCM7gcS5eqZpb81OxQdk4cqMPwhXCZpB4_IB77M3C4k
 
 ###
 
-PUT http://localhost:5000/api/pitchBranch/618f6d86d1d92d1149e4c454
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThjZjRkZTYzZjdlYTU0ZDYwYjhjZWYiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzY3ODk2ODUsImV4cCI6MTYzNjc5MzI4NX0.Itk9SaGuIfkmyi_QkQDbaM40gDi1JTcLSR5WVGz-iwU
+PUT http://localhost:5000/api/pitchBranch/619ba93bba72b12e6ea9f2f6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkwMzkxOTQsImV4cCI6MTYzOTEyNTU5NH0.VbD4_YwwwG2-HEkDkV0pK2ib8PEvltu1PrHMHfHz7TU
 Content-Type: application/json
 
 {
-    "displayName": "Sân Thunder Football",
+    "displayName": "Sân Ông Tám mập",
     "phoneNumber": "0987654321",
-    "address": "số 123",
+    "address": "số 352",
     "ward": "phường 2",
     "district": "quận 2",
     "province": "HCM",
-    "description":"zui là chính",
+    "description":"zui là tám",
     "startTime": "06:00",
     "endTime": "22:00",
-    "owner": "618cf4de63f7ea54d60b8cef"
+    "owner": "619ba183a6c8f7239ee1f162"
 }
 
 ###
 GET http://localhost:5000/api/pitchBranch/getDetail/619ba93bba72b12e6ea9f2f6
+
+###
+GET http://localhost:5000/api/pitchBranch/getDetailOwner/619ba93bba72b12e6ea9f2f6
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkyMDQzNTgsImV4cCI6MTYzOTI5MDc1OH0.tZAwxAxpeQvN3S039R7mVHu3Xaj2uzI6ecndY8MdaPU
