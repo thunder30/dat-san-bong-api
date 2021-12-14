@@ -4,11 +4,11 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlM
 
 ###
 POST http://localhost:5000/api/pitchtype
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5MzgzNTAsImV4cCI6MTYzODAyNDc1MH0.qS_jx0Eap3MssAtmjE725MajkXj982fpffy5c2ljo6M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkwNTQzMDgsImV4cCI6MTYzOTE0MDcwOH0.bINwOUJW0NtgToXDA2rf7-bewQdj8s5QHkeiwaaDU4s
 Content-Type: application/json
 
 {
-    "displayName": "Sân 5",
+    "displayName": "Sân bỏ",
     "description": "Sân này có 5 người",
     "pitchBranch":"619ba93bba72b12e6ea9f2f6"
 }
@@ -25,12 +25,12 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/api/pitchtype/619347615da96bc6c9721f0f
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3MDM5MzQyLCJleHAiOjE2MzcwNDI5NDJ9.bdGAVE-EFsOuliAcnEp_a7GbQP0XOU4zmTOvIIvkaNY
+DELETE http://localhost:5000/api/pitchtype/619bb3e1b770e45c464db6e2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzk0MDU1MDEsImV4cCI6MTYzOTQ5MTkwMX0.7fISiyz7UNBWY4v_WXOGlZ1crpCwce7_lDPioWhIeZs
 
 ###
 GET http://localhost:5000/api/pitchtype/6190cf8840851e03ca987d2a
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlMGM1MmEwYjc2ZjY3N2U1ODdlMzgiLCJyb2xlcyI6WyJBRE1JTiIsIktIQUNIX0hBTkciLCJDSFVfU0FOIl0sImlzQWRtaW4iOnRydWUsImlhdCI6MTYzNjg5MTYxNSwiZXhwIjoxNjM2ODk1MjE1fQ.oFowJI4boQWiV1EZL7NXfHBNLPHz9dY-RfBRA4v86oQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzk0MDU1MDEsImV4cCI6MTYzOTQ5MTkwMX0.7fISiyz7UNBWY4v_WXOGlZ1crpCwce7_lDPioWhIeZs
 
 ###
 GET http://localhost:5000/api/pitchtype?branchId=6191ee94a487c92bab48d44e&Bra=123

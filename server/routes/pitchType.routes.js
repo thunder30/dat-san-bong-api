@@ -10,6 +10,9 @@ const {
     validateGetByBranch
 } = require('../middlewares/pitchType')
 const PitchBranch = require('../models/PitchBranch')
+const Pitch = require('../models/Pitch')
+const BookingDetail = require('../models/BookingDetail')
+const Status = require('../models/Status')
 
 
 /**
@@ -139,8 +142,6 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
                 select = 'owner',
                 match = {owner: userId}
         )
-        console.log(userId)
-        console.log(_pitchType.pitchBranch)
         if(!_pitchType.pitchBranch){
             return res.status(403).json({
                 success: false,
@@ -148,6 +149,27 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
                 message: 'Bạn không phải là chủ của sân này'
             })
         }
+
+        const statusCanceled = await Status.findOne({}).where('status').equals('ST3')
+        const statusCanceled2 = await Status.findOne({}).where('status').equals('ST4')
+
+        const pitch = await Pitch.find({}).where('pitchType').equals(id)
+        for(let i = 0; i < pitch.length; i++){
+            const _bookingDetail = await BookingDetail.find({}).where('pitch').equals(pitch[i]._id)
+            for(let j = 0; j < _bookingDetail.length; j++){
+                const endtime = convertStringToDate(_bookingDetail[j].endTime)
+                if(_bookingDetail[j].status == statusCanceled || _bookingDetail[i].status == statusCanceled2)
+                    continue
+                if(endtime > Date.now()){
+                    return res.status(400).json({
+                        success: false,
+                        messageEn: 'You can not delete this pitchtype!',
+                        message: 'Bạn không thể xóa loại sân này!'
+                    })
+                }
+            }
+        }
+
         // delete from database _pitchType
         const pitchTypeDel = await PitchType.findByIdAndUpdate(id, { isActive: false }, { new: true })
 
@@ -171,7 +193,7 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
             success: false,
             messageEn: 'Internal server error!',
             message: 'Có lỗi xảy ra trong quá trình xử lý!',
-            error,
+            error: error.message,
         })
     }
 })
@@ -254,5 +276,11 @@ router.get('/:id', verifyToken, validateGetById, async (req, res) => {
     }
 })
 
+function convertStringToDate(s) {
+    const splDayTime = s.split(' ')
+    const splDay = splDayTime[0].split('/')
+    const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
+    return dateTime
+}
 
 module.exports = router

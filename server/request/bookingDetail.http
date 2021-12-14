@@ -38,3 +38,34 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZ
 
 ###
 GET http://localhost:5000/api/bookingdetail/bookedTime?pitch=61a1089dc0e40d948fdf9b2e
+
+###
+{
+    [
+        date: "12/11/2023",
+        time: [
+            {
+                startTime: "00:00",
+                endTime: "02:00"
+            },
+            {
+                startTime: "00:00",
+                endTime: "02:00"
+            }
+        ]
+    ],
+    [
+        date: "12/11/2023",
+        time: [
+            {
+                startTime: "00:00",
+                endTime: "02:00"
+            },
+            {
+                startTime: "00:00",
+                endTime: "02:00"
+            }
+        ]
+    ],
+
+}

@@ -79,13 +79,13 @@ GET http://localhost:5000/api/pitchBranch/getDetail/619ba93bba72b12e6ea9f2f6
 
 ### // khách hàng kiểm tra sân
 POST http://localhost:5000/api/booking/checkout
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3OTEwNDA1LCJleHAiOjE2Mzc5OTY4MDV9.VCibm94G1frWFt3QDqVmP9HvB8yT3xrjXHhu_LErPLw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzg4NjA2NTQsImV4cCI6MTYzODk0NzA1NH0.qOs3tz6G7h9ozUxglIGLoR2PtWM5QmqtACuxERIK0MU
 Content-Type: application/json
 
 {
-    "startTime": "12/11/2023 07:30",
-    "endTime": "12/11/2023 08:30",
-    "pitch":"619bb462b770e45c464db6f6"
+    "startTime": "08/12/2023 18:00",
+    "endTime": "08/12/2023 19:30",
+    "pitch":"619bb432b770e45c464db6ec"
 }
 
 ### // khách hàng đặt sân

@@ -13,8 +13,8 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "ngoctinh3004@gmail.com",
-    "password": "thunder"
+    "email": "h2z4ld87m3@eposta.buzz",
+    "password": "Thunder123"
 }
 
 ###
@@ -31,6 +31,6 @@ POST http://localhost:5000/api/auth/login
 Content-Type: application/json
 
 {
-    "email": "4mgkixfpur@eposta.buzz",
-    "password": "thunder"
+    "email": "covid21tsp@gmail.com",
+    "password": "123456789"
 }

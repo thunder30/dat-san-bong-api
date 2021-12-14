@@ -1,11 +1,11 @@
 POST http://localhost:5000/api/pitch
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5MzgzNTAsImV4cCI6MTYzODAyNDc1MH0.qS_jx0Eap3MssAtmjE725MajkXj982fpffy5c2ljo6M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTE4M2E2YzhmNzIzOWVlMWYxNjIiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzg2NzkyMjgsImV4cCI6MTYzODc2NTYyOH0._HbBDfyhF3QHjminiig-AcPZcBtsX7WjYPHIHbm4x8c
 Content-Type: application/json
 
 {
-    "displayName": "Sân 5 đứa nhỏ",
-    "description": "Sân này thích cho con ních đá hơn",
-    "pitchType": "61a1083bc0e40d948fdf9b29"
+    "displayName": "Sân ba đưa đá",
+    "description": "Sân này thích cho con ních đá cho zui",
+    "pitchType": "61ac4344a893a586fc58d595"
 
 }
 
@@ -18,23 +18,21 @@ GET http://localhost:5000/api/pitch/619b19bbf90f2bb8d1bf4267
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3NTU0MzkwLCJleHAiOjE2Mzc1NTc5OTB9._KUUz8sE4Ju1q7kbIz-eQgfTRIcrchHsM2sDdAkHknk
 
 ###
-PUT http://localhost:5000/api/pitch/619b19bbf90f2bb8d1bf4267
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3NTU0MzkwLCJleHAiOjE2Mzc1NTc5OTB9._KUUz8sE4Ju1q7kbIz-eQgfTRIcrchHsM2sDdAkHknk
+PUT http://localhost:5000/api/pitch/619bb432b770e45c464db6ec
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkyMzM5MjcsImV4cCI6MTYzOTMyMDMyN30.vnfuQATZ22IsTa7cOdOZHKT0wGydmo2ZOPqVHbN3hFA
 Content-Type: application/json
 
 {
-    "displayName": "Sân C rồi",
-    "description": "Sân này kế cây bự á",
-    "pitchType": "61975db55189c10b99d74068"
+    "isActive": true
 }
 
 ###
-DELETE http://localhost:5000/api/pitch/619b19bbf90f2bb8d1bf424
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3NTU0MzkwLCJleHAiOjE2Mzc1NTc5OTB9._KUUz8sE4Ju1q7kbIz-eQgfTRIcrchHsM2sDdAkHknk
+DELETE http://localhost:5000/api/pitch/61a1089dc0e40d948fdf9b2e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzk0MDU1MDEsImV4cCI6MTYzOTQ5MTkwMX0.7fISiyz7UNBWY4v_WXOGlZ1crpCwce7_lDPioWhIeZs
 
 ###
 GET http://localhost:5000/api/pitch?pitchType=61975db55189c10b99d74068
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZWNmYjI5ZTQ1ZmNmZTc3N2M0NzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3NTU3NTgwLCJleHAiOjE2Mzc1NjExODB9.kK_ZVS9OKqwawR1oqGlM_UqxxWotF4vp1W3JixXjKqc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzk0MDU1MDEsImV4cCI6MTYzOTQ5MTkwMX0.7fISiyz7UNBWY4v_WXOGlZ1crpCwce7_lDPioWhIeZs
 
 
 

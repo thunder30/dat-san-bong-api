@@ -11,7 +11,9 @@ const {
 } = require('../middlewares/pitch')
 const Pitch = require('../models/Pitch')
 const PitchType = require('../models/PitchType')
-const { route } = require('./price.routes')
+const BookingDetail = require('../models/BookingDetail')
+const Status = require('../models/Status')
+const booking = require('../middlewares/booking')
 
 /**
  * @POST /api/pitch
@@ -133,6 +135,23 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
                 message: 'Bạn không có quyền xóa sân này!'
             })
         }
+        
+        const statusCanceled = await Status.findOne({}).where('status').equals('ST3')
+        const statusCanceled2 = await Status.findOne({}).where('status').equals('ST4')
+
+        const _bookingDetail = await BookingDetail.find({pitch: _pitch._id})
+        for(let i = 0; i < _bookingDetail.length; i++){
+            const endtime = convertStringToDate(_bookingDetail[i].endTime)
+            if(_bookingDetail[i].status == statusCanceled || _bookingDetail[i].status == statusCanceled2)
+                continue
+            if(endtime > Date.now()){
+                return res.status(400).json({
+                    success: false,
+                    messageEn: 'You can not delete this pitch!',
+                    message: 'Bạn không thể xóa sân này!'
+                })
+            }
+        }
 
         let pitch = await Pitch.findByIdAndUpdate(req.params.id, { isActive: false }, { new: true })
 
@@ -221,6 +240,13 @@ router.get('/', verifyToken, validateGetByPitchType, async (req, res) => {
         })
     }
 })
+
+function convertStringToDate(s) {
+    const splDayTime = s.split(' ')
+    const splDay = splDayTime[0].split('/')
+    const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
+    return dateTime
+}
 
 
 module.exports = router

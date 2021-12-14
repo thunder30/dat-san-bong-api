@@ -5,12 +5,12 @@ tris
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM3NTkzMTY2LCJleHAiOjE2Mzc2Nzk1NjZ9.zrhNJOKqnVD3aiKSYi9NmryDKNgRg0ivi_-hRBpOtaA
 ###
 POST http://localhost:5000/api/price
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWExZTUwMjgwOTk5MTRlNzY4OTJjNzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc5OTk5MDgsImV4cCI6MTYzODA4NjMwOH0.ApGrjqX6AYzuW74xrgIshj8Fq-A5roTqKdcfrP9cmnA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkyNDI5MDYsImV4cCI6MTYzOTMyOTMwNn0.e72iRsH5auPmbPaK6lvS1QBXJk6BlDDzSpLZbIDTO3w
 Content-Type: application/json
 
 {
-    "pitchType": "61a1e5898099914e76892c8d",
-    "time": "619ba8d7c99ae8e7b202c0ef",
+    "pitchType": "61a1083bc0e40d948fdf9b29",
+    "time": "619ba8d6c99ae8e7b202c0d9",
     "price": "10000"
 }
 
@@ -25,32 +25,27 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTkxZ
 
 ###
 PUT  http://localhost:5000/api/price/619bacdc7eb3c1e90106768a
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzc1OTUyNTIsImV4cCI6MTYzNzY4MTY1Mn0.fNHwSsJOuTVMOVddqnFbvXDcyfPflkwWtSBk5xsMpjQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkyNDE1OTgsImV4cCI6MTYzOTMyNzk5OH0.O6p3b479DeIQ4hD_Bq9x_Z37i9WztyVfd-5KUWn_u5Y
 Content-Type: application/json
 
 {
-    "pitchType": "6193475a5da96bc6c9721f0a",
-    "time": "619ba8d6c99ae8e7b202c0d5",
+    "pitchType": "61a1083bc0e40d948fdf9b29",
+    "time": "619ba8d6c99ae8e7b202c0d3",
     "price": "2000"
 }
 
 ###
 POST http://localhost:5000/api/price/arrtime
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWExZTUwMjgwOTk5MTRlNzY4OTJjNzgiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM4MDg4MjY1LCJleHAiOjE2MzgxNzQ2NjV9.jomKQNzkInumiCWO5O9UdSY0VEFCQvZUcwQwLFol6so
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkyNDE1OTgsImV4cCI6MTYzOTMyNzk5OH0.O6p3b479DeIQ4hD_Bq9x_Z37i9WztyVfd-5KUWn_u5Y
 Content-Type: application/json
 
 {
-    "pitchType": "61a1e5898099914e76892c8d",
+    "pitchType": "61a1083bc0e40d948fdf9b29",
     "prices":[
         {
-            "startTime": "01:30",
-            "endTime": "03:00",
-            "price": "3000"
-        },
-        {
-            "startTime": "05:30",
-            "endTime": "06:30",
-            "price": "2000"
+            "startTime": "00:30",
+            "endTime": "02:00",
+            "price": "200000"
         }
     ]
 }
