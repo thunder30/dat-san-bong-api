@@ -9,6 +9,8 @@
         "mongoose": "^6.0.12",
         "mongoose-slug-generator": "^1.0.4",
         "nodemailer": "^6.7.0",
+        "nodemailer-plugin-inline-base64": "^2.1.1",
+        "qrcode": "^1.5.0",
         "slugify": "^1.6.1"
     },
     "devDependencies": {

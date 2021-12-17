@@ -1,7 +1,10 @@
 const nodemail = require('nodemailer')
+const inlineBase64 = require('nodemailer-plugin-inline-base64');
 
 const mailer = {
-    sendMail(receiver, code, startTime, endTime, address, pitch, price) {
+    sendMail (receiver, code, startTime, endTime, address, pitch, price, url) {
+        // console.log(url)
+        // console.log(typeof url)
         const optionOne = {
             service: 'Gmail',
             auth: {
@@ -33,22 +36,30 @@ const mailer = {
         }
         const transport = optionThree
         let transporter = nodemail.createTransport(transport)
+        transporter.use('compile', inlineBase64());
         const help = `https://www.facebook.com/it.nnt`
+        //split " "
+        const day = startTime.split(' ')[0] 
+        const _startTime = startTime.split(' ')[1]
+        const _endTime = endTime.split(' ')[1]
         const htmlContent = `
             <div>
                 <p>Xin chào <b>${receiver}</b>,</p>
                 <p>Cảm ơn bạn đã đặt sân của chúng tôi<br>
-                Thời gian bắt đầu là: ${startTime} và kết thúc vào lúc ${endTime}<br>
+                Vào ngày ${day} thời lượng ${_startTime} - ${_endTime} <br>
                 Tại địa chỉ: ${address}<br>
                 Ở sân: ${pitch}<br>
-                Mã code để bạn xác thực là: <b>${code}</b><br>
-                Giá đã thanh toán tiền là: ${price}</b>
+                Giá đã thanh toán tiền là: ${price}</b><br>
+                Mã code để vào sân là: <b>${code}</b><br>
+                </b>Hoặc bạn có thể quét mã QR này khi vào sân</b> <br>
+                <img src="${url}" alt="QR Code" style="width: 100px; height: 100px;">
                 </p>
                 <p>Nếu có gì sai sót vui lòng liên hệ với chúng tôi <a href=${help} style="text-decoration: none">tại đây</a></p>
                 <p>Trân trọng,<br>Đội ngũ Thunder.</p>
             </div>
         `
 
+        // const buffer = Buffer.from(s.split("base64,")[1], "base64");
         const mailOptions = {
             from: `Thunder Team <${process.env.MAIL_USER}>`,
             to: receiver,
@@ -65,8 +76,8 @@ const mailer = {
     },
 }
 
-const sendMailBooked = (receiver, code, startTime, endTime, address, pitch, price) => {
-    mailer.sendMail(receiver, code, startTime, endTime, address, pitch, price)
+const sendMailBooked = (receiver, code, startTime, endTime, address, pitch, price, url) => {
+    mailer.sendMail(receiver, code, startTime, endTime, address, pitch, price, url)
 }
 
 module.exports = sendMailBooked

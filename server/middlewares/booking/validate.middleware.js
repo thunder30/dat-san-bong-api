@@ -204,43 +204,67 @@ const validateCheckoutFunction = async (req, res, next) => {
 
     }
 
-    // create array Time of bookingDetail request
-    const startTimeArrayAdd2 = startTimeArrayAdd[1].split(':')
-    const startTimeArrayAdd3 = endTimeArrayAdd[1].split(':')
-    let le = '30'
-    if(startTimeArrayAdd2[1] == '00')
-    le = '00'
+    // create array Time continues of bookingDetail request result like [ '08:00', '08:30', '09:00', '09:30', '10:00' ]
     let arrTime = []
-    for (let i = startTimeArrayAdd2[0]; i <= startTimeArrayAdd3[0]; i++) {
-        if(i == startTimeArrayAdd2[0]){
-                // arrTime.push(i + ':' + le)
-                if(le == '00'){
-                    arrTime.push(i + ':' + '00')
-                    arrTime.push(i + ':' + '30')
-                }
-                else{
-                    arrTime.push(i + ':' + '30')
-                }
-                continue
-        }
+    // first of array
+    let c = startDateTimeAdd
+    console.log(c)
+    let hour = c.getHours() 
+    if(hour < 10)
+        hour = '0' + hour
+    let min = c.getMinutes()
+    if(min < 10)
+        min = '0' + min
+    let time = hour + ':' + min
+    arrTime.push(time)
+    // to end of array
+    do{
+        let d = new Date(c.getTime() + 30 * 60000)
+        let hour = d.getHours()
+        if(hour < 10)
+            hour = '0' + hour
+        let min = d.getMinutes()
+        if(min < 10)
+            min = '0' + min
+        let time = hour + ':' + min
+        arrTime.push(time)
+        c = d
+    }while(c.getTime() < endDateTimeAdd.getTime());
+    
 
-        if(i<10)
-            arrTime.push('0' +i + ':' + '00')
-        else
-            arrTime.push(i + ':' + '00')
-        le = 30
-        if(i<10)
-            arrTime.push('0' +i + ':' + '30')
-        else
-            arrTime.push(i + ':' + '30')
-        le = 00
-    }    
+    // for (let i = startTimeArrayAdd2[0]; i <= startTimeArrayAdd3[0]; i++) {
+    //     if(i == startTimeArrayAdd2[0]){
+    //             // arrTime.push(i + ':' + le)
+    //             if(le == '00'){
+    //                 arrTime.push(i + ':' + '00')
+    //                 arrTime.push(i + ':' + '30')
+    //             }
+    //             else{
+    //                 arrTime.push(i + ':' + '30')
+    //             }
+    //             continue
+    //     }
+
+    //     if(i<10)
+    //         arrTime.push('0' +i + ':' + '00')
+    //     else
+    //         arrTime.push(i + ':' + '00')
+    //     le = 30
+    //     if(i<10)
+    //         arrTime.push('0' +i + ':' + '30')
+    //     else
+    //         arrTime.push(i + ':' + '30')
+    //     le = 00
+    // }    
+    // console.log(arrTime)
 
     //compare time for money
     let sumPrice = 0
     for(let i = 0; i < _price.length; i++){
         for(let j = 0; j < arrTime.length; j+=1){
             if(arrTime[j] == _price[i].time.startTime && arrTime[j+1] == _price[i].time.endTime){
+                // console.log(arrTime[j] + ' ' + arrTime[j+1])
+                // console.log(_price[i].price)
                 sumPrice += _price[i].price
             }
         }
@@ -695,37 +719,32 @@ const validatePostConfirmFunction = async (req, res, next) => {
 
     }
 
-    // create array Time of bookingDetail request
-    const startTimeArrayAdd2 = startTimeArrayAdd[1].split(':')
-    const startTimeArrayAdd3 = endTimeArrayAdd[1].split(':')
-    let le = 30
-    if(startTimeArrayAdd2[1] == '00')
-    le = 00
+    // create array Time continues of bookingDetail request result like [ '08:00', '08:30', '09:00', '09:30', '10:00' ]
     let arrTime = []
-    for (let i = startTimeArrayAdd2[0].toString(); i <= startTimeArrayAdd3[0]; i++) {
-        if(i == startTimeArrayAdd2[0]){
-            // arrTime.push(i + ':' + le)
-            if(le == '00'){
-                arrTime.push(i + ':' + '00')
-                arrTime.push(i + ':' + '30')
-            }
-            else{
-                arrTime.push(i + ':' + '30')
-            }
-            continue
-        }
-
-        if(i<10)
-            arrTime.push('0' +i + ':' + '00')
-        else
-            arrTime.push(i + ':' + '00')
-        le = 30
-        if(i<10)
-            arrTime.push('0' +i + ':' + '30')
-        else
-            arrTime.push(i + ':' + '30')
-        le = 00
-    }
+    // first of array
+    let c = startDateTimeAdd
+    console.log(c)
+    let hour = c.getHours() 
+    if(hour < 10)
+        hour = '0' + hour
+    let min = c.getMinutes()
+    if(min < 10)
+        min = '0' + min
+    let time = hour + ':' + min
+    arrTime.push(time)
+    // to end of array
+    do{
+        let d = new Date(c.getTime() + 30 * 60000)
+        let hour = d.getHours()
+        if(hour < 10)
+            hour = '0' + hour
+        let min = d.getMinutes()
+        if(min < 10)
+            min = '0' + min
+        let time = hour + ':' + min
+        arrTime.push(time)
+        c = d
+    }while(c.getTime() < endDateTimeAdd.getTime());
 
     //compare time for money
     let sumPrice = 0

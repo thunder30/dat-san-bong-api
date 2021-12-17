@@ -21,30 +21,30 @@ Content-Type: application/json
 
 ### //  booking confirm
 POST http://localhost:5000/api/booking/confirm
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWFmNjE3YTFhMWRkYzZjNWEwYjZmYWMiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkwMjEzNjMsImV4cCI6MTYzOTEwNzc2M30.L0LiqkrJ5vlwKJi5iehSv8TCh8CyDcOHK81OUcAJOEQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM5NjQ3NjE4LCJleHAiOjE2Mzk3MzQwMTh9.StodDrvW0O6-6G6lEZJs_5ibTKLG0qvbpxD8nWUGPW4
 Content-Type: application/json
 
 {
-        "startTime": "10/12/2021 08:30",
-        "endTime": "10/12/2021 09:00",
+        "startTime": "20/12/2021 08:30",
+        "endTime": "20/12/2021 09:00",
         "status": "ST1",
         "isPaid": true,
         "name": "",
         "phone": "",
-        "customer": "61af617a1a1ddc6c5a0b6fac",
-        "pitch":"61a1089dc0e40d948fdf9b2e"
+        "customer": "619ba12394bbb8fcce69142b",
+        "pitch":"619bb43bb770e45c464db6f1"
 }
 
 ###
 
 POST http://localhost:5000/api/booking/checkout
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWFmNjE3YTFhMWRkYzZjNWEwYjZmYWMiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzg5Nzg4NDksImV4cCI6MTYzOTA2NTI0OX0.pMiEKnlDLEXJKf5VcEFK2_lqF9mizt-zHSdBWEXXlhQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM5NjQ3NjE4LCJleHAiOjE2Mzk3MzQwMTh9.StodDrvW0O6-6G6lEZJs_5ibTKLG0qvbpxD8nWUGPW4
 Content-Type: application/json
 
 {
-    "startTime": "11/12/2021 12:30",
-    "endTime": "11/12/2021 13:00",
-    "pitch":"619bb432b770e45c464db6ec"
+    "startTime": "20/12/2021 08:30",
+    "endTime": "20/12/2021 09:00",
+    "pitch":"619bb43bb770e45c464db6f1"
     //"customer": "619ba12394bbb8fcce69142b",
 }
  
@@ -123,3 +123,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliO
 ###
 GET http://localhost:5000/api/booking/static?startDate=12/10/2023&endDate=31/12/2023
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliOWQ2MjgyOGMwYWQ2YjQ4YWM1ZmQiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2Mzg2OTE0NTQsImV4cCI6MTYzODc3Nzg1NH0.-Ew-Mu-_0CrPV3uXetDPPep3kRhzhSz3pwxKwB1NHf0
+
+###
+GET http://localhost:5000/api/booking/test

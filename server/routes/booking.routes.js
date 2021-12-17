@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const { verifyToken } = require('../middlewares/auth')
+const QRCode = require('qrcode')
 const {
     validatePost,
     validateGetByID,
@@ -122,8 +123,14 @@ router.post('/confirm', verifyToken, validatePostConfirm(), validateResult, vali
             code,
         })
 
-        sendmail(receiver,code,startTime,endTime,address,pitchName,toCommas(price)+" VND")
+        QRCode.toDataURL(code, function (err, url) {
+            // console.log(url)
+            // var buffer = Buffer.from(pixel.url("base64,")[1], "base64");
+            // console.log(buffer)
 
+            sendmail(receiver,code,startTime,endTime,address,pitchName,toCommas(price)+" VND",url)
+          })
+        
     } catch (err) {
         res.status(500).json({
             success: false,
@@ -392,6 +399,46 @@ router.delete('/:id', verifyToken, validateDelete, async (req, res) => {
 })
 
 /**
+ * @GET /api/booking/test send email
+ * @desc test send email
+ */
+router.get('/test', async (req, res) => {
+    try {
+        const code = '456'
+        // const generateQR = code => {
+        //     try {
+        //       console.log(QRCode.toDataURL(code))
+        //     } catch (err) {
+        //       console.error(err)
+        //     }
+        // }
+        // generateQR(code)
+        let ur 
+        QRCode.toDataURL(code, function (err, url) {
+            ur = url;
+            // console.log(url)
+            sendmail("trisnguyen25112000@gmail.com",'code','startTime','endTime','address','pitchName',toCommas(1000)+" VND",url)
+            // console.log(url)
+            // var buffer = Buffer.from(pixel.url("base64,")[1], "base64");
+            // console.log(buffer)
+            
+          })
+          
+        res.status(200).json({
+            success: true,
+            message: 'Send email successfully!',
+        })
+       
+    }catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+/**
  * @POST /api/booking/static
  * @desc get sum countBookings, Price as time, pitchBranchId
  */
@@ -509,12 +556,6 @@ let getStaticAsPitchBranch = async (pitchBranchId, booking) => {
     // console.log(staticAsPitchBranch)
     return staticAsPitchBranch
 }
-
-/**
- * @GET /api/booking/pitchbranch/:id
- * @desc Get a booking by branch id
- */
-
 
 /**
  * @GET /api/booking/:id
@@ -746,5 +787,7 @@ function convertStringToDate(s) {
     const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
     return dateTime
 }
+
+
 
 module.exports = router
