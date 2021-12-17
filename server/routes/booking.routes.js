@@ -413,17 +413,26 @@ router.get('/test', async (req, res) => {
         //     }
         // }
         // generateQR(code)
-        let ur 
-        QRCode.toDataURL(code, function (err, url) {
-            ur = url;
-            // console.log(url)
-            sendmail("trisnguyen25112000@gmail.com",'code','startTime','endTime','address','pitchName',toCommas(1000)+" VND",url)
-            // console.log(url)
-            // var buffer = Buffer.from(pixel.url("base64,")[1], "base64");
-            // console.log(buffer)
+        // let ur 
+        // QRCode.toDataURL(code, function (err, url) {
+        //     ur = url;
+        //     // console.log(url)
+        //     sendmail("trisnguyen25112000@gmail.com",'code','startTime','endTime','address','pitchName',toCommas(1000)+" VND",url)
+        //     // console.log(url)
+        //     // var buffer = Buffer.from(pixel.url("base64,")[1], "base64");
+        //     // console.log(buffer)
             
-          })
-          
+        //   })
+        const json = {
+            name: 'trisnguyen',
+            code: code,
+        }
+        const string = JSON.stringify(json)
+        console.log(string)
+        const obj = JSON.parse(string)
+        console.log(obj)
+        console.log(obj.name)
+        
         res.status(200).json({
             success: true,
             message: 'Send email successfully!',

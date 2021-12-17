@@ -405,6 +405,10 @@ router.get('/getDetailOwner/:id', verifyToken, async (req, res) => {
         let pitchTypes =[]
         for(let item of pitchType)
         {
+            if(!pitchType.isActive)
+            {
+                continue
+            }
             // console.log (item._id.toString())
             let pitch = await Pitch.find({pitchType: item._id.toString()}).select('_id displayName description isActive pitchType')
             let price = await Price.find({pitchType: item._id.toString()})

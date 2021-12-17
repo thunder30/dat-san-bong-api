@@ -36,16 +36,21 @@ Content-Type: application/json
 
 ###
 POST http://localhost:5000/api/price/arrtime
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkyNDE1OTgsImV4cCI6MTYzOTMyNzk5OH0.O6p3b479DeIQ4hD_Bq9x_Z37i9WztyVfd-5KUWn_u5Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2Mzk3MjQ1NjgsImV4cCI6MTYzOTgxMDk2OH0.ZEn2e6E1TVv3BYMf-3ta6s-6FlAfTkaB_bM0Npor9pQ
 Content-Type: application/json
 
 {
-    "pitchType": "61a1083bc0e40d948fdf9b29",
+    "pitchType": "61b8473074e9f32b175bddcb",
     "prices":[
         {
             "startTime": "00:30",
-            "endTime": "02:00",
-            "price": "200000"
+            "endTime": "01:30",
+            "price": "100000"
+        },
+        {
+            "startTime": "01:30",
+            "endTime": "22:00",
+            "price": "120000"
         }
     ]
 }

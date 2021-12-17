@@ -121,11 +121,11 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
             }
 
             let arrTime = []
-            while ( _startTime < _endTime ){
+            while ( _startTime <= _endTime ){
                 times = _startTime.getHours() + ':' + _startTime.getMinutes()
                 if(_startTime.getHours() < 10){
                     times = '0' + times
-                    console.log(times)
+                    // console.log(times)
                 }
                 if(_startTime.getMinutes() < 10){
                     times = times + '0'
@@ -135,6 +135,7 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
                 _startTime.setMinutes(_startTime.getMinutes() + 30)
             }
             arrTimes.push(arrTime)
+            // console.log(arrTimes)
         }
         // console.log(arrTimes)
         // save if price not exist 
@@ -146,20 +147,20 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
                 const _price = await Price.find({pitchType, time : time._id}) 
 
                 // console.log(_price)
-                // if(_price.length !== 0)
-                // {
-                //     //update price
-                //     let upPrice = await Price.findOneAndUpdate({pitchType, time : time._id}, {price : prices[i].price})
-                //     arrResult.push(upPrice)
-                // }else{
-                //      //save price
-                //     let newPrice = await Price.create({
-                //         pitchType,
-                //         time: time._id,
-                //         price: prices[i].price
-                //     })
-                //     arrResult.push(newPrice)
-                // }
+                if(_price.length !== 0)
+                {
+                    //update price
+                    let upPrice = await Price.findOneAndUpdate({pitchType, time : time._id}, {price : prices[i].price})
+                    arrResult.push(upPrice)
+                }else{
+                     //save price
+                    let newPrice = await Price.create({
+                        pitchType,
+                        time: time._id,
+                        price: prices[i].price
+                    })
+                    arrResult.push(newPrice)
+                }
             }
         }
 
@@ -176,7 +177,7 @@ router.post('/arrtime', verifyToken, validatePostArrTime, async (req, res) => {
                 success: true,
                 messageEn: 'Config price success',
                 message: 'Cấu hình giá thành công',
-                arrResult
+                // arrResult
             }
         )
 
