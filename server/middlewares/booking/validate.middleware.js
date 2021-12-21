@@ -7,6 +7,8 @@ const BookingDetail = require('../../models/BookingDetail')
 const Pitch = require('../../models/Pitch')
 const Price = require('../../models/Price')
 const User = require('../../models/User')
+const PitchType = require('../../models/PitchType')
+const PitchBranch= require('../../models/PitchBranch')
 
 const validatePost = (req, res, next) => {
 
@@ -204,60 +206,26 @@ const validateCheckoutFunction = async (req, res, next) => {
 
     }
 
-    // create array Time continues of bookingDetail request result like [ '08:00', '08:30', '09:00', '09:30', '10:00' ]
-    let arrTime = []
-    // first of array
-    let c = startDateTimeAdd
-    console.log(c)
-    let hour = c.getHours() 
-    if(hour < 10)
-        hour = '0' + hour
-    let min = c.getMinutes()
-    if(min < 10)
-        min = '0' + min
-    let time = hour + ':' + min
-    arrTime.push(time)
-    // to end of array
-    do{
-        let d = new Date(c.getTime() + 30 * 60000)
-        let hour = d.getHours()
-        if(hour < 10)
-            hour = '0' + hour
-        let min = d.getMinutes()
-        if(min < 10)
-            min = '0' + min
-        let time = hour + ':' + min
-        arrTime.push(time)
-        c = d
-    }while(c.getTime() < endDateTimeAdd.getTime());
-    
+    const _Pitch = await Pitch.findById(pitch)
+    const _PitchType = await PitchType.findById(_Pitch.pitchType)
+    const _pitchBranch = await PitchBranch.findById(_PitchType.pitchBranch)
+    //convert _pitchBranch.startTime HH:MM to Date
+    const startTimeBranch = _pitchBranch.startTime.split(':')
+    const startDateBranch = new Date(0,0,0,startTimeBranch[0], startTimeBranch[1])
+    //convert _pitchBranch.endTime HH:MM to Date
+    const endTimeBranch = _pitchBranch.endTime.split(':')
+    const endDateBranch = new Date(0,0,0,endTimeBranch[0], endTimeBranch[1])
+    let _arrTimeBranch = createArrayTime(startDateBranch,endDateBranch)
+    //check startTimeAdd is in _arrTimeBranch
+    if (!_arrTimeBranch.includes(startTimeArrayAdd[1]) || !_arrTimeBranch.includes(endTimeArrayAdd[1])) {
+        return res.status(400).send({
+            success: false,
+            messageEn: 'this time not available!',
+            message: 'Thời gian này không mở cửa',
+        })
+    }
 
-    // for (let i = startTimeArrayAdd2[0]; i <= startTimeArrayAdd3[0]; i++) {
-    //     if(i == startTimeArrayAdd2[0]){
-    //             // arrTime.push(i + ':' + le)
-    //             if(le == '00'){
-    //                 arrTime.push(i + ':' + '00')
-    //                 arrTime.push(i + ':' + '30')
-    //             }
-    //             else{
-    //                 arrTime.push(i + ':' + '30')
-    //             }
-    //             continue
-    //     }
-
-    //     if(i<10)
-    //         arrTime.push('0' +i + ':' + '00')
-    //     else
-    //         arrTime.push(i + ':' + '00')
-    //     le = 30
-    //     if(i<10)
-    //         arrTime.push('0' +i + ':' + '30')
-    //     else
-    //         arrTime.push(i + ':' + '30')
-    //     le = 00
-    // }    
-    // console.log(arrTime)
-
+    let arrTime = createArrayTime(startDateTimeAdd, endDateTimeAdd)
     //compare time for money
     let sumPrice = 0
     for(let i = 0; i < _price.length; i++){
@@ -719,33 +687,27 @@ const validatePostConfirmFunction = async (req, res, next) => {
 
     }
 
-    // create array Time continues of bookingDetail request result like [ '08:00', '08:30', '09:00', '09:30', '10:00' ]
-    let arrTime = []
-    // first of array
-    let c = startDateTimeAdd
-    console.log(c)
-    let hour = c.getHours() 
-    if(hour < 10)
-        hour = '0' + hour
-    let min = c.getMinutes()
-    if(min < 10)
-        min = '0' + min
-    let time = hour + ':' + min
-    arrTime.push(time)
-    // to end of array
-    do{
-        let d = new Date(c.getTime() + 30 * 60000)
-        let hour = d.getHours()
-        if(hour < 10)
-            hour = '0' + hour
-        let min = d.getMinutes()
-        if(min < 10)
-            min = '0' + min
-        let time = hour + ':' + min
-        arrTime.push(time)
-        c = d
-    }while(c.getTime() < endDateTimeAdd.getTime());
+    const _Pitch = await Pitch.findById(pitch)
+    const _PitchType = await PitchType.findById(_Pitch.pitchType)
+    const _pitchBranch = await PitchBranch.findById(_PitchType.pitchBranch)
+    //convert _pitchBranch.startTime HH:MM to Date
+    const startTimeBranch = _pitchBranch.startTime.split(':')
+    const startDateBranch = new Date(0,0,0,startTimeBranch[0], startTimeBranch[1])
+    //convert _pitchBranch.endTime HH:MM to Date
+    const endTimeBranch = _pitchBranch.endTime.split(':')
+    const endDateBranch = new Date(0,0,0,endTimeBranch[0], endTimeBranch[1])
+    let _arrTimeBranch = createArrayTime(startDateBranch,endDateBranch)
+    //check startTimeAdd is in _arrTimeBranch
+    if (!_arrTimeBranch.includes(startTimeArrayAdd[1]) || !_arrTimeBranch.includes(endTimeArrayAdd[1])) {
+        return res.status(400).send({
+            success: false,
+            messageEn: 'this time not available!',
+            message: 'Thời gian này không mở cửa',
+        })
+    }
 
+
+    let arrTime = createArrayTime(startDateTimeAdd, endDateTimeAdd)
     //compare time for money
     let sumPrice = 0
     for(let i = 0; i < _price.length; i++){
@@ -878,6 +840,35 @@ function convertStringToDate(s) {
     const splDay = s.split('/')
     const dateTime = new Date(splDay[2], splDay[1] - 1, splDay[0])
     return dateTime
+}
+
+//const 
+function createArrayTime(startDateTimeAdd,endDateTimeAdd){// create array Time continues of bookingDetail request result like [ '08:00', '08:30', '09:00', '09:30', '10:00' ]
+    let arrTime = []
+    // first of array
+    let c = startDateTimeAdd
+    let hour = c.getHours() 
+    if(hour < 10)
+        hour = '0' + hour
+    let min = c.getMinutes()
+    if(min < 10)
+        min = '0' + min
+    let time = hour + ':' + min
+    arrTime.push(time)
+    // to end of array
+    do{
+        let d = new Date(c.getTime() + 30 * 60000)
+        let hour = d.getHours()
+        if(hour < 10)
+            hour = '0' + hour
+        let min = d.getMinutes()
+        if(min < 10)
+            min = '0' + min
+        let time = hour + ':' + min
+        arrTime.push(time)
+        c = d
+    }while(c.getTime() < endDateTimeAdd.getTime());
+    return arrTime
 }
 
 module.exports = { validatePost, validateDelete, validatePut

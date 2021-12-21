@@ -405,7 +405,7 @@ router.get('/getDetailOwner/:id', verifyToken, async (req, res) => {
         let pitchTypes =[]
         for(let item of pitchType)
         {
-            if(!pitchType.isActive)
+            if(!item.isActive)
             {
                 continue
             }
@@ -500,6 +500,9 @@ router.get('/', async (req, res) => {
         })
     }
 })
+
+
+    
 
 
 module.exports = router
