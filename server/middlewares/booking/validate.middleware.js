@@ -342,7 +342,6 @@ const validatePutCheckinFunction = async (req, res, next) => {
 }
 
 const validatePutCancelFunction = async (req, res, next) => {
-    
 
     const bookingDetailId = req.params.id
 
@@ -356,7 +355,7 @@ const validatePutCancelFunction = async (req, res, next) => {
     }
 
     const userId = req.payload.userId
-    if(!bookingDetailId || !req.body.status) {
+    if(!bookingDetailId) {
         return res.status(400).json({
             success: false,
             messageEn: 'Bad request',
@@ -370,7 +369,7 @@ const validatePutCancelFunction = async (req, res, next) => {
         return res.status(400).json({
             success: false,
             messageEn: 'You are not owner of this booking!',
-            message: 'Bạn không phải chủ sở hữu đặt sân này!',
+            message: 'Bạn không phải chủ sở hữu phiếu đặt sân này!',
         })
     }
 
@@ -383,7 +382,76 @@ const validatePutCancelFunction = async (req, res, next) => {
     }
 
     //startTime endTime to date object
-    bookingDetail.startTime = "29/11/2021 19:40"
+    // bookingDetail.startTime = "29/11/2021 19:40"
+    const startTimeArray = bookingDetail.startTime.split(' ')
+    const startDate = startTimeArray[0].split('/')
+    const startTimeArray2 = startTimeArray[1].split(':')
+    const startDateTime = new Date(startDate[2], startDate[1] - 1, startDate[0], startTimeArray2[0], startTimeArray2[1])
+
+    // hủy trước 24h
+    // startDatetime - 12 hours
+    const now = new Date()
+    const startSub = new Date(startDateTime.getTime() - 12 * 3600000)
+    // console.log(startSub.getTime())
+    // console.log(now.getTime())
+    // console.log(startSub.getDate() + ' ' + now.getDate())
+    // console.log(now)
+    if(startSub.getTime() < now.getTime()) {
+        return res.status(400).json({
+            success: false,
+            messageEn: 'Entire time to cancel',
+            message: 'Đã hết hạn hủy sân!',
+        })
+    }
+
+    next()
+}
+
+const validatePutCancelOwnerFunction = async (req, res, next) => {
+    
+    const bookingDetailId = req.params.id
+
+    //check bookingDetailId is valid id
+    if(!ObjectId.isValid(bookingDetailId)) {
+        return res.status(400).json({
+            success: false,
+            messageEn: 'Bad request',
+            message: 'Yêu cầu không hợp lệ',
+        })
+    }
+
+    const userId = req.payload.userId
+    if(!bookingDetailId ) {
+        return res.status(400).json({
+            success: false,
+            messageEn: 'Bad request',
+            message: 'Yêu cầu không hợp lệ',
+        })
+    }
+
+    const bookingDetail = await BookingDetail.findById(bookingDetailId).populate('status booking')
+    const pitch = await Pitch.findById(bookingDetail.pitch)
+    const pitchType = await PitchType.findById(pitch.pitchType)
+    const pitchBranch = await PitchBranch.findById(pitchType.pitchBranch)
+    
+    if(pitchBranch.owner != userId) {
+        return res.status(400).json({
+            success: false,
+            messageEn: 'You are not owner of this booking!',
+            message: 'Bạn không phải chủ sân của phiếu đặt sân này!',
+        })
+    }
+
+    if(bookingDetail.status.status !== 'ST1') {
+        return res.status(400).json({
+            success: false,
+            messageEn: 'You cannot cancel this booking',
+            message: 'Bạn không thể hủy đặt sân này!',
+        })
+    }
+
+    //startTime endTime to date object
+    // bookingDetail.startTime = "29/11/2021 19:40"
     const startTimeArray = bookingDetail.startTime.split(' ')
     const startDate = startTimeArray[0].split('/')
     const startTimeArray2 = startTimeArray[1].split(':')
@@ -875,4 +943,4 @@ module.exports = { validatePost, validateDelete, validatePut
     , validateGetByID, validateResult, validatePostFunction
     , validateCheckout, validateCheckoutFunction
     , validatePostConfirm, validatePostConfirmFunction, validatePutCheckinFunction
-    , validatePutCancelFunction, validatePutRefreshFunction, validatePostStaticFunction }
+    , validatePutCancelFunction, validatePutRefreshFunction, validatePostStaticFunction,validatePutCancelOwnerFunction }

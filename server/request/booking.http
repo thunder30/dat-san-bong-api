@@ -21,30 +21,30 @@ Content-Type: application/json
 
 ### //  booking confirm
 POST http://localhost:5000/api/booking/confirm
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM5NjQ3NjE4LCJleHAiOjE2Mzk3MzQwMTh9.StodDrvW0O6-6G6lEZJs_5ibTKLG0qvbpxD8nWUGPW4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWFmNjE3YTFhMWRkYzZjNWEwYjZmYWMiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjQwMDk4NjM0LCJleHAiOjE2NDAxODUwMzR9.8t_cfjKOy_0gVuMQSyauGU9bw-pMXLyXbOVw51CWZrY
 Content-Type: application/json
 
 {
-        "startTime": "20/12/2021 08:30",
-        "endTime": "20/12/2021 09:00",
+        "startTime": "25/12/2021 22:30",
+        "endTime": "25/12/2021 23:00",
         "status": "ST1",
         "isPaid": true,
         "name": "",
         "phone": "",
-        "customer": "619ba12394bbb8fcce69142b",
-        "pitch":"619bb43bb770e45c464db6f1"
+        "customer": "61af617a1a1ddc6c5a0b6fac",
+        "pitch":"61bcbc1e51e23853299fd492"
 }
 
 ###
 
 POST http://localhost:5000/api/booking/checkout
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTEyMzk0YmJiOGZjY2U2OTE0MmIiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjM5NjQ3NjE4LCJleHAiOjE2Mzk3MzQwMTh9.StodDrvW0O6-6G6lEZJs_5ibTKLG0qvbpxD8nWUGPW4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWFmNjE3YTFhMWRkYzZjNWEwYjZmYWMiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjQwMDY2MjkxLCJleHAiOjE2NDAxNTI2OTF9.l_uwrEx9LoppOIuRvii-8gYtnlf2lvvL0uNTVaYxA_A
 Content-Type: application/json
 
 {
-    "startTime": "20/12/2021 08:30",
-    "endTime": "20/12/2021 09:00",
-    "pitch":"619bb43bb770e45c464db6f1"
+    "startTime": "23/12/2021 22:30",
+    "endTime": "23/12/2021 23:00",
+    "pitch":"61bcbc1e51e23853299fd492"
     //"customer": "619ba12394bbb8fcce69142b",
 }
  
@@ -86,13 +86,12 @@ PUT http://localhost:5000/api/booking/checkin/9f5cf7
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkwNTQzMDgsImV4cCI6MTYzOTE0MDcwOH0.bINwOUJW0NtgToXDA2rf7-bewQdj8s5QHkeiwaaDU4s
 
 ###
-PUT http://localhost:5000/api/booking/cancel/61a363d45f845dbff84c088d
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliYTIxM2E2YzhmNzIzOWVlMWYxNjkiLCJyb2xlcyI6WyJDSFVfU0FOIl0sImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE2MzkwNTQzMDgsImV4cCI6MTYzOTE0MDcwOH0.bINwOUJW0NtgToXDA2rf7-bewQdj8s5QHkeiwaaDU4s
-Content-Type: application/json
+PUT http://localhost:5000/api/booking/cancelCus/61c32f2a6c5bb85a8752236a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWFmNjE3YTFhMWRkYzZjNWEwYjZmYWMiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjQwMDk4NjM0LCJleHAiOjE2NDAxODUwMzR9.8t_cfjKOy_0gVuMQSyauGU9bw-pMXLyXbOVw51CWZrY
 
-{
-    "status": "ST3"
-}
+###
+PUT http://localhost:5000/api/booking/cancelOwner/61c32f2a6c5bb85a8752236a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MWFmNjE3YTFhMWRkYzZjNWEwYjZmYWMiLCJyb2xlcyI6WyJLSEFDSF9IQU5HIiwiQ0hVX1NBTiJdLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjQwMDk4NjM0LCJleHAiOjE2NDAxODUwMzR9.8t_cfjKOy_0gVuMQSyauGU9bw-pMXLyXbOVw51CWZrY
 
 ###
 DELETE http://localhost:5000/api/booking/61974575a491e8f384c7cf35
@@ -100,7 +99,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MThlM
 
 ###
 GET http://localhost:5000/api/booking
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliOWQ2MjgyOGMwYWQ2YjQ4YWM1ZmQiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2MzgyNTE2MDYsImV4cCI6MTYzODMzODAwNn0.C408BlD8izoV-UmjCpiH2c1POBSJnWKM2bZc3Vzy23k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MTliOWQ2MjgyOGMwYWQ2YjQ4YWM1ZmQiLCJyb2xlcyI6WyJBRE1JTiJdLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2NDAxNTYzNTgsImV4cCI6MTY0MDI0Mjc1OH0.V30ObiRmYADjs2ZxgUhEt5EPFRfeuS7Tde50L7-sr8E
 
 ###
 PUT http://localhost:5000/api/booking/refresh/619ba93bba72b12e6ea9f2f6

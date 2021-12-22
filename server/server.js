@@ -15,6 +15,11 @@ app.use(express.urlencoded({ extended: true }))
 // connect database
 db.connect()
 
+// set inteval for change status
+// setInterval(() => {
+//     db.query('UPDATE orders SET status = ? WHERE status = ?', ['delivered', 'pending'])
+// }, 1000 * 60 * 60 * 24)
+
 // routes init
 routes(app)
 

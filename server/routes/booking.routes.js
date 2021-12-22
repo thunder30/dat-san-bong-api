@@ -15,6 +15,7 @@ const {
     validatePostConfirm,
     validatePutCheckinFunction,
     validatePutCancelFunction,
+    validatePutCancelOwnerFunction,
     validatePutRefreshFunction,
     validatePostStaticFunction
 } = require('../middlewares/booking')
@@ -283,15 +284,46 @@ router.post('/', verifyToken, validatePost(), validateResult, validatePostFuncti
 })
 
 /**
- * @PUT /api/booking/cancel/:id
- * @desc update status by a bookingDetail code
+ * @PUT /api/booking/cancelCus/:id
+ * @desc update status by id
  */
-router.put('/cancel/:id', verifyToken, validatePutCancelFunction, async (req, res) => {
+router.put('/cancelCus/:id', verifyToken, validatePutCancelFunction, async (req, res) => {
     try {
         
         const status = req.body.status
         const bookingDetailId = req.params.id
-        const statusId = await Status.findOne({ status: status })
+        const statusId = await Status.findOne({ status: "ST3" })
+
+        let bookingDetailUpdate = await BookingDetail.findOneAndUpdate(
+            {
+                _id: bookingDetailId
+            },
+            { status: statusId._id }, 
+            { new: true })
+        res.status(200).json({
+            success: true,
+            message: 'Update successfully!',
+            bookingDetailUpdate
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error!',
+            error: error.message
+        })
+    }
+})
+
+/**
+ * @PUT /api/booking/cancelOwner/:id
+ * @desc update status by id
+ */
+router.put('/cancelOwner/:id', verifyToken, validatePutCancelOwnerFunction, async (req, res) => {
+    try {
+        // const status = req.body.status
+        const bookingDetailId = req.params.id
+        const statusId = await Status.findOne({ status: "ST4" })
 
         let bookingDetailUpdate = await BookingDetail.findOneAndUpdate(
             { 
@@ -305,7 +337,6 @@ router.put('/cancel/:id', verifyToken, validatePutCancelFunction, async (req, re
             message: 'Update successfully!',
             bookingDetailUpdate
         })
-
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -625,7 +656,7 @@ router.get('/', verifyToken, async (req, res) => {
                     bookingDetail[j].pitch = pitch
                     bookingDetails.push(bookingDetail[j])
                 }
-                let customer = await User.findById(booking[i].customer).select('email -_id')
+                let customer = await User.findById(booking[i].customer).select('email firstName lastName -_id')
                 bookings.push({
                     _id : booking[i]._id,
                     startDate: booking[i].startDate,
@@ -708,7 +739,7 @@ router.get('/', verifyToken, async (req, res) => {
                         bookingDetails.push(trueBookingDetail[j])
                     }
                 }
-                let customer = await User.findById(booking[i].customer).select('email -_id')
+                let customer = await User.findById(booking[i].customer).select('email firstName lastName -_id')
                 if(bookingDetails.length > 0) {
                     bookings.push({
                         _id : booking[i]._id,
@@ -761,7 +792,7 @@ router.get('/', verifyToken, async (req, res) => {
                 _bookingDetail[j].pitch = pitch
                 bookingDetails.push(_bookingDetail[j])
             }
-            const customer = await User.findById(_bookings[i].customer).select('email -_id')
+            const customer = await User.findById(_bookings[i].customer).select('email firstName lastName -_id')
             bookings.push({ 
                 _id: _bookings[i]._id,
                 startDate: _bookings[i].startDate,
